@@ -1,5 +1,4 @@
 import { useOverviewQuery } from "@/api/queries";
-import { Plot } from "react-plotly.js";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui";
 import { TrendingUp, Database, LayoutDashboard, AlertTriangle, Download } from "lucide-react";
 
@@ -92,29 +91,27 @@ export function OverviewPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardHeader>
             <CardTitle className="text-sm font-medium">Top Regions by Recorded Cases</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-[300px] w-full">
-              <Plot
-                data={[
-                  {
-                    x: topRegions.map((r) => r.cases),
-                    y: topRegions.map((r) => r.region),
-                    type: "bar",
-                    orientation: "h",
-                    marker: { color: "#2563eb" },
-                  },
-                ]}
-                layout={{
-                  margin: { l: 120, r: 20, t: 30, b: 40 },
-                  xaxis: { title: "Recorded Cases" },
-                  yaxis: { automargin: true },
-                  showlegend: false,
-                }}
-                useResizeHandler={true}
-              />
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm border-collapse">
+                <thead>
+                  <tr>
+                    <th className="text-left border-b border-slate-200 pb-2 font-medium text-muted-foreground">Region</th>
+                    <th className="text-right border-b border-slate-200 pb-2 font-medium text-muted-foreground">Cases</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {topRegions.map((r) => (
+                    <tr key={r.region} className="border-b border-slate-100">
+                      <td className="py-2 font-medium">{r.region}</td>
+                      <td className="py-2 text-right">{r.cases}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
             <p className="text-xs text-muted-foreground mt-2">
               Source: {metadata.datasetVersion} | Release: {releaseId} | Generated: {new Date(
@@ -125,29 +122,27 @@ export function OverviewPage() {
         </Card>
 
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardHeader>
             <CardTitle className="text-sm font-medium">Top Categories by Recorded Cases</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-[300px] w-full">
-              <Plot
-                data={[
-                  {
-                    x: topCategories.map((c) => c.cases),
-                    y: topCategories.map((c) => c.category),
-                    type: "bar",
-                    orientation: "h",
-                    marker: { color: "#059669" },
-                  },
-                ]}
-                layout={{
-                  margin: { l: 120, r: 20, t: 30, b: 40 },
-                  xaxis: { title: "Recorded Cases" },
-                  yaxis: { automargin: true },
-                  showlegend: false,
-                }}
-                useResizeHandler={true}
-              />
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm border-collapse">
+                <thead>
+                  <tr>
+                    <th className="text-left border-b border-slate-200 pb-2 font-medium text-muted-foreground">Category</th>
+                    <th className="text-right border-b border-slate-200 pb-2 font-medium text-muted-foreground">Cases</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {topCategories.map((c) => (
+                    <tr key={c.category} className="border-b border-slate-100">
+                      <td className="py-2 font-medium">{c.category}</td>
+                      <td className="py-2 text-right">{c.cases}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
             <p className="text-xs text-muted-foreground mt-2">
               Coverage: {metadata.coverage} | Denominator:{" "}
