@@ -1,13 +1,8 @@
-import { BrowserRouter } from "react-router-dom";
-import { Providers } from "@/app/providers";
-import { router } from "@/app/router";
-
 export default function App() {
   return (
-    <BrowserRouter>
-      <Providers>
-        <RouterProvider router={router} />
-      </Providers>
-    </BrowserRouter>
+    <div style={{ padding: "20px", fontFamily: "sans-serif" }}>
+      <h1>CrimeScope</h1>
+      <p>App is loading.</p>
+    </div>
   );
 }
