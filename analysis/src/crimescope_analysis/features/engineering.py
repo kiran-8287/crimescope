@@ -17,9 +17,9 @@ def load_observations(csv_path: Path) -> list[dict]:
         for row in reader:
             row["total"] = int(row["total"]) if row.get("total") else 0
             row["year"] = int(row["year"])
-            # Normalize: use reported_value as alias for total if present
-            if "reported_value" not in row:
-                row["reported_value"] = row["total"]
+            row["reported_value"] = (
+                int(row["reported_value"]) if row.get("reported_value") else None
+            )
             rows.append(row)
     return rows
 
