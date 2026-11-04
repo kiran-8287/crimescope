@@ -1,0 +1,1528 @@
+{
+  "year": 2022,
+  "n_regions": 28,
+  "n_categories": 141,
+  "n_components": 2,
+  "eigenvalues": [
+    12082033.309165,
+    1431299.66057
+  ],
+  "explained_variance_ratio": [
+    0.8940824100334225,
+    0.1059175899665776
+  ],
+  "cumulative_variance_ratio": [
+    0.8940824100334225,
+    1.0
+  ],
+  "loadings": [
+    {
+      "component": "PC1",
+      "eigenvalue": 12082033.309165,
+      "explained_variance_ratio": 0.894082,
+      "features": [
+        {
+          "category": "A) Auto/ Motor Vehicle Theft",
+          "loading": 107.202868
+        },
+        {
+          "category": "A) Dacoity",
+          "loading": 0.50557
+        },
+        {
+          "category": "A) Day Time",
+          "loading": 7.938192
+        },
+        {
+          "category": "A) Missing Children Deemed as Kidnapped",
+          "loading": 0.318549
+        },
+        {
+          "category": "A) Promoting enmity between groups",
+          "loading": -0.496545
+        },
+        {
+          "category": "A) Sedition",
+          "loading": 0.0
+        },
+        {
+          "category": "Abetment of Suicide",
+          "loading": 10.546082
+        },
+        {
+          "category": "Acid Attack",
+          "loading": 0.017476
+        },
+        {
+          "category": "Affray",
+          "loading": -1.434067
+        },
+        {
+          "category": "Agrarian",
+          "loading": -0.034439
+        },
+        {
+          "category": "Arson",
+          "loading": 6.828055
+        },
+        {
+          "category": "Assault on Women",
+          "loading": 32.579148
+        },
+        {
+          "category": "Assault on Women with Intent to Outrage her Modesty",
+          "loading": 93.95238
+        },
+        {
+          "category": "Assault or use of Criminal Force on women with intent to Disrobe",
+          "loading": 3.462257
+        },
+        {
+          "category": "Attempt to Acid Attack",
+          "loading": 0.002938
+        },
+        {
+          "category": "Attempt to Commit Dacoity/Robbery",
+          "loading": 0.288856
+        },
+        {
+          "category": "Attempt to Commit Murder",
+          "loading": 20.670007
+        },
+        {
+          "category": "Attempt to Commit Rape",
+          "loading": 2.14337
+        },
+        {
+          "category": "Attempt to Commit Suicide",
+          "loading": 5.178942
+        },
+        {
+          "category": "Attempt to commit Culpable Homicide",
+          "loading": -0.059089
+        },
+        {
+          "category": "B) Dacoity with Murder",
+          "loading": 0.03722
+        },
+        {
+          "category": "B) Imputation, assertions prejudicial to national integration",
+          "loading": 0.050177
+        },
+        {
+          "category": "B) Night",
+          "loading": 43.995638
+        },
+        {
+          "category": "B) Other Kidnapping & Abduction",
+          "loading": 9.782731
+        },
+        {
+          "category": "B) Other Thefts",
+          "loading": 68.523691
+        },
+        {
+          "category": "B) Others",
+          "loading": -0.598264
+        },
+        {
+          "category": "Burglary",
+          "loading": 51.93383
+        },
+        {
+          "category": "Buying of Minors for Prostitution",
+          "loading": 0.0
+        },
+        {
+          "category": "Caste Conflict",
+          "loading": 0.029681
+        },
+        {
+          "category": "Causing Death by Negligence",
+          "loading": 77.914238
+        },
+        {
+          "category": "Causing Grievous Hurt by Rash/Negligent Driving on Public",
+          "loading": 75.593984
+        },
+        {
+          "category": "Causing Grievous Hurt by act endangering life/safety of others",
+          "loading": -0.679681
+        },
+        {
+          "category": "Causing Hurt by Rash/Negligent Driving on Public Way",
+          "loading": 130.559591
+        },
+        {
+          "category": "Causing Hurt by act endangering life/safety of others",
+          "loading": -4.291619
+        },
+        {
+          "category": "Cheating",
+          "loading": 99.642004
+        },
+        {
+          "category": "Cheating by Impersonation",
+          "loading": 9.059514
+        },
+        {
+          "category": "Circulate False/Fake News/Rumours",
+          "loading": 0.863136
+        },
+        {
+          "category": "Communal/ Religious",
+          "loading": -0.140701
+        },
+        {
+          "category": "Counterfeit Coin",
+          "loading": 0.0
+        },
+        {
+          "category": "Counterfeit Currency & Bank notes",
+          "loading": 0.040767
+        },
+        {
+          "category": "Counterfeiting",
+          "loading": 0.046214
+        },
+        {
+          "category": "Counterfeiting Government Stamp",
+          "loading": 0.0
+        },
+        {
+          "category": "Counterfeiting of Seal or Mark",
+          "loading": 0.005448
+        },
+        {
+          "category": "Criminal Breach of Trust",
+          "loading": 19.773094
+        },
+        {
+          "category": "Criminal Intimidation",
+          "loading": 80.8521
+        },
+        {
+          "category": "Criminal Misappropriation",
+          "loading": 1.712812
+        },
+        {
+          "category": "Criminal Trespass",
+          "loading": 34.643519
+        },
+        {
+          "category": "Cruelty by Husband or his Relatives",
+          "loading": 251.701801
+        },
+        {
+          "category": "Culpable Homicide not amounting to Murder",
+          "loading": 0.857528
+        },
+        {
+          "category": "Dacoity",
+          "loading": 0.542791
+        },
+        {
+          "category": "Deaths due to Medical Negligence",
+          "loading": 0.062462
+        },
+        {
+          "category": "Deaths due to Negligence of Civic Bodies",
+          "loading": 0.0
+        },
+        {
+          "category": "Deaths due to Negligence relating to Rail Accidents",
+          "loading": 0.0
+        },
+        {
+          "category": "Deaths due to Negligence relating to Road Accidents",
+          "loading": 76.025656
+        },
+        {
+          "category": "Deaths due to other Negligence",
+          "loading": 1.82612
+        },
+        {
+          "category": "Dishonestly Receiving/Dealing-in Stolen Property",
+          "loading": 0.015542
+        },
+        {
+          "category": "Disobedience to order duly promulgated by Public Servant",
+          "loading": 29.749504
+        },
+        {
+          "category": "Dowry Deaths",
+          "loading": 0.741443
+        },
+        {
+          "category": "Electricity /Power Supply Disputes",
+          "loading": 0.0
+        },
+        {
+          "category": "Enmity/Rivalry",
+          "loading": -0.188449
+        },
+        {
+          "category": "Exploitation of Trafficked Person 370A IPC)",
+          "loading": 0.730836
+        },
+        {
+          "category": "Extortion & Blackmailing",
+          "loading": 7.253147
+        },
+        {
+          "category": "Family Disputes",
+          "loading": 0.014978
+        },
+        {
+          "category": "Forgery",
+          "loading": 8.017175
+        },
+        {
+          "category": "Forgery, Cheating & Fraud",
+          "loading": 137.958309
+        },
+        {
+          "category": "Fraud",
+          "loading": 30.29913
+        },
+        {
+          "category": "Grievous Hurt",
+          "loading": 7.272629
+        },
+        {
+          "category": "Harbouring an Offender",
+          "loading": 0.0
+        },
+        {
+          "category": "Hit and Run",
+          "loading": 5.018225
+        },
+        {
+          "category": "Human Trafficking",
+          "loading": 0.065904
+        },
+        {
+          "category": "Hurt",
+          "loading": 265.467637
+        },
+        {
+          "category": "Importation of Girls from Foreign Country",
+          "loading": 0.0
+        },
+        {
+          "category": "Industrial",
+          "loading": 0.000802
+        },
+        {
+          "category": "Insult to the Modesty of Women",
+          "loading": 53.818501
+        },
+        {
+          "category": "Kidnapping and Abduction",
+          "loading": 22.685257
+        },
+        {
+          "category": "Kidnapping and Abduction for the Purpose of Begging",
+          "loading": 0.031659
+        },
+        {
+          "category": "Kidnapping and Abduction in order to Murder",
+          "loading": 0.084107
+        },
+        {
+          "category": "Kidnapping and Abduction of Women to compel her for marriage",
+          "loading": -0.928128
+        },
+        {
+          "category": "Kidnapping for Ransom",
+          "loading": 0.219701
+        },
+        {
+          "category": "Land/ Property Dispute",
+          "loading": 0.353156
+        },
+        {
+          "category": "Making Preparation and Assembly for committing Dacoity",
+          "loading": 0.026965
+        },
+        {
+          "category": "Miscarriage, Infanticide, Foeticide and Abandonment",
+          "loading": 0.31242
+        },
+        {
+          "category": "Miscellaneous IPC Crimes",
+          "loading": 1713.367783
+        },
+        {
+          "category": "Money Dispute",
+          "loading": -0.042109
+        },
+        {
+          "category": "Murder",
+          "loading": 7.919864
+        },
+        {
+          "category": "Obscene Acts and Songs at Public Places",
+          "loading": -2.820729
+        },
+        {
+          "category": "Obstruction on Public way",
+          "loading": 507.041686
+        },
+        {
+          "category": "Offences Affecting the Human Body",
+          "loading": 516.049054
+        },
+        {
+          "category": "Offences Relating to Documents & Property Marks",
+          "loading": 138.004523
+        },
+        {
+          "category": "Offences against Property",
+          "loading": 262.792533
+        },
+        {
+          "category": "Offences against Public Tranquillity",
+          "loading": -1.652346
+        },
+        {
+          "category": "Offences against State",
+          "loading": -0.598264
+        },
+        {
+          "category": "Offences against the State",
+          "loading": -0.598264
+        },
+        {
+          "category": "Offences promoting enmity between different groups",
+          "loading": -0.446367
+        },
+        {
+          "category": "Offences related to Mischief",
+          "loading": 6.451123
+        },
+        {
+          "category": "Offences relating to Adulteration or Sale of Food/Drugs",
+          "loading": 33.122771
+        },
+        {
+          "category": "Offences relating to Elections",
+          "loading": 0.069048
+        },
+        {
+          "category": "Offences relating to Religion",
+          "loading": -0.182111
+        },
+        {
+          "category": "Other Accidents",
+          "loading": 71.007432
+        },
+        {
+          "category": "Other Grievous Hurt",
+          "loading": 0.10233
+        },
+        {
+          "category": "Other IPC Crimes",
+          "loading": 90.163376
+        },
+        {
+          "category": "Other Kidnapping & Abduction",
+          "loading": 0.886843
+        },
+        {
+          "category": "Other Rioting",
+          "loading": 0.282036
+        },
+        {
+          "category": "Other Simple Hurt",
+          "loading": 0.049062
+        },
+        {
+          "category": "Political",
+          "loading": 0.049242
+        },
+        {
+          "category": "Procuration of Minor Girls",
+          "loading": 2.188517
+        },
+        {
+          "category": "Rape",
+          "loading": 8.047211
+        },
+        {
+          "category": "Rash Driving on Public Way",
+          "loading": 496.007905
+        },
+        {
+          "category": "Rash Driving on Public way",
+          "loading": 702.161481
+        },
+        {
+          "category": "Rioting",
+          "loading": 0.246343
+        },
+        {
+          "category": "Rioting while in Aandolan/ Morcha",
+          "loading": 0.0
+        },
+        {
+          "category": "Rioting/Attacks on Police Personnel or Govt Servants",
+          "loading": -0.012064
+        },
+        {
+          "category": "Robbery",
+          "loading": 5.518938
+        },
+        {
+          "category": "Sale of obscene Books/Objects",
+          "loading": 0.008383
+        },
+        {
+          "category": "Sectarian",
+          "loading": 0.0
+        },
+        {
+          "category": "Selling of Minors for Prostitution",
+          "loading": 0.0
+        },
+        {
+          "category": "Sexual Harassment",
+          "loading": 19.283644
+        },
+        {
+          "category": "Simple Hurt",
+          "loading": 258.195008
+        },
+        {
+          "category": "Stalking",
+          "loading": 34.787663
+        },
+        {
+          "category": "Students",
+          "loading": 0.0
+        },
+        {
+          "category": "Theft",
+          "loading": 175.726559
+        },
+        {
+          "category": "Total Cognizable IPC crimes",
+          "loading": 2718.12666
+        },
+        {
+          "category": "Unlawful Assembly",
+          "loading": -0.018255
+        },
+        {
+          "category": "Unnatural Offences",
+          "loading": 0.057394
+        },
+        {
+          "category": "Voluntarily Causing Grievous hurt/Force to deter public servant from his duty",
+          "loading": 0.203892
+        },
+        {
+          "category": "Voluntarily Causing Simple Hurt",
+          "loading": 29.908611
+        },
+        {
+          "category": "Voluntarily Causing hurt/Force to deter public servant from his duty",
+          "loading": 9.322264
+        },
+        {
+          "category": "Voluntarily causing grievous hurt",
+          "loading": 3.332639
+        },
+        {
+          "category": "Voluntarily causing grievous hurt by dangerous weapons or means",
+          "loading": 4.293034
+        },
+        {
+          "category": "Voluntarily causing hurt by Dangerous weapons or means",
+          "loading": 223.20669
+        },
+        {
+          "category": "Voyeurism",
+          "loading": 3.839668
+        },
+        {
+          "category": "Water Dispute",
+          "loading": -0.065792
+        },
+        {
+          "category": "Wrongful Restraint/Confinement",
+          "loading": 8.918911
+        },
+        {
+          "category": "a) Bank",
+          "loading": 11.166593
+        },
+        {
+          "category": "a) at Work or Office Premises",
+          "loading": 0.319611
+        },
+        {
+          "category": "b) ATMs",
+          "loading": 1.037947
+        },
+        {
+          "category": "b) In Public Transport System",
+          "loading": 3.428111
+        },
+        {
+          "category": "c) Credit Card/ Debit Card",
+          "loading": 9.436848
+        },
+        {
+          "category": "c) In Shelter Homes for women and Children",
+          "loading": -0.179708
+        },
+        {
+          "category": "d) Other Frauds",
+          "loading": 8.657742
+        },
+        {
+          "category": "d) Other Places",
+          "loading": 15.715631
+        }
+      ]
+    },
+    {
+      "component": "PC2",
+      "eigenvalue": 1431299.66057,
+      "explained_variance_ratio": 0.105918,
+      "features": [
+        {
+          "category": "A) Auto/ Motor Vehicle Theft",
+          "loading": 33.640997
+        },
+        {
+          "category": "A) Dacoity",
+          "loading": 0.614871
+        },
+        {
+          "category": "A) Day Time",
+          "loading": 4.289302
+        },
+        {
+          "category": "A) Missing Children Deemed as Kidnapped",
+          "loading": 0.372714
+        },
+        {
+          "category": "A) Promoting enmity between groups",
+          "loading": 1.318543
+        },
+        {
+          "category": "A) Sedition",
+          "loading": 0.0
+        },
+        {
+          "category": "Abetment of Suicide",
+          "loading": 1.67502
+        },
+        {
+          "category": "Acid Attack",
+          "loading": 0.106993
+        },
+        {
+          "category": "Affray",
+          "loading": 31.672449
+        },
+        {
+          "category": "Agrarian",
+          "loading": 0.012383
+        },
+        {
+          "category": "Arson",
+          "loading": 4.320004
+        },
+        {
+          "category": "Assault on Women",
+          "loading": 10.489565
+        },
+        {
+          "category": "Assault on Women with Intent to Outrage her Modesty",
+          "loading": 24.369537
+        },
+        {
+          "category": "Assault or use of Criminal Force on women with intent to Disrobe",
+          "loading": 0.449243
+        },
+        {
+          "category": "Attempt to Acid Attack",
+          "loading": 0.126163
+        },
+        {
+          "category": "Attempt to Commit Dacoity/Robbery",
+          "loading": -0.1737
+        },
+        {
+          "category": "Attempt to Commit Murder",
+          "loading": 12.163471
+        },
+        {
+          "category": "Attempt to Commit Rape",
+          "loading": 1.453095
+        },
+        {
+          "category": "Attempt to Commit Suicide",
+          "loading": 7.357638
+        },
+        {
+          "category": "Attempt to commit Culpable Homicide",
+          "loading": -0.034414
+        },
+        {
+          "category": "B) Dacoity with Murder",
+          "loading": -0.057536
+        },
+        {
+          "category": "B) Imputation, assertions prejudicial to national integration",
+          "loading": 0.073305
+        },
+        {
+          "category": "B) Night",
+          "loading": 27.284856
+        },
+        {
+          "category": "B) Other Kidnapping & Abduction",
+          "loading": -1.3703
+        },
+        {
+          "category": "B) Other Thefts",
+          "loading": -11.336844
+        },
+        {
+          "category": "B) Others",
+          "loading": -0.346663
+        },
+        {
+          "category": "Burglary",
+          "loading": 31.574158
+        },
+        {
+          "category": "Buying of Minors for Prostitution",
+          "loading": 0.0
+        },
+        {
+          "category": "Caste Conflict",
+          "loading": 0.054568
+        },
+        {
+          "category": "Causing Death by Negligence",
+          "loading": 44.802669
+        },
+        {
+          "category": "Causing Grievous Hurt by Rash/Negligent Driving on Public",
+          "loading": -47.393835
+        },
+        {
+          "category": "Causing Grievous Hurt by act endangering life/safety of others",
+          "loading": 12.012148
+        },
+        {
+          "category": "Causing Hurt by Rash/Negligent Driving on Public Way",
+          "loading": 5.781725
+        },
+        {
+          "category": "Causing Hurt by act endangering life/safety of others",
+          "loading": 120.37211
+        },
+        {
+          "category": "Cheating",
+          "loading": 79.323836
+        },
+        {
+          "category": "Cheating by Impersonation",
+          "loading": -13.917968
+        },
+        {
+          "category": "Circulate False/Fake News/Rumours",
+          "loading": -0.222034
+        },
+        {
+          "category": "Communal/ Religious",
+          "loading": 0.194855
+        },
+        {
+          "category": "Counterfeit Coin",
+          "loading": 0.0
+        },
+        {
+          "category": "Counterfeit Currency & Bank notes",
+          "loading": -0.281359
+        },
+        {
+          "category": "Counterfeiting",
+          "loading": -0.251595
+        },
+        {
+          "category": "Counterfeiting Government Stamp",
+          "loading": 0.0
+        },
+        {
+          "category": "Counterfeiting of Seal or Mark",
+          "loading": 0.029764
+        },
+        {
+          "category": "Criminal Breach of Trust",
+          "loading": 8.249831
+        },
+        {
+          "category": "Criminal Intimidation",
+          "loading": 27.839428
+        },
+        {
+          "category": "Criminal Misappropriation",
+          "loading": -2.016492
+        },
+        {
+          "category": "Criminal Trespass",
+          "loading": 1.574117
+        },
+        {
+          "category": "Cruelty by Husband or his Relatives",
+          "loading": 45.49069
+        },
+        {
+          "category": "Culpable Homicide not amounting to Murder",
+          "loading": 0.098161
+        },
+        {
+          "category": "Dacoity",
+          "loading": 0.557335
+        },
+        {
+          "category": "Deaths due to Medical Negligence",
+          "loading": 0.168205
+        },
+        {
+          "category": "Deaths due to Negligence of Civic Bodies",
+          "loading": 0.0
+        },
+        {
+          "category": "Deaths due to Negligence relating to Rail Accidents",
+          "loading": 0.0
+        },
+        {
+          "category": "Deaths due to Negligence relating to Road Accidents",
+          "loading": 42.98086
+        },
+        {
+          "category": "Deaths due to other Negligence",
+          "loading": 1.653603
+        },
+        {
+          "category": "Dishonestly Receiving/Dealing-in Stolen Property",
+          "loading": 0.098953
+        },
+        {
+          "category": "Disobedience to order duly promulgated by Public Servant",
+          "loading": 8.757498
+        },
+        {
+          "category": "Dowry Deaths",
+          "loading": 0.633499
+        },
+        {
+          "category": "Electricity /Power Supply Disputes",
+          "loading": 0.0
+        },
+        {
+          "category": "Enmity/Rivalry",
+          "loading": 0.324193
+        },
+        {
+          "category": "Exploitation of Trafficked Person 370A IPC)",
+          "loading": 1.041722
+        },
+        {
+          "category": "Extortion & Blackmailing",
+          "loading": 4.710115
+        },
+        {
+          "category": "Family Disputes",
+          "loading": 0.159975
+        },
+        {
+          "category": "Forgery",
+          "loading": 1.613572
+        },
+        {
+          "category": "Forgery, Cheating & Fraud",
+          "loading": 89.264742
+        },
+        {
+          "category": "Fraud",
+          "loading": 8.327335
+        },
+        {
+          "category": "Grievous Hurt",
+          "loading": 16.417285
+        },
+        {
+          "category": "Harbouring an Offender",
+          "loading": 0.0
+        },
+        {
+          "category": "Hit and Run",
+          "loading": 2.962672
+        },
+        {
+          "category": "Human Trafficking",
+          "loading": 0.25777
+        },
+        {
+          "category": "Hurt",
+          "loading": 316.414542
+        },
+        {
+          "category": "Importation of Girls from Foreign Country",
+          "loading": 0.0
+        },
+        {
+          "category": "Industrial",
+          "loading": -0.063273
+        },
+        {
+          "category": "Insult to the Modesty of Women",
+          "loading": 40.847466
+        },
+        {
+          "category": "Kidnapping and Abduction",
+          "loading": 1.20939
+        },
+        {
+          "category": "Kidnapping and Abduction for the Purpose of Begging",
+          "loading": 0.052729
+        },
+        {
+          "category": "Kidnapping and Abduction in order to Murder",
+          "loading": 0.111846
+        },
+        {
+          "category": "Kidnapping and Abduction of Women to compel her for marriage",
+          "loading": 1.877102
+        },
+        {
+          "category": "Kidnapping for Ransom",
+          "loading": 0.037201
+        },
+        {
+          "category": "Land/ Property Dispute",
+          "loading": 0.62569
+        },
+        {
+          "category": "Making Preparation and Assembly for committing Dacoity",
+          "loading": 0.255696
+        },
+        {
+          "category": "Miscarriage, Infanticide, Foeticide and Abandonment",
+          "loading": 0.102501
+        },
+        {
+          "category": "Miscellaneous IPC Crimes",
+          "loading": -518.376234
+        },
+        {
+          "category": "Money Dispute",
+          "loading": 0.066
+        },
+        {
+          "category": "Murder",
+          "loading": 6.722317
+        },
+        {
+          "category": "Obscene Acts and Songs at Public Places",
+          "loading": -3.082184
+        },
+        {
+          "category": "Obstruction on Public way",
+          "loading": -210.443394
+        },
+        {
+          "category": "Offences Affecting the Human Body",
+          "loading": 461.185628
+        },
+        {
+          "category": "Offences Relating to Documents & Property Marks",
+          "loading": 89.013147
+        },
+        {
+          "category": "Offences against Property",
+          "loading": 67.094844
+        },
+        {
+          "category": "Offences against Public Tranquillity",
+          "loading": 39.228989
+        },
+        {
+          "category": "Offences against State",
+          "loading": -0.346663
+        },
+        {
+          "category": "Offences against the State",
+          "loading": -0.346663
+        },
+        {
+          "category": "Offences promoting enmity between different groups",
+          "loading": 1.391848
+        },
+        {
+          "category": "Offences related to Mischief",
+          "loading": 1.527639
+        },
+        {
+          "category": "Offences relating to Adulteration or Sale of Food/Drugs",
+          "loading": 62.641707
+        },
+        {
+          "category": "Offences relating to Elections",
+          "loading": 0.007867
+        },
+        {
+          "category": "Offences relating to Religion",
+          "loading": 0.574312
+        },
+        {
+          "category": "Other Accidents",
+          "loading": 40.018189
+        },
+        {
+          "category": "Other Grievous Hurt",
+          "loading": -0.040237
+        },
+        {
+          "category": "Other IPC Crimes",
+          "loading": 234.067188
+        },
+        {
+          "category": "Other Kidnapping & Abduction",
+          "loading": 1.506164
+        },
+        {
+          "category": "Other Rioting",
+          "loading": 3.127803
+        },
+        {
+          "category": "Other Simple Hurt",
+          "loading": -0.196211
+        },
+        {
+          "category": "Political",
+          "loading": 0.210776
+        },
+        {
+          "category": "Procuration of Minor Girls",
+          "loading": -0.380478
+        },
+        {
+          "category": "Rape",
+          "loading": -4.304057
+        },
+        {
+          "category": "Rash Driving on Public Way",
+          "loading": -442.701582
+        },
+        {
+          "category": "Rash Driving on Public way",
+          "loading": -484.313692
+        },
+        {
+          "category": "Rioting",
+          "loading": 4.916779
+        },
+        {
+          "category": "Rioting while in Aandolan/ Morcha",
+          "loading": 0.0
+        },
+        {
+          "category": "Rioting/Attacks on Police Personnel or Govt Servants",
+          "loading": 0.14452
+        },
+        {
+          "category": "Robbery",
+          "loading": 1.534795
+        },
+        {
+          "category": "Sale of obscene Books/Objects",
+          "loading": 0.022311
+        },
+        {
+          "category": "Sectarian",
+          "loading": 0.0
+        },
+        {
+          "category": "Selling of Minors for Prostitution",
+          "loading": 0.0
+        },
+        {
+          "category": "Sexual Harassment",
+          "loading": 10.252238
+        },
+        {
+          "category": "Simple Hurt",
+          "loading": 299.997258
+        },
+        {
+          "category": "Stalking",
+          "loading": 1.914591
+        },
+        {
+          "category": "Students",
+          "loading": 0.0
+        },
+        {
+          "category": "Theft",
+          "loading": 22.304153
+        },
+        {
+          "category": "Total Cognizable IPC crimes",
+          "loading": 371.8669
+        },
+        {
+          "category": "Unlawful Assembly",
+          "loading": 1.247913
+        },
+        {
+          "category": "Unnatural Offences",
+          "loading": 0.191926
+        },
+        {
+          "category": "Voluntarily Causing Grievous hurt/Force to deter public servant from his duty",
+          "loading": -0.28121
+        },
+        {
+          "category": "Voluntarily Causing Simple Hurt",
+          "loading": 20.679186
+        },
+        {
+          "category": "Voluntarily Causing hurt/Force to deter public servant from his duty",
+          "loading": 6.969451
+        },
+        {
+          "category": "Voluntarily causing grievous hurt",
+          "loading": -1.048844
+        },
+        {
+          "category": "Voluntarily causing grievous hurt by dangerous weapons or means",
+          "loading": 5.542272
+        },
+        {
+          "category": "Voluntarily causing hurt by Dangerous weapons or means",
+          "loading": 152.172722
+        },
+        {
+          "category": "Voyeurism",
+          "loading": 1.2639
+        },
+        {
+          "category": "Water Dispute",
+          "loading": 0.059289
+        },
+        {
+          "category": "Wrongful Restraint/Confinement",
+          "loading": 46.033253
+        },
+        {
+          "category": "a) Bank",
+          "loading": -14.883108
+        },
+        {
+          "category": "a) at Work or Office Premises",
+          "loading": 0.760253
+        },
+        {
+          "category": "b) ATMs",
+          "loading": 4.534177
+        },
+        {
+          "category": "b) In Public Transport System",
+          "loading": -1.338688
+        },
+        {
+          "category": "c) Credit Card/ Debit Card",
+          "loading": 1.142206
+        },
+        {
+          "category": "c) In Shelter Homes for women and Children",
+          "loading": 1.180374
+        },
+        {
+          "category": "d) Other Frauds",
+          "loading": 17.534059
+        },
+        {
+          "category": "d) Other Places",
+          "loading": 9.650299
+        }
+      ]
+    }
+  ],
+  "components": [
+    {
+      "region": "Alluri Sitharama Raju",
+      "scores": [
+        {
+          "component": "PC1",
+          "score": -5545.466197
+        },
+        {
+          "component": "PC2",
+          "score": -1111.62695
+        }
+      ]
+    },
+    {
+      "region": "Anakapalli",
+      "scores": [
+        {
+          "component": "PC1",
+          "score": -1223.080053
+        },
+        {
+          "component": "PC2",
+          "score": -620.308649
+        }
+      ]
+    },
+    {
+      "region": "Anantapuramu",
+      "scores": [
+        {
+          "component": "PC1",
+          "score": -663.239059
+        },
+        {
+          "component": "PC2",
+          "score": 657.583084
+        }
+      ]
+    },
+    {
+      "region": "Annamayya",
+      "scores": [
+        {
+          "component": "PC1",
+          "score": -1806.596555
+        },
+        {
+          "component": "PC2",
+          "score": 433.920162
+        }
+      ]
+    },
+    {
+      "region": "Bapatla",
+      "scores": [
+        {
+          "component": "PC1",
+          "score": -996.854096
+        },
+        {
+          "component": "PC2",
+          "score": 1137.345943
+        }
+      ]
+    },
+    {
+      "region": "Chittoor",
+      "scores": [
+        {
+          "component": "PC1",
+          "score": 2786.462204
+        },
+        {
+          "component": "PC2",
+          "score": -1660.941079
+        }
+      ]
+    },
+    {
+      "region": "Dr BR Ambedkar Konaseema",
+      "scores": [
+        {
+          "component": "PC1",
+          "score": -104.218601
+        },
+        {
+          "component": "PC2",
+          "score": -335.138903
+        }
+      ]
+    },
+    {
+      "region": "East Godavari",
+      "scores": [
+        {
+          "component": "PC1",
+          "score": 1035.108715
+        },
+        {
+          "component": "PC2",
+          "score": 1855.438606
+        }
+      ]
+    },
+    {
+      "region": "Eluru",
+      "scores": [
+        {
+          "component": "PC1",
+          "score": 3738.167257
+        },
+        {
+          "component": "PC2",
+          "score": 830.854201
+        }
+      ]
+    },
+    {
+      "region": "Guntakal Railway",
+      "scores": [
+        {
+          "component": "PC1",
+          "score": -6027.370982
+        },
+        {
+          "component": "PC2",
+          "score": -1284.047597
+        }
+      ]
+    },
+    {
+      "region": "Guntur",
+      "scores": [
+        {
+          "component": "PC1",
+          "score": 4197.867715
+        },
+        {
+          "component": "PC2",
+          "score": 1406.451437
+        }
+      ]
+    },
+    {
+      "region": "Kakinada",
+      "scores": [
+        {
+          "component": "PC1",
+          "score": -502.334278
+        },
+        {
+          "component": "PC2",
+          "score": 799.93661
+        }
+      ]
+    },
+    {
+      "region": "Krishna",
+      "scores": [
+        {
+          "component": "PC1",
+          "score": 1166.878424
+        },
+        {
+          "component": "PC2",
+          "score": 691.054134
+        }
+      ]
+    },
+    {
+      "region": "Kurnool",
+      "scores": [
+        {
+          "component": "PC1",
+          "score": -1652.319431
+        },
+        {
+          "component": "PC2",
+          "score": 533.621323
+        }
+      ]
+    },
+    {
+      "region": "NTR",
+      "scores": [
+        {
+          "component": "PC1",
+          "score": 11213.430674
+        },
+        {
+          "component": "PC2",
+          "score": -2137.438075
+        }
+      ]
+    },
+    {
+      "region": "Nandyal",
+      "scores": [
+        {
+          "component": "PC1",
+          "score": -819.249402
+        },
+        {
+          "component": "PC2",
+          "score": 1279.428682
+        }
+      ]
+    },
+    {
+      "region": "Palnadu",
+      "scores": [
+        {
+          "component": "PC1",
+          "score": -1226.676251
+        },
+        {
+          "component": "PC2",
+          "score": 296.804836
+        }
+      ]
+    },
+    {
+      "region": "Parvathipuram Manyam",
+      "scores": [
+        {
+          "component": "PC1",
+          "score": -3769.39436
+        },
+        {
+          "component": "PC2",
+          "score": -1704.635954
+        }
+      ]
+    },
+    {
+      "region": "Prakasam",
+      "scores": [
+        {
+          "component": "PC1",
+          "score": 1847.047235
+        },
+        {
+          "component": "PC2",
+          "score": 200.054358
+        }
+      ]
+    },
+    {
+      "region": "Sri Potti Sriramulu Nellore",
+      "scores": [
+        {
+          "component": "PC1",
+          "score": 3240.087859
+        },
+        {
+          "component": "PC2",
+          "score": 127.064494
+        }
+      ]
+    },
+    {
+      "region": "Sri Sathya Sai",
+      "scores": [
+        {
+          "component": "PC1",
+          "score": -1616.034783
+        },
+        {
+          "component": "PC2",
+          "score": 199.996916
+        }
+      ]
+    },
+    {
+      "region": "Srikakulam",
+      "scores": [
+        {
+          "component": "PC1",
+          "score": -346.178529
+        },
+        {
+          "component": "PC2",
+          "score": -40.807606
+        }
+      ]
+    },
+    {
+      "region": "Tirupati",
+      "scores": [
+        {
+          "component": "PC1",
+          "score": 445.955288
+        },
+        {
+          "component": "PC2",
+          "score": 1752.794707
+        }
+      ]
+    },
+    {
+      "region": "Viiayawada Railway",
+      "scores": [
+        {
+          "component": "PC1",
+          "score": -5841.90883
+        },
+        {
+          "component": "PC2",
+          "score": -1204.215196
+        }
+      ]
+    },
+    {
+      "region": "Visakhapatnam",
+      "scores": [
+        {
+          "component": "PC1",
+          "score": 3493.122544
+        },
+        {
+          "component": "PC2",
+          "score": -1858.51811
+        }
+      ]
+    },
+    {
+      "region": "Vizianagaram",
+      "scores": [
+        {
+          "component": "PC1",
+          "score": 75.274859
+        },
+        {
+          "component": "PC2",
+          "score": -2043.838268
+        }
+      ]
+    },
+    {
+      "region": "West Godavari",
+      "scores": [
+        {
+          "component": "PC1",
+          "score": -1609.736847
+        },
+        {
+          "component": "PC2",
+          "score": 837.716381
+        }
+      ]
+    },
+    {
+      "region": "YSR",
+      "scores": [
+        {
+          "component": "PC1",
+          "score": 511.255478
+        },
+        {
+          "component": "PC2",
+          "score": 961.450513
+        }
+      ]
+    }
+  ]
+}

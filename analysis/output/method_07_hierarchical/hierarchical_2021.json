@@ -1,0 +1,202 @@
+{
+  "year": 2021,
+  "linkage": "ward",
+  "n_regions": 20,
+  "n_categories": 141,
+  "max_clusters": 3,
+  "merge_history": [
+    {
+      "clusters_merged": [
+        4,
+        15
+      ],
+      "distance": 83329.0,
+      "new_cluster_size": 2,
+      "remaining_clusters": 19
+    },
+    {
+      "clusters_merged": [
+        14,
+        16
+      ],
+      "distance": 783995.0,
+      "new_cluster_size": 2,
+      "remaining_clusters": 18
+    },
+    {
+      "clusters_merged": [
+        5,
+        13
+      ],
+      "distance": 1159253.5,
+      "new_cluster_size": 2,
+      "remaining_clusters": 17
+    },
+    {
+      "clusters_merged": [
+        10,
+        15
+      ],
+      "distance": 1812550.0,
+      "new_cluster_size": 3,
+      "remaining_clusters": 16
+    },
+    {
+      "clusters_merged": [
+        5,
+        8
+      ],
+      "distance": 2319744.0,
+      "new_cluster_size": 2,
+      "remaining_clusters": 15
+    },
+    {
+      "clusters_merged": [
+        7,
+        8
+      ],
+      "distance": 3108194.0,
+      "new_cluster_size": 2,
+      "remaining_clusters": 14
+    },
+    {
+      "clusters_merged": [
+        3,
+        4
+      ],
+      "distance": 4180792.0,
+      "new_cluster_size": 2,
+      "remaining_clusters": 13
+    },
+    {
+      "clusters_merged": [
+        2,
+        4
+      ],
+      "distance": 5990383.0,
+      "new_cluster_size": 2,
+      "remaining_clusters": 12
+    },
+    {
+      "clusters_merged": [
+        0,
+        2
+      ],
+      "distance": 7220961.5,
+      "new_cluster_size": 2,
+      "remaining_clusters": 11
+    },
+    {
+      "clusters_merged": [
+        5,
+        7
+      ],
+      "distance": 8495348.8,
+      "new_cluster_size": 5,
+      "remaining_clusters": 10
+    },
+    {
+      "clusters_merged": [
+        1,
+        4
+      ],
+      "distance": 16622032.666667,
+      "new_cluster_size": 3,
+      "remaining_clusters": 9
+    },
+    {
+      "clusters_merged": [
+        3,
+        6
+      ],
+      "distance": 21518237.75,
+      "new_cluster_size": 4,
+      "remaining_clusters": 8
+    },
+    {
+      "clusters_merged": [
+        3,
+        4
+      ],
+      "distance": 22616348.0,
+      "new_cluster_size": 4,
+      "remaining_clusters": 7
+    },
+    {
+      "clusters_merged": [
+        2,
+        3
+      ],
+      "distance": 52106789.428571,
+      "new_cluster_size": 7,
+      "remaining_clusters": 6
+    },
+    {
+      "clusters_merged": [
+        0,
+        4
+      ],
+      "distance": 58169519.2,
+      "new_cluster_size": 5,
+      "remaining_clusters": 5
+    },
+    {
+      "clusters_merged": [
+        0,
+        2
+      ],
+      "distance": 76458134.0,
+      "new_cluster_size": 5,
+      "remaining_clusters": 4
+    },
+    {
+      "clusters_merged": [
+        0,
+        2
+      ],
+      "distance": 108021898.75,
+      "new_cluster_size": 8,
+      "remaining_clusters": 3
+    }
+  ],
+  "clusters": [
+    {
+      "cluster_id": 0,
+      "size": 7,
+      "regions": [
+        "Guntakal Railway",
+        "Vijayawada Railway",
+        "Srikakulam",
+        "Visakha Rural",
+        "Vizianagaram",
+        "Rajahmundry",
+        "Tirupathi Urban"
+      ]
+    },
+    {
+      "cluster_id": 1,
+      "size": 5,
+      "regions": [
+        "West Godavari",
+        "Krishna",
+        "Prakasham",
+        "Anantapur",
+        "Kurnool"
+      ]
+    },
+    {
+      "cluster_id": 2,
+      "size": 8,
+      "regions": [
+        "Visakhapatnam",
+        "Guntur Urban",
+        "Vijayawada City",
+        "Chittoor",
+        "East Godavari",
+        "Guntur",
+        "Cuddapah",
+        "Nellore"
+      ]
+    }
+  ]
+}

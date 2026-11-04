@@ -1,0 +1,48 @@
+{
+  "methods_run": [
+    "05",
+    "06",
+    "07"
+  ],
+  "results": [
+    {
+      "method": "05_pca",
+      "years_analyzed": [
+        2020,
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "output_dir": "analysis\\output\\method_05_pca"
+    },
+    {
+      "method": "06_kmeans",
+      "years_analyzed": [
+        2020,
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "k_values": [
+        3,
+        4,
+        5
+      ],
+      "output_dir": "analysis\\output\\method_06_kmeans"
+    },
+    {
+      "method": "07_hierarchical_clustering",
+      "years_analyzed": [
+        2020,
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "max_clusters": 3,
+      "output_dir": "analysis\\output\\method_07_hierarchical"
+    }
+  ]
+}
