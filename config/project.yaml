@@ -1,0 +1,19 @@
+# CrimeScope project configuration
+years:
+  - 2020
+  - 2021
+  - 2022
+  - 2023
+  - 2024
+source_snapshot: null
+permitted_unit_types:
+  - administrative_district
+  - city_police
+  - railway
+paths:
+  raw: data/raw
+  external: data/external
+  mappings: data/mappings
+  interim: data/interim
+  processed: data/processed
+  serving: data/serving

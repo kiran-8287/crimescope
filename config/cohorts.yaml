@@ -1,0 +1,14 @@
+# Cohort definitions
+cohorts:
+  - id: annual_descriptive
+    description: Eligible observations in one year
+    membership_rule: valid observations for a single reporting year
+  - id: comparable_trend_panel
+    description: Compatible regions and categories throughout a specified period
+    membership_rule: stable geography/category definitions across the full period
+  - id: single_year_profile
+    description: Region rows with common category features for PCA/clustering
+    membership_rule: complete category feature set for one year
+  - id: region_year_transaction
+    description: Eligible records for association rules
+    membership_rule: eligible region-year category observations

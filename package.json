@@ -1,0 +1,26 @@
+{
+  "name": "crimescope",
+  "version": "0.1.0",
+  "private": true,
+  "description": "CrimeScope: Regional Crime Patterns and Trends — full-stack analytics dashboard",
+  "workspaces": [
+    "frontend",
+    "backend",
+    "packages/contracts"
+  ],
+  "scripts": {
+    "dev": "npm --workspace frontend run dev",
+    "build": "npm --workspace frontend run build && npm --workspace backend run build",
+    "lint": "npm --workspace frontend run lint && npm --workspace backend run lint",
+    "test": "npm --workspace frontend run test && npm --workspace backend run test",
+    "test:e2e": "npm --workspace frontend run test:e2e"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "license": "MIT"
+}
