@@ -1,0 +1,105 @@
+{
+  "methods_run": [
+    "01",
+    "02",
+    "03",
+    "04"
+  ],
+  "results": [
+    {
+      "method": "01_data_processing",
+      "total_observations": 18628,
+      "output_csv": "analysis\\output\\crime_observations_canonical.csv",
+      "accounting": {
+        "cii_2020_1_districtwise-ipc-crimes_t1": {
+          "source_rows": 22,
+          "canonical_observations": 2944,
+          "valid": 2944,
+          "warnings": 0,
+          "quarantined": 142,
+          "eligible_for_comparison": 2802,
+          "aggregate_rows": 142,
+          "regions": 21,
+          "categories": 141
+        },
+        "cii_2021_1_districtwise-ipc-crimes_t1": {
+          "source_rows": 22,
+          "canonical_observations": 2982,
+          "valid": 2982,
+          "warnings": 0,
+          "quarantined": 142,
+          "eligible_for_comparison": 2840,
+          "aggregate_rows": 142,
+          "regions": 21,
+          "categories": 141
+        },
+        "cii_2022_1_districtwise-ipc-crimes_t1": {
+          "source_rows": 30,
+          "canonical_observations": 4118,
+          "valid": 4118,
+          "warnings": 0,
+          "quarantined": 142,
+          "eligible_for_comparison": 3976,
+          "aggregate_rows": 142,
+          "regions": 29,
+          "categories": 141
+        },
+        "cii_2023_1_districtwise-ipc-crimes_t1": {
+          "source_rows": 30,
+          "canonical_observations": 4118,
+          "valid": 4118,
+          "warnings": 0,
+          "quarantined": 142,
+          "eligible_for_comparison": 3976,
+          "aggregate_rows": 142,
+          "regions": 29,
+          "categories": 141
+        },
+        "cii_2024_1_districtwise-ipc-crimes_t1": {
+          "source_rows": 29,
+          "canonical_observations": 4466,
+          "valid": 4466,
+          "warnings": 0,
+          "quarantined": 154,
+          "eligible_for_comparison": 4312,
+          "aggregate_rows": 154,
+          "regions": 29,
+          "categories": 154
+        }
+      }
+    },
+    {
+      "method": "02_descriptive_statistics",
+      "input_observations": 18628,
+      "categories_analyzed": 251,
+      "years_covered": [
+        2020,
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "output_dir": "analysis\\output\\method_02_descriptive"
+    },
+    {
+      "method": "03_bivariate_analysis",
+      "input_observations": 18628,
+      "years_analyzed": [
+        2020,
+        2021,
+        2022,
+        2023,
+        2024
+      ],
+      "output_dir": "analysis\\output\\method_03_bivariate"
+    },
+    {
+      "method": "04_feature_engineering",
+      "input_observations": 18628,
+      "region_year_rows": 17810,
+      "year_change_rows": 9372,
+      "output_csv": "analysis\\output\\method_04_feature_engineering.csv",
+      "changes_csv": "analysis\\output\\method_04_feature_engineering_year_change.csv"
+    }
+  ]
+}

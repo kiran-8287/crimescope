@@ -1,0 +1,282 @@
+{
+  "year": 2024,
+  "linkage": "ward",
+  "n_regions": 28,
+  "n_categories": 154,
+  "max_clusters": 3,
+  "merge_history": [
+    {
+      "clusters_merged": [
+        7,
+        11
+      ],
+      "distance": 113359.5,
+      "new_cluster_size": 2,
+      "remaining_clusters": 27
+    },
+    {
+      "clusters_merged": [
+        3,
+        18
+      ],
+      "distance": 179314.0,
+      "new_cluster_size": 2,
+      "remaining_clusters": 26
+    },
+    {
+      "clusters_merged": [
+        2,
+        23
+      ],
+      "distance": 195087.5,
+      "new_cluster_size": 2,
+      "remaining_clusters": 25
+    },
+    {
+      "clusters_merged": [
+        14,
+        15
+      ],
+      "distance": 211468.0,
+      "new_cluster_size": 2,
+      "remaining_clusters": 24
+    },
+    {
+      "clusters_merged": [
+        5,
+        8
+      ],
+      "distance": 223746.5,
+      "new_cluster_size": 2,
+      "remaining_clusters": 23
+    },
+    {
+      "clusters_merged": [
+        2,
+        3
+      ],
+      "distance": 225743.5,
+      "new_cluster_size": 2,
+      "remaining_clusters": 22
+    },
+    {
+      "clusters_merged": [
+        0,
+        3
+      ],
+      "distance": 383628.0,
+      "new_cluster_size": 2,
+      "remaining_clusters": 21
+    },
+    {
+      "clusters_merged": [
+        2,
+        4
+      ],
+      "distance": 399631.5,
+      "new_cluster_size": 2,
+      "remaining_clusters": 20
+    },
+    {
+      "clusters_merged": [
+        0,
+        3
+      ],
+      "distance": 557708.5,
+      "new_cluster_size": 2,
+      "remaining_clusters": 19
+    },
+    {
+      "clusters_merged": [
+        2,
+        14
+      ],
+      "distance": 649176.0,
+      "new_cluster_size": 3,
+      "remaining_clusters": 18
+    },
+    {
+      "clusters_merged": [
+        0,
+        10
+      ],
+      "distance": 781529.333333,
+      "new_cluster_size": 3,
+      "remaining_clusters": 17
+    },
+    {
+      "clusters_merged": [
+        1,
+        7
+      ],
+      "distance": 819482.0,
+      "new_cluster_size": 2,
+      "remaining_clusters": 16
+    },
+    {
+      "clusters_merged": [
+        2,
+        8
+      ],
+      "distance": 981503.333333,
+      "new_cluster_size": 3,
+      "remaining_clusters": 15
+    },
+    {
+      "clusters_merged": [
+        2,
+        8
+      ],
+      "distance": 1204529.333333,
+      "new_cluster_size": 3,
+      "remaining_clusters": 14
+    },
+    {
+      "clusters_merged": [
+        6,
+        8
+      ],
+      "distance": 1538940.5,
+      "new_cluster_size": 4,
+      "remaining_clusters": 13
+    },
+    {
+      "clusters_merged": [
+        0,
+        5
+      ],
+      "distance": 1735648.0,
+      "new_cluster_size": 3,
+      "remaining_clusters": 12
+    },
+    {
+      "clusters_merged": [
+        3,
+        5
+      ],
+      "distance": 1740539.6,
+      "new_cluster_size": 5,
+      "remaining_clusters": 11
+    },
+    {
+      "clusters_merged": [
+        1,
+        3
+      ],
+      "distance": 2376924.666667,
+      "new_cluster_size": 3,
+      "remaining_clusters": 10
+    },
+    {
+      "clusters_merged": [
+        0,
+        1
+      ],
+      "distance": 2798466.5,
+      "new_cluster_size": 2,
+      "remaining_clusters": 9
+    },
+    {
+      "clusters_merged": [
+        0,
+        4
+      ],
+      "distance": 4108902.285714,
+      "new_cluster_size": 7,
+      "remaining_clusters": 8
+    },
+    {
+      "clusters_merged": [
+        0,
+        2
+      ],
+      "distance": 4278911.6,
+      "new_cluster_size": 5,
+      "remaining_clusters": 7
+    },
+    {
+      "clusters_merged": [
+        0,
+        1
+      ],
+      "distance": 4524660.166667,
+      "new_cluster_size": 6,
+      "remaining_clusters": 6
+    },
+    {
+      "clusters_merged": [
+        0,
+        3
+      ],
+      "distance": 10829351.25,
+      "new_cluster_size": 12,
+      "remaining_clusters": 5
+    },
+    {
+      "clusters_merged": [
+        0,
+        3
+      ],
+      "distance": 12930098.222222,
+      "new_cluster_size": 9,
+      "remaining_clusters": 4
+    },
+    {
+      "clusters_merged": [
+        0,
+        3
+      ],
+      "distance": 28372166.545455,
+      "new_cluster_size": 11,
+      "remaining_clusters": 3
+    }
+  ],
+  "clusters": [
+    {
+      "cluster_id": 0,
+      "size": 5,
+      "regions": [
+        "Parvathipuram Manyam",
+        "West Godavari",
+        "Viiayawada Railway",
+        "Alluri Sitharama Raju",
+        "Guntakal Railway"
+      ]
+    },
+    {
+      "cluster_id": 1,
+      "size": 12,
+      "regions": [
+        "East Godavari",
+        "Kakinada",
+        "Palnadu",
+        "Eluru",
+        "Krishna",
+        "Dr BR Ambedkar Konaseema",
+        "Annamayya",
+        "Sri Sathya Sai",
+        "Bapatla",
+        "Chittoor",
+        "Anakapalli",
+        "Nandyal"
+      ]
+    },
+    {
+      "cluster_id": 2,
+      "size": 11,
+      "regions": [
+        "Srikakulam",
+        "Vizianagaram",
+        "Visakhapatnam",
+        "Guntur",
+        "NTR",
+        "Tirupati",
+        "Prakasam",
+        "Sri Potti Sriramulu Nellore",
+        "Kurnool",
+        "Anantapuramu",
+        "YSR"
+      ]
+    }
+  ]
+}
