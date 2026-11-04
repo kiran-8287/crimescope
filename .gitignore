@@ -20,6 +20,9 @@ data/processed/
 data/serving/releases/*
 !data/serving/releases/.gitkeep
 
+# Generated analysis output (regenerate via scripts)
+analysis/output/
+
 # IDE
 .vscode/
 .idea/

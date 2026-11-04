@@ -1,7 +1,7 @@
 import { useOverviewQuery } from "@/api/queries";
 import { Plot } from "react-plotly.js";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui";
-import { TrendingUp, Database, LayoutDashboard, AlertTriangle } from "lucide-react";
+import { TrendingUp, Database, LayoutDashboard, AlertTriangle, Download } from "lucide-react";
 
 export function OverviewPage() {
   const { data, isLoading, error } = useOverviewQuery();
@@ -39,10 +39,22 @@ export function OverviewPage() {
   return (
     <div className="p-6 space-y-6">
       <header className="space-y-2">
-        <h1 className="text-2xl font-semibold">Overview</h1>
-        <p className="text-sm text-muted-foreground">
-          Reported crime patterns for {year}, {metadata.geographyLevel} level — {metadata.categoryScope}.
-        </p>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-semibold">Overview</h1>
+            <p className="text-sm text-muted-foreground">
+              Reported crime patterns for {year}, {metadata.geographyLevel} level — {metadata.categoryScope}.
+            </p>
+          </div>
+          <a
+            href="/api/v1/export/canonical"
+            download
+            className="inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-primary transition-colors hover:text-primary-hover border border-primary rounded"
+          >
+            <Download size={16} />
+            <span>Download CSV</span>
+          </a>
+        </div>
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
