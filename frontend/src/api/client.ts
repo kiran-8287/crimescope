@@ -194,6 +194,60 @@ export function fetchHierarchical(year: number): Promise<HierarchicalResponse> {
   return fetchJson<HierarchicalResponse>(`/analysis/runs/current/hierarchical?year=${year}`);
 }
 
+export interface AnomalyResponse {
+  year: number;
+  cross_sectional: Array<{
+    year: number;
+    region: string;
+    state_name: string;
+    category: string;
+    value: number;
+    category_mean: number;
+    category_std: number;
+    z_score: number;
+    anomaly_type: string;
+    direction: string;
+  }>;
+  year_on_year: Array<{
+    year: number;
+    prev_year: number;
+    region: string;
+    state_name: string;
+    category: string;
+    prev_total: number;
+    curr_total: number;
+    abs_change: number;
+    pct_change: number;
+    anomaly_type: string;
+    direction: string;
+  }>;
+  cross_sectional_count: number;
+  year_on_year_count: number;
+}
+
+export interface AssociationRulesResponse {
+  year: number;
+  n_transactions: number;
+  n_itemsets: number;
+  n_rules: number;
+  itemsets: any[];
+  rules: Array<{
+    antecedent: string[];
+    consequent: string[];
+    support: number;
+    confidence: number;
+    lift: number;
+  }>;
+}
+
+export function fetchAnomalies(year: number): Promise<AnomalyResponse> {
+  return fetchJson<AnomalyResponse>(`/anomalies?year=${year}`);
+}
+
+export function fetchAssociationRules(year: number): Promise<AssociationRulesResponse> {
+  return fetchJson<AssociationRulesResponse>(`/association-rules?year=${year}`);
+}
+
 export function useOverviewQuery() {
   return queryClient.getQueryData(["overview"]) ?? null;
 }

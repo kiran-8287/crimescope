@@ -9,6 +9,8 @@ import {
   fetchPca,
   fetchKmeans,
   fetchHierarchical,
+  fetchAnomalies,
+  fetchAssociationRules,
   type OverviewResponse,
   type RegionalComparisonResponse,
   type TrendsResponse,
@@ -104,6 +106,40 @@ export function useHierarchicalQuery(year: number) {
   return useQuery<HierarchicalResponse, Error>({
     queryKey: ["hierarchical", year],
     queryFn: () => fetchHierarchical(year),
+    staleTime: 10 * 60 * 1000,
+    enabled: !!year,
+  });
+}
+
+export type AnomalyResponse = {
+  year: number;
+  cross_sectional: any[];
+  year_on_year: any[];
+  cross_sectional_count: number;
+  year_on_year_count: number;
+};
+export type AssociationRulesResponse = {
+  year: number;
+  n_transactions: number;
+  n_itemsets: number;
+  n_rules: number;
+  itemsets: any[];
+  rules: any[];
+};
+
+export function useAnomaliesQuery(year: number) {
+  return useQuery<AnomalyResponse, Error>({
+    queryKey: ["anomalies", year],
+    queryFn: () => fetchAnomalies(year),
+    staleTime: 10 * 60 * 1000,
+    enabled: !!year,
+  });
+}
+
+export function useAssociationRulesQuery(year: number) {
+  return useQuery<AssociationRulesResponse, Error>({
+    queryKey: ["associationRules", year],
+    queryFn: () => fetchAssociationRules(year),
     staleTime: 10 * 60 * 1000,
     enabled: !!year,
   });
