@@ -1,0 +1,19 @@
+original_name,canonical_name,law_framework,notes,effective_from_year,effective_to_year
+Murder (Sec.302 IPC),Murder,IPC,Stable category,2020,2023
+Murder (Section 103 (1) BNS /Section 302 IPC),Murder,BNS,Equivalent to IPC Sec.302,2024,2024
+Culpable Homicide not amounting to Murder (Sec.304 IPC),Culpable Homicide not amounting to Murder,IPC,Stable category,2020,2023
+Culpable Homicide not amounting to Murder (Section 105 BNS/Section 304 IPC),Culpable Homicide not amounting to Murder,BNS,Equivalent to IPC Sec.304,2024,2024
+Rape (Sec.376 IPC),Rape,IPC,Stable category,2020,2023
+Rape (Section 64 to Section 71 BNS / Section 376 IPC),Rape,BNS,Equivalent to IPC Sec.376,2024,2024
+Kidnapping and Abduction (Total) (Col.46+ Col.49 to Col.55),Kidnapping and Abduction Total,IPC,Stable category,2020,2023
+Kidnapping & Abduction (Section 137-142 BNS/Section 363-369 IPC) (Total a to f),Kidnapping and Abduction Total,BNS,Equivalent IPC kidnapping total,2024,2024
+Theft (Total) (Col.92+Col.93),Theft Total,IPC,Stable category,2020,2023
+Theft (Total a to g),Theft Total,BNS,Equivalent IPC theft total,2024,2024
+Robbery (Sec.392/394/397 IPC),Robbery,IPC,Stable category,2020,2023
+Robbery (Section 309 (4), 309(6), 311 BNS/Section 392/394/397 IPC),Robbery,BNS,Equivalent IPC robbery,2024,2024
+Dacoity (Total) (Col.101+ Col.102),Dacoity Total,IPC,Stable category,2020,2023
+Dacoity (Total a+b),Dacoity Total,BNS,Equivalent IPC dacoity total,2024,2024
+Rioting (Total) (Col.70 to Col.85),Rioting Total,IPC,Stable category,2020,2023
+Rioting (Total a to r),Rioting Total,BNS,Equivalent IPC rioting total,2024,2024
+Total Cognizable IPC crimes,Total Cognizable Crimes,IPC,Grand total category,2020,2023
+Total Cognizable IPC/BNS crimes,Total Cognizable Crimes,BNS,Grand total category,2024,2024

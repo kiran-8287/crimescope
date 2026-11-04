@@ -1,0 +1,11 @@
+{
+  "source_rows": 22,
+  "canonical_observations": 2802,
+  "valid": 2782,
+  "warnings": 0,
+  "quarantined": 20,
+  "eligible_for_comparison": 2802,
+  "aggregate_rows": 0,
+  "regions": 20,
+  "categories": 141
+}

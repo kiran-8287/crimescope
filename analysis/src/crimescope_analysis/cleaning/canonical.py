@@ -1,11 +1,11 @@
-"""Canonical long-format row emitter for CrimeScope observations."""
+"""Multi-year canonical long-format row emitter with quarantine and mapping support."""
 
 from __future__ import annotations
 
 import csv
 import hashlib
 import re
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Optional
 
@@ -32,6 +32,9 @@ class Observation:
     source_row_reference: str
     quality_status: str
     comparison_status: str
+    quarantine_reason: Optional[str] = None
+    mapped_geography_id: Optional[str] = None
+    mapped_category_id: Optional[str] = None
 
 
 STATE_PREFIX = re.compile(r"^State:\s*(.+?)\s*$")
@@ -39,7 +42,6 @@ TOTAL_TOKENS = {"total districts", "total", "total districts ", "total districts
 
 
 def parse_state_line(raw: str) -> tuple[str, str]:
-    """Extract state name from a 'State: <name>' prefix cell."""
     m = STATE_PREFIX.match(raw.strip())
     if m:
         return m.group(1).strip(), "state"
@@ -47,7 +49,6 @@ def parse_state_line(raw: str) -> tuple[str, str]:
 
 
 def classify_region(name: str) -> str:
-    """Classify a reporting unit by name suffix."""
     lower = name.lower().strip()
     if lower in TOTAL_TOKENS or lower == "":
         return "aggregate"
@@ -59,12 +60,10 @@ def classify_region(name: str) -> str:
 
 
 def stable_id(*parts: str) -> str:
-    """Build a stable observation id from parts."""
     return hashlib.sha256("|".join(parts).encode("utf-8")).hexdigest()[:24]
 
 
 def clean_numeric(token: str) -> tuple[Optional[int], Optional[str]]:
-    """Parse a numeric token, returning (value, missing_reason)."""
     if token is None:
         return None, "source_blank"
     t = token.strip()
@@ -88,7 +87,6 @@ def parse_table(
     source_id: str,
     geography_version: str = "ncrb-2020",
 ) -> list[Observation]:
-    """Parse one NCRB district-wise table into canonical observations."""
     observations: list[Observation] = []
 
     with csv_path.open("r", encoding="utf-8", newline="") as f:
@@ -100,12 +98,17 @@ def parse_table(
 
     with csv_path.open("r", encoding="utf-8", newline="") as f:
         reader = csv.reader(f)
-        next(reader)  # skip header
+        next(reader)
         for row_idx, row in enumerate(reader, start=2):
             if not row or all(c.strip() == "" for c in row):
                 continue
 
             geography_cell = row[0].strip() if len(row) > 0 else ""
+
+            # Skip sub-header row (column numbers under headers) — empty geography cell
+            if geography_cell == "":
+                continue
+
             state_name, _ = parse_state_line(geography_cell)
             if state_name and geography_cell.lower().startswith("state:"):
                 current_state = state_name
@@ -133,6 +136,10 @@ def parse_table(
                 measure_type = "cases"
                 unit = "count"
 
+                quarantine_reason: Optional[str] = None
+                if is_total:
+                    quarantine_reason = "aggregate_row_excluded_from_comparison"
+
                 obs = Observation(
                     observation_id=stable_id("obs", source_id, str(year), current_state or "", region_name, raw_header),
                     year=year,
@@ -149,11 +156,12 @@ def parse_table(
                     unit=unit,
                     reported_value=value,
                     missing_reason=missing_reason,
-                    law_framework="IPC",
+                    law_framework="IPC" if year < 2024 else "BNS",
                     source_id=source_id,
                     source_row_reference=f"row_{row_idx}",
                     quality_status="valid" if missing_reason is None else "warning",
                     comparison_status="eligible" if not is_total else "aggregate_only",
+                    quarantine_reason=quarantine_reason,
                 )
                 observations.append(obs)
 
@@ -161,7 +169,6 @@ def parse_table(
 
 
 def write_observations(observations: list[Observation], out_path: Path) -> None:
-    """Write observations to a CSV file in long format."""
     out_path.parent.mkdir(parents=True, exist_ok=True)
     fields = [
         "observation_id", "year", "state_id", "state_name", "geography_id",
@@ -169,6 +176,7 @@ def write_observations(observations: list[Observation], out_path: Path) -> None:
         "category_id", "original_category", "measure_type", "unit",
         "reported_value", "missing_reason", "law_framework", "source_id",
         "source_row_reference", "quality_status", "comparison_status",
+        "quarantine_reason", "mapped_geography_id", "mapped_category_id",
     ]
     with out_path.open("w", encoding="utf-8", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=fields)
@@ -181,7 +189,6 @@ def build_row_accounting(
     csv_path: Path,
     observations: list[Observation],
 ) -> dict:
-    """Build stepwise row-accounting summary."""
     raw_rows = 0
     with csv_path.open("r", encoding="utf-8", newline="") as f:
         reader = csv.reader(f)
@@ -193,6 +200,7 @@ def build_row_accounting(
     total_observations = len(observations)
     valid = sum(1 for o in observations if o.quality_status == "valid")
     warnings = sum(1 for o in observations if o.quality_status == "warning")
+    quarantined = sum(1 for o in observations if o.quarantine_reason is not None)
     aggregates = sum(1 for o in observations if o.comparison_status == "aggregate_only")
     eligible = total_observations - aggregates
 
@@ -201,8 +209,129 @@ def build_row_accounting(
         "canonical_observations": total_observations,
         "valid": valid,
         "warnings": warnings,
+        "quarantined": quarantined,
         "eligible_for_comparison": eligible,
         "aggregate_rows": aggregates,
         "regions": len({o.region_name for o in observations if o.region_name}),
         "categories": len({o.category_id for o in observations}),
+    }
+
+
+def load_geography_mapping(mapping_path: Path) -> dict[str, str]:
+    """Load geography crosswalk: original_name -> canonical_name."""
+    mapping: dict[str, str] = {}
+    if not mapping_path.exists():
+        return mapping
+    with mapping_path.open("r", encoding="utf-8", newline="") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            original = row.get("original_name", "").strip()
+            canonical = row.get("canonical_name", "").strip()
+            if original and canonical:
+                mapping[original] = canonical
+    return mapping
+
+
+def load_category_mapping(mapping_path: Path) -> dict[str, str]:
+    """Load category crosswalk: original_name -> canonical_name."""
+    mapping: dict[str, str] = {}
+    if not mapping_path.exists():
+        return mapping
+    with mapping_path.open("r", encoding="utf-8", newline="") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            original = row.get("original_name", "").strip()
+            canonical = row.get("canonical_name", "").strip()
+            if original and canonical:
+                mapping[original] = canonical
+    return mapping
+
+
+def apply_mappings(
+    observations: list[Observation],
+    geo_mapping: dict[str, str],
+    cat_mapping: dict[str, str],
+) -> list[Observation]:
+    """Apply geography and category mappings; update mapped IDs."""
+    result: list[Observation] = []
+    for obs in observations:
+        mapped_geo = geo_mapping.get(obs.original_region_name)
+        mapped_cat = cat_mapping.get(obs.original_category)
+        obs.mapped_geography_id = stable_id("mapped_geo", mapped_geo or obs.original_region_name, str(obs.year)) if mapped_geo else None
+        obs.mapped_category_id = stable_id("mapped_cat", mapped_cat or obs.original_category) if mapped_cat else None
+        result.append(obs)
+    return result
+
+
+def detect_duplicates(observations: list[Observation]) -> list[Observation]:
+    """Mark duplicate observations (same year+state+region+category across sources)."""
+    seen: dict[tuple, int] = {}
+    result: list[Observation] = []
+    for obs in observations:
+        key = (obs.year, obs.state_name, obs.original_region_name, obs.original_category)
+        if key in seen:
+            obs.quality_status = "duplicate"
+            obs.quarantine_reason = f"duplicate_of_row_{seen[key]}"
+        else:
+            seen[key] = int(obs.source_row_reference.split("_")[1]) if obs.source_row_reference.startswith("row_") else 0
+        result.append(obs)
+    return result
+
+
+def validate_totals(
+    observations: list[Observation],
+    total_category: str = "Total Cognizable IPC crimes",
+    total_category_bns: str = "Total Cognizable IPC/BNS crimes",
+) -> list[Observation]:
+    """Validate that component sums match the total row value."""
+    result: list[Observation] = []
+    total_labels = {total_category, total_category_bns}
+
+    # Group eligible (non-aggregate) observations by (year, state, region)
+    groups: dict[tuple, list[Observation]] = {}
+    for obs in observations:
+        if obs.comparison_status != "eligible":
+            continue
+        key = (obs.year, obs.state_name, obs.original_region_name)
+        groups.setdefault(key, []).append(obs)
+
+    total_obs_map: dict[tuple, Observation] = {}
+    for obs in observations:
+        if obs.original_category in total_labels and obs.comparison_status == "aggregate_only":
+            key = (obs.year, obs.state_name, obs.original_region_name)
+            total_obs_map[key] = obs
+
+    for key, group in groups.items():
+        total_obs = total_obs_map.get(key)
+        if total_obs is not None and total_obs.reported_value is not None:
+            component_sum = sum(
+                o.reported_value or 0 for o in group if o.original_category not in total_labels
+            )
+            if component_sum != total_obs.reported_value:
+                total_obs.quality_status = "totals_mismatch"
+                total_obs.quarantine_reason = f"total={total_obs.reported_value}, component_sum={component_sum}"
+            result.append(total_obs)
+        result.extend(group)
+
+    return result
+
+
+def build_quality_report(
+    all_accounting: dict[str, dict],
+    total_observations: int,
+    total_quarantined: int,
+    total_duplicates: int,
+    total_totals_mismatch: int,
+) -> dict:
+    return {
+        "per_source": all_accounting,
+        "summary": {
+            "total_sources": len(all_accounting),
+            "total_source_rows": sum(a["source_rows"] for a in all_accounting.values()),
+            "total_canonical_observations": total_observations,
+            "total_quarantined": total_quarantined,
+            "total_duplicates": total_duplicates,
+            "total_totals_mismatch": total_totals_mismatch,
+            "eligible_for_comparison": sum(a["eligible_for_comparison"] for a in all_accounting.values()),
+        },
     }

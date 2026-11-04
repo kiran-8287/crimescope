@@ -1,0 +1,68 @@
+{
+  "per_source": {
+    "cii_2020_1_districtwise-ipc-crimes_t1": {
+      "source_rows": 22,
+      "canonical_observations": 2802,
+      "valid": 2782,
+      "warnings": 0,
+      "quarantined": 20,
+      "eligible_for_comparison": 2802,
+      "aggregate_rows": 0,
+      "regions": 20,
+      "categories": 141
+    },
+    "cii_2021_1_districtwise-ipc-crimes_t1": {
+      "source_rows": 22,
+      "canonical_observations": 2840,
+      "valid": 2820,
+      "warnings": 0,
+      "quarantined": 20,
+      "eligible_for_comparison": 2840,
+      "aggregate_rows": 0,
+      "regions": 20,
+      "categories": 141
+    },
+    "cii_2022_1_districtwise-ipc-crimes_t1": {
+      "source_rows": 30,
+      "canonical_observations": 3976,
+      "valid": 3948,
+      "warnings": 0,
+      "quarantined": 28,
+      "eligible_for_comparison": 3976,
+      "aggregate_rows": 0,
+      "regions": 28,
+      "categories": 141
+    },
+    "cii_2023_1_districtwise-ipc-crimes_t1": {
+      "source_rows": 30,
+      "canonical_observations": 3976,
+      "valid": 3948,
+      "warnings": 0,
+      "quarantined": 28,
+      "eligible_for_comparison": 3976,
+      "aggregate_rows": 0,
+      "regions": 28,
+      "categories": 141
+    },
+    "cii_2024_1_districtwise-ipc-crimes_t1": {
+      "source_rows": 29,
+      "canonical_observations": 4312,
+      "valid": 4312,
+      "warnings": 0,
+      "quarantined": 0,
+      "eligible_for_comparison": 4312,
+      "aggregate_rows": 0,
+      "regions": 28,
+      "categories": 154
+    }
+  },
+  "summary": {
+    "total_sources": 5,
+    "total_source_rows": 133,
+    "total_canonical_observations": 17906,
+    "total_quarantined": 96,
+    "total_duplicates": 96,
+    "total_totals_mismatch": 0,
+    "eligible_for_comparison": 17906
+  }
+}
