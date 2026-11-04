@@ -1,14 +1,5 @@
-import { BrowserRouter } from "react-router-dom";
-import { Providers } from "@/app/providers";
-import { router } from "@/app/router";
-import { RouterProvider } from "react-router-dom";
+import { OverviewPage } from "@/features/overview/OverviewPage";
 
 export default function App() {
-  return (
-    <BrowserRouter>
-      <Providers>
-        <RouterProvider router={router} />
-      </Providers>
-    </BrowserRouter>
-  );
+  return <OverviewPage />;
 }
