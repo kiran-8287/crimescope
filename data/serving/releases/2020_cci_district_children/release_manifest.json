@@ -1,0 +1,16 @@
+{
+  "release_id": "2020_cci_district_children",
+  "release_type": "phase_b_vertical_slice",
+  "created_at": "2026-11-04T00:00:00Z",
+  "source_table": "data/raw/2020/1_districtwise-crime-against-children-2020_t1.csv",
+  "source_id": "cii_2020_1_districtwise-crime-against-children_t1",
+  "year": 2020,
+  "sqlite_path": "data\\serving\\releases\\2020_cci_district_children\\crimescope.sqlite",
+  "sqlite_sha256": "c69ca842feb87c5ed86eb4f256f2057eb95f072db8bdb14006e08e92236ae061",
+  "csv_sha256": "7ed0bbba892c3b9ccfe0a93872b40e35f5520d4138c97d8670a1000f9fac2926",
+  "row_count": 1448,
+  "eligible_regions": 20,
+  "eligible_categories": 57,
+  "total_cases_aggregate": 0,
+  "description": "Phase B vertical slice: one verified NCRB 2020 district-wise crimes-against-children table"
+}
