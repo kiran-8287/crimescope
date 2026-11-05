@@ -1,102 +1,165 @@
-"""Phase C: Build canonical multi-year dataset with cleaning, mapping, quarantine, quality report."""
-
+"""Build canonical observations from explicit 2020 AP plus verified 2021-24 fragments."""
 from __future__ import annotations
 
+import argparse
 import csv
+import hashlib
 import json
 import sys
+from collections import Counter, defaultdict
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "analysis" / "src"))
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "analysis" / "src"))
+sys.path.insert(0, str(ROOT / "scripts"))
 
 from crimescope_analysis.cleaning.canonical import (  # noqa: E402
-    apply_mappings,
-    build_quality_report,
-    build_row_accounting,
-    detect_duplicates,
-    load_category_mapping,
-    load_geography_mapping,
-    parse_table,
-    validate_totals,
+    apply_mappings, build_quality_report, build_row_accounting, detect_duplicates,
+    load_category_mapping, load_geography_mapping, parse_table, validate_totals,
     write_observations,
 )
+from source_inputs import dataset_source_manifest, load_source_inputs  # noqa: E402
 
-SOURCES = [
-    {"year": 2020, "source_id": "cii_2020_1_districtwise-ipc-crimes_t1", "path": "data/raw/2020/1_districtwise-ipc-crimes-2020_t1.csv"},
-    {"year": 2021, "source_id": "cii_2021_1_districtwise-ipc-crimes_t1", "path": "data/raw/2021/1_16730065601districtwiseipccrimes2021_t1.csv"},
-    {"year": 2022, "source_id": "cii_2022_1_districtwise-ipc-crimes_t1", "path": "data/raw/2022/1_17016833111districtwiseipccrimes2022_t1.csv"},
-    {"year": 2023, "source_id": "cii_2023_1_districtwise-ipc-crimes_t1", "path": "data/raw/2023/1_1districtwiseipccrimes20231_t1.csv"},
-    {"year": 2024, "source_id": "cii_2024_1_districtwise-ipc-crimes_t1", "path": "data/raw/2024/1_1districtwiseipccrimes2024_t1.csv"},
-]
-
-OUTPUT_DIR = Path("data/processed")
-ALL_OBSERVATIONS_PATH = OUTPUT_DIR / "crime_observations_multi_year.csv"
-QUARANTINE_PATH = OUTPUT_DIR / "quarantined_observations.csv"
-QUALITY_REPORT_PATH = OUTPUT_DIR / "quality_report.json"
-ROW_ACCOUNTING_DIR = OUTPUT_DIR / "row_accounting"
-
-GEO_MAPPING_PATH = Path("data/mappings/geography_crosswalk.csv")
-CAT_MAPPING_PATH = Path("data/mappings/category_crosswalk.csv")
+DEFAULT_OUTPUT = ROOT / "data/processed"
+GEO_MAPPING = ROOT / "data/mappings/geography_crosswalk.csv"
+CAT_MAPPING = ROOT / "data/mappings/category_crosswalk.csv"
 
 
-def main() -> int:
-    geo_mapping = load_geography_mapping(GEO_MAPPING_PATH)
-    cat_mapping = load_category_mapping(CAT_MAPPING_PATH)
+def sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
 
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    ROW_ACCOUNTING_DIR.mkdir(parents=True, exist_ok=True)
+
+def coverage_rows(observations: list, sources: list[dict]) -> tuple[list[dict], dict, list[dict]]:
+    by_state: dict[tuple[int, str], list] = defaultdict(list)
+    for obs in observations:
+        by_state[(obs.year, obs.state_name)].append(obs)
+    fragment_counts = Counter((src["year"], src.get("state_name") or "Unknown") for src in sources)
+    coverage: list[dict] = []
+    reconciliation: list[dict] = []
+    for (year, state), group in sorted(by_state.items()):
+        units = {}
+        for kind in ("administrative_district", "city_police", "railway", "other_police_unit", "aggregate", "unknown"):
+            units[kind] = len({o.geography_id for o in group if o.region_type == kind})
+        official = [o for o in group if o.original_category in {"Total Cognizable IPC crimes", "Total Cognizable IPC/BNS crimes"}]
+        aggregate_total = next((o.reported_value for o in official if o.region_type == "aggregate" and o.original_region_name.casefold() == "total districts"), None)
+        district_values = [o.reported_value for o in official if o.region_type == "administrative_district" and o.reported_value is not None]
+        district_sum = sum(district_values) if district_values else None
+        reporting_values = [o.reported_value for o in official if o.comparison_status == "eligible" and o.reported_value is not None]
+        reporting_sum = sum(reporting_values) if reporting_values else None
+        difference = aggregate_total - reporting_sum if aggregate_total is not None and reporting_sum is not None else None
+        reconciliation.append({"year": year, "state_ut": state, "category": next((o.original_category for o in official), ""),
+                               "aggregate_value": aggregate_total, "district_official_total_sum": district_sum,
+                               "all_reporting_unit_official_total_sum": reporting_sum,
+                               "difference": difference, "status": "match" if difference == 0 else "difference" if difference is not None else "unavailable"})
+        coverage.append({
+            "year": year, "state_ut": state, "coverage_scope": "partial_2020_andhra_pradesh" if year == 2020 else "indexed_state_ut_fragment",
+            "fragments": fragment_counts[(year, state)],
+            "administrative_districts": units["administrative_district"], "city_police_units": units["city_police"],
+            "railway_units": units["railway"], "other_police_units": units["other_police_unit"], "aggregate_rows": units["aggregate"],
+            "retained_observations": sum(o.comparison_status == "eligible" and o.quality_status not in {"duplicate", "quarantined"} for o in group),
+            "all_observations": len(group), "valid": sum(o.quality_status == "valid" for o in group),
+            "warnings_or_missing": sum(o.quality_status == "warning" for o in group),
+            "duplicates_excluded": sum(o.quality_status == "duplicate" for o in group),
+            "aggregate_observations_excluded_from_district_sums": sum(o.comparison_status == "aggregate_only" for o in group),
+            "explicit_zero_values": sum(o.reported_value == 0 for o in group),
+            "missing_or_unparseable_values": sum(o.reported_value is None for o in group),
+            "official_total_aggregate_value": aggregate_total,
+            "sum_of_district_official_totals": district_sum,
+            "sum_of_all_reporting_unit_official_totals": reporting_sum,
+            "official_total_reconciliation_difference": difference,
+        })
+    names_to_states: dict[str, set[str]] = defaultdict(set)
+    ids_for_name_state_year: dict[tuple[int, str, str], set[str]] = defaultdict(set)
+    for obs in observations:
+        if obs.region_type == "administrative_district":
+            names_to_states[obs.region_name].add(obs.state_name)
+            ids_for_name_state_year[(obs.year, obs.region_name, obs.state_name)].add(obs.geography_id)
+    repeated = {name: sorted(states) for name, states in names_to_states.items() if len(states) > 1}
+    repeated_validation = {
+        "district_names_repeated_across_states": repeated,
+        "same_year_name_state_pairs_with_multiple_geography_ids": {
+            f"{year}|{name}|{state}": sorted(ids) for (year, name, state), ids in ids_for_name_state_year.items() if len(ids) > 1
+        },
+        "state_included_in_geography_id": True,
+    }
+    return coverage, repeated_validation, reconciliation
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--output-dir", default=str(DEFAULT_OUTPUT), help="Build output directory; use a staging directory before publishing")
+    parser.add_argument("--without-2020", action="store_true", help="Build only manifest-backed 2021-2024 fragments")
+    args = parser.parse_args(argv)
+    output_dir = Path(args.output_dir)
+    if not output_dir.is_absolute():
+        output_dir = ROOT / output_dir
+    row_accounting_dir = output_dir / "row_accounting"
+    row_accounting_dir.mkdir(parents=True, exist_ok=True)
+    sources = load_source_inputs(ROOT, include_2020=not args.without_2020)
+    geo_mapping = load_geography_mapping(GEO_MAPPING)
+    cat_mapping = load_category_mapping(CAT_MAPPING)
 
     all_observations: list = []
-    all_accounting: dict = {}
-
-    for src in SOURCES:
-        csv_path = Path(src["path"])
-        if not csv_path.exists():
-            print(f"WARNING: source file not found: {csv_path}", file=sys.stderr)
-            continue
-
-        print(f"Processing {csv_path} (year={src['year']})")
-        observations = parse_table(csv_path, src["year"], src["source_id"])
+    all_accounting: dict[str, dict] = {}
+    for src in sources:
+        print(f"Processing {src['path']} (year={src['year']}, state/UT={src.get('state_name')})")
+        observations = parse_table(src["path"], src["year"], src["source_id"],
+                                   geography_version=src.get("geography_version"),
+                                   state_name_hint=src.get("state_name"),
+                                   header_template=src.get("header_template"))
         observations = apply_mappings(observations, geo_mapping, cat_mapping)
-        observations = detect_duplicates(observations)
-        observations = validate_totals(observations)
-
-        accounting = build_row_accounting(csv_path, observations)
+        accounting = build_row_accounting(src["path"], observations)
+        accounting.update({"year": src["year"], "state_ut": src.get("state_name"), "table_id": src["table_id"],
+                          "partial_source": bool(src.get("partial")), "input_sha256": sha256(src["path"])})
         all_accounting[src["source_id"]] = accounting
-
-        # Per-year accounting file
-        acct_path = ROW_ACCOUNTING_DIR / f"row_accounting_{src['year']}.json"
-        with acct_path.open("w", encoding="utf-8") as f:
-            json.dump(accounting, f, indent=2)
-
-        print(json.dumps(accounting, indent=2))
         all_observations.extend(observations)
 
-    total_observations = len(all_observations)
-    total_quarantined = sum(1 for o in all_observations if o.quarantine_reason is not None)
-    total_duplicates = sum(1 for o in all_observations if o.quality_status == "duplicate")
-    total_totals_mismatch = sum(1 for o in all_observations if o.quality_status == "totals_mismatch")
-
-    print(f"\nWriting {total_observations} canonical observations to {ALL_OBSERVATIONS_PATH}")
-    write_observations(all_observations, ALL_OBSERVATIONS_PATH)
-
+    all_observations = detect_duplicates(all_observations)
+    all_observations = validate_totals(all_observations)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    data_path = output_dir / "crime_observations_multi_year.csv"
+    write_observations(all_observations, data_path)
     quarantined = [o for o in all_observations if o.quarantine_reason is not None]
-    if quarantined:
-        print(f"Writing {len(quarantined)} quarantined observations to {QUARANTINE_PATH}")
-        write_observations(quarantined, QUARANTINE_PATH)
-
+    write_observations(quarantined, output_dir / "quarantined_observations.csv")
     report = build_quality_report(
-        all_accounting,
-        total_observations,
-        total_quarantined,
-        total_duplicates,
-        total_totals_mismatch,
+        all_accounting, len(all_observations), len(quarantined),
+        sum(o.quality_status == "duplicate" for o in all_observations),
+        sum(o.quality_status == "totals_mismatch" for o in all_observations),
     )
-    with QUALITY_REPORT_PATH.open("w", encoding="utf-8") as f:
-        json.dump(report, f, indent=2)
-
-    print(json.dumps(report, indent=2))
-    print(f"\nPhase C complete: {OUTPUT_DIR}")
+    coverage, name_validation, reconciliations = coverage_rows(all_observations, sources)
+    report["coverage_by_year_state"] = coverage
+    report["cross_state_name_validation"] = name_validation
+    report["official_total_reconciliation"] = reconciliations
+    report["source_selection"] = dataset_source_manifest(sources)
+    report["summary"].update({"data_sha256": sha256(data_path), "year_count": len({o.year for o in all_observations}),
+                              "states_or_uts": len({o.state_name for o in all_observations}),
+                              "region_type_counts": {kind: len({o.geography_id for o in all_observations if o.region_type == kind})
+                                                     for kind in ("administrative_district", "city_police", "railway", "other_police_unit", "aggregate")}})
+    if not args.without_2020:
+        prior_path = ROOT / "data/processed/quality_report.json"
+        if prior_path.exists():
+            try:
+                prior_investigation = json.loads(prior_path.read_text(encoding="utf-8")).get("source_cell_completeness_investigation")
+                if prior_investigation:
+                    report["source_cell_completeness_investigation"] = prior_investigation
+            except (OSError, json.JSONDecodeError):
+                pass
+    (output_dir / "quality_report.json").write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    with (output_dir / "coverage_by_year_state.csv").open("w", encoding="utf-8", newline="") as handle:
+        fields = list(coverage[0]) if coverage else []
+        writer = csv.DictWriter(handle, fieldnames=fields)
+        writer.writeheader()
+        writer.writerows(coverage)
+    with (output_dir / "reconciliation_by_year_state.csv").open("w", encoding="utf-8", newline="") as handle:
+        fields = list(reconciliations[0]) if reconciliations else []
+        writer = csv.DictWriter(handle, fieldnames=fields)
+        writer.writeheader()
+        writer.writerows(reconciliations)
+    (output_dir / "source_selection_manifest.json").write_text(json.dumps(report["source_selection"], indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    print(json.dumps({"output_dir": str(output_dir), "observations": len(all_observations), "source_files": len(sources),
+                      "coverage_rows": len(coverage), "duplicate_observations": report["summary"]["total_duplicates"],
+                      "official_total_mismatches": report["summary"]["total_totals_mismatch"],
+                      "dataset_sha256": report["summary"]["data_sha256"]}, indent=2))
     return 0
 
 

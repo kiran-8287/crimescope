@@ -15,7 +15,7 @@ def load_feature_matrix(csv_path: Path) -> list[dict]:
     with csv_path.open("r", encoding="utf-8", newline="") as f:
         reader = csv.DictReader(f)
         for row in reader:
-            row["total"] = int(row["total"]) if row.get("total") else 0
+            row["total"] = int(row["total"]) if row.get("total") not in ("", None) else None
             row["year"] = int(row["year"])
             if "reported_value" not in row:
                 row["reported_value"] = row["total"]
@@ -31,11 +31,12 @@ def build_transactions(
     """Build transactions: one per region, items are categories with cases >= min_cases."""
     year_rows = [r for r in rows if r["year"] == year]
     transactions = []
-    regions = sorted({r["region_name"] for r in year_rows})
+    region_key = lambda r: r.get("region_id") or f"{r.get('state_name', '')}|{r['region_name']}"
+    regions = sorted({region_key(r) for r in year_rows})
 
     for reg in regions:
-        reg_rows = [r for r in year_rows if r["region_name"] == reg]
-        items = {r["category"] for r in reg_rows if r["total"] >= min_cases}
+        reg_rows = [r for r in year_rows if region_key(r) == reg]
+        items = {r["category"] for r in reg_rows if r["total"] is not None and r["total"] >= min_cases}
         if items:
             transactions.append(items)
 
@@ -47,6 +48,7 @@ def apriori(
     min_support: float = 0.1,
     min_confidence: float = 0.5,
     max_itemset_size: int = 3,
+    min_lift: float = 0.0,
 ) -> dict:
     """Simple Apriori algorithm for association rules."""
     n_transactions = len(transactions)
@@ -157,6 +159,8 @@ def apriori(
                 )
                 consequent_support = consequent_count / n_transactions
                 lift = confidence / consequent_support if consequent_support > 0 else 0
+                if lift < min_lift:
+                    continue
 
                 rules.append(
                     {
@@ -165,6 +169,7 @@ def apriori(
                         "support": round(support, 4),
                         "confidence": round(confidence, 4),
                         "lift": round(lift, 4),
+                        "support_count": itemset_count,
                     }
                 )
 
@@ -183,14 +188,19 @@ def run_association_rules(
     input_csv: Path,
     output_dir: Path,
     years: list[int],
+    min_cases: int = 10,
+    min_support: float = 0.15,
+    min_confidence: float = 0.6,
+    max_itemset_size: int = 3,
+    min_lift: float = 0.0,
 ) -> dict:
     output_dir.mkdir(parents=True, exist_ok=True)
     rows = load_feature_matrix(input_csv)
 
     results = {}
     for year in years:
-        transactions = build_transactions(rows, year)
-        result = apriori(transactions, min_support=0.15, min_confidence=0.6)
+        transactions = build_transactions(rows, year, min_cases=min_cases)
+        result = apriori(transactions, min_support=min_support, min_confidence=min_confidence, max_itemset_size=max_itemset_size, min_lift=min_lift)
         result["year"] = year
         results[year] = result
         with (output_dir / f"association_rules_{year}.json").open("w", encoding="utf-8") as f:

@@ -1,0 +1,57 @@
+{
+  "dataset_id": "ap-ncrb-processed-2020-2024",
+  "data_classification": "source_processed",
+  "processed_dataset": "data/processed/crime_observations_multi_year.csv",
+  "processed_sha256": "f6b9640cb8afee75080e355f4b84e2de9b13606ec3951767fc1bfd4a13c86fc2",
+  "processed_rows": 17906,
+  "analysis_rows": 17810,
+  "excluded_duplicate_rows": 96,
+  "verified_at": "2026-11-05",
+  "verification_method": "Rebuilt in memory with the configured Phase C parser, geography/category mappings, duplicate detector and total validator; output matched processed CSV row-for-row.",
+  "pipeline_files": {
+    "scripts/build_phase_c.py": "eac7b6b39fa1e7ee89f6f77dd6142d432d89442a6e5d3cf5cb53508c05433a94",
+    "analysis/src/crimescope_analysis/cleaning/canonical.py": "5ccf2e8a8679d69fbf054a4831a2acb51d091e8f539dabc55581bfdc62318cdb",
+    "data/mappings/geography_crosswalk.csv": "ee3bd6780b6d426793e16e439c4351ccf8cfdde9cb667361cae224715639b4cc",
+    "data/mappings/category_crosswalk.csv": "27da28ee334538d4eeddc2426e318d2dc9b917f3a85d56e1ee68cdfdc9258e58"
+  },
+  "source_files": [
+    {
+      "year": 2020,
+      "source_id": "cii_2020_1_districtwise-ipc-crimes_t1",
+      "path": "data/raw/2020/1_districtwise-ipc-crimes-2020_t1.csv",
+      "sha256": "7288972b3b79ca24eaaa1bb82a4822ca63e98b83b3ad0ab789b6087a47480c40"
+    },
+    {
+      "year": 2021,
+      "source_id": "cii_2021_1_districtwise-ipc-crimes_t1",
+      "path": "data/raw/2021/1_16730065601districtwiseipccrimes2021_t1.csv",
+      "sha256": "5ec4d63a48089745c24b63b8fb76eabd9e235dee0c5964006941c863d734f0e0"
+    },
+    {
+      "year": 2022,
+      "source_id": "cii_2022_1_districtwise-ipc-crimes_t1",
+      "path": "data/raw/2022/1_17016833111districtwiseipccrimes2022_t1.csv",
+      "sha256": "30c4d621d62c5c2dd36c138ec7983000df811fbba05ccb8a40a557319c25654b"
+    },
+    {
+      "year": 2023,
+      "source_id": "cii_2023_1_districtwise-ipc-crimes_t1",
+      "path": "data/raw/2023/1_1districtwiseipccrimes20231_t1.csv",
+      "sha256": "498aa6fd81d5a494243e045a4cfe7edda2d02359b5064c95348d7b263dec83c0"
+    },
+    {
+      "year": 2024,
+      "source_id": "cii_2024_1_districtwise-ipc-crimes_t1",
+      "path": "data/raw/2024/1_1districtwiseipccrimes2024_t1.csv",
+      "sha256": "a52066d149a40ce6f4ab64077de9f558c15a23cd3af867e5df9be8e8bade3dc4"
+    }
+  ],
+  "current_serving_release": {
+    "pointer": "data/serving/current.json",
+    "release_id": "2020_cci_district_children",
+    "manifest": "data/serving/releases/2020_cci_district_children/release_manifest.json",
+    "manifest_sha256": "0f4301a5fadb754154f59688a738a4ba0351a111b009b44ebca167993585cd1f",
+    "sqlite": "data/serving/releases/2020_cci_district_children/crimescope.sqlite",
+    "sqlite_sha256": "c69ca842feb87c5ed86eb4f256f2057eb95f072db8bdb14006e08e92236ae061"
+  }
+}

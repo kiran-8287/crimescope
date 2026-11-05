@@ -1,0 +1,26 @@
+import {PageTitle} from '../components/Layout';
+import {Panel,Filters,Notice,ExportButton} from '../components/UI';
+import {Lines} from '../components/Charts';
+import {DataTable} from '../components/DataTable';
+import {useAnalytics} from '../context/useAnalytics';
+import {number} from '../utils/format';
+import {categoryLabel,roleFor} from '../utils/categories';
+import {getObservationIndex,observationAt} from '../utils/observationIndex';
+
+export default function TrendsPage(){
+ const {data,filters}=useAnalytics();const observationIndex=getObservationIndex(data.observations);const labels=data.meta.years.map(String);const series:{name:string;values:(number|null)[]}[]=[];const detail:any[]=[];
+ const pairs=(data.meta.comparisonPairs??[]).filter(p=>p.status==='available'&&p.toYear<=filters.year);
+ for(const pair of pairs){
+   const valueAt=(year:number)=>filters.category==='all'?data.meta.categories?.find(c=>c.years.includes(year)&&roleFor(data,c.id,year)==='official_total')?.id:(data.meta.categories?.some(c=>c.id===filters.category&&c.years.includes(year))?filters.category:null);
+   const catA=valueAt(pair.fromYear),catB=valueAt(pair.toYear);if(!catA||!catB)continue;
+   const a=data.regions.filter(r=>r.year===pair.fromYear&&r.cohortId?.startsWith(`${pair.id}:`)&&(filters.unitType==='all'||r.regionType===filters.unitType)&&(filters.state==='all'||r.state===filters.state));
+   const b=new Map(data.regions.filter(r=>r.year===pair.toYear&&r.cohortId?.startsWith(`${pair.id}:`)&&(filters.unitType==='all'||r.regionType===filters.unitType)&&(filters.state==='all'||r.state===filters.state)).map(r=>[r.cohortId!,r]));
+   const candidates=a.filter(r=>b.has(r.cohortId!));const usable=candidates.filter(r=>{const other=b.get(r.cohortId!)!;return [[r,pair.fromYear,catA],[other,pair.toYear,catB]].every(([unit,year,category])=>{const observation=observationAt(observationIndex,(unit as typeof r).id,year as number,category as string);return observation?.cases!==null&&observation!==undefined})});
+   const values:(number|null)[]=labels.map(()=>null);
+   for(const [year,cat] of [[pair.fromYear,catA],[pair.toYear,catB]] as const){const index=data.meta.years.indexOf(year);const yearUnits=usable.map(r=>year===pair.fromYear?r:b.get(r.cohortId!)!);const nums=yearUnits.map(r=>observationAt(observationIndex,r.id,year,cat)?.cases??null);const v=nums.length&&nums.every(n=>n!==null)?nums.reduce<number>((s,n)=>s+(n??0),0):null;values[index]=v;detail.push({id:`${pair.id}-${year}`,period:`${pair.fromYear}–${pair.toYear}`,year,category:categoryLabel(data,cat),units:usable.length,candidateUnits:candidates.length,cases:v});}
+   series.push({name:`${pair.fromYear}–${pair.toYear} · ${usable.length} matched units`,values});
+ }
+ if(filters.year===2024){const category=filters.category==='all'?data.meta.categories?.find(c=>c.years.includes(2024)&&roleFor(data,c.id,2024)==='official_total')?.id:filters.category;const units=data.regions.filter(r=>r.year===2024&&(filters.unitType==='all'||r.regionType===filters.unitType)&&(filters.state==='all'||r.state===filters.state));const values:(number|null)[]=labels.map(()=>null);if(category){const nums=units.map(r=>observationAt(observationIndex,r.id,2024,category)?.cases??null);const value=nums.length&&nums.every(n=>n!==null)?nums.reduce<number>((s,n)=>s+(n??0),0):null;values[data.meta.years.indexOf(2024)]=value;series.push({name:`2024 standalone · ${units.length} units (BNS)`,values});detail.push({id:'2024-standalone',period:'Standalone BNS year',year:2024,category:categoryLabel(data,category),units:units.length,candidateUnits:units.length,cases:value});}}
+ const matchedCount=Math.max(0,...detail.map(r=>Number(r.units??0)));
+ return <><PageTitle eyebrow="ACROSS TIME" title="Yearly trends" description="Only source-verified geography and category cohorts are connected." action={<ExportButton rows={detail} name="trends"/>}/><Filters/>{series.length?<Panel title="Comparable reported counts" subtitle={`${filters.unitType==='administrative_district'?'Administrative districts':filters.unitType} · category: ${filters.category==='all'?'official total':categoryLabel(data,filters.category)}`}><Lines labels={labels} series={series} unit="cases"/><p className="panel-note">Points are sums for units with a non-null value in both years of that pair. Missing units remain excluded from both values and are counted in the table.</p></Panel>:<div className="empty"><h2>No supported comparison for this selection</h2><p>{data.meta.unsupportedComparison??'Select a year and category with a verified comparable cohort.'}</p></div>}<Panel title="Coverage and values"><DataTable rows={detail} columns={[{key:'period',label:'Period'},{key:'year',label:'Year'},{key:'category',label:'Category'},{key:'units',label:'Matched units'},{key:'candidateUnits',label:'Candidate units'},{key:'cases',label:'Known cases',render:r=>number(r.cases as number|null)}]}/></Panel><Notice>Verified adjacent comparisons: 2020–2021 (same 20 unit names/types and IPC category IDs) and 2022–2023 (same 28 unit names/types and IPC category IDs). 2021–2022 includes district reorganisation; 2023–2024 changes IPC to BNS. Those transitions are not connected. {matchedCount} is the largest matched-unit count shown above.</Notice></>
+}

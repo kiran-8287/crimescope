@@ -35,3 +35,11 @@
 5. **Outlier/anomaly analysis** — cross-sectional and year-on-year anomaly detection
 
 Association rules (method 09) implemented where observations support a meaningful transaction design.
+
+## Current connected analysis run (2026-11-05)
+
+The frontend's current saved methods use run `ap-2024-admin-leaf-log1p-zscore-20261105-v3`, recorded in `analysis/output/runs/current.json`. The manifest pins the processed dataset hash, feature-input hash, ordered feature IDs/labels, year and geography IDs, parameters, dependencies, output hashes, and validations. Dashboard methods are validated independently at load time.
+
+PCA and both clustering methods use the 2024 Andhra Pradesh administrative-district cohort (26 units). Features include source leaf and component categories, excluding official and parent totals. Each reported count is transformed as `log1p(count)`; each feature is then centered and population-standardized across the cohort. Zero-variance features remain zero. Inputs are counts, not rates or category shares. PCA uses SVD and divides retained component variance by the total variance across all features. PC1 explains 17.01%, PC2 7.91%, together 24.92%. The 131-dimensional feature space is reduced to two display axes; this is descriptive profile similarity, not risk ranking.
+
+K-means assignments for k=3,4,5 and Ward hierarchical memberships use that same recorded feature input and do not depend on PCA output. Saved diagnostics are limited to inertia/cluster sizes and merge history; silhouette and stability are explicitly unavailable. Anomaly flags are cross-sectional in the 2024 cohort. Association items indicate district profile presence at a count threshold; they do not represent event co-occurrence. Composition shares remain disabled because the category hierarchy includes overlapping totals and no complete mutually exclusive denominator has been established.

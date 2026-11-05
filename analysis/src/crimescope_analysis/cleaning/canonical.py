@@ -54,13 +54,38 @@ def classify_region(name: str) -> str:
         return "aggregate"
     if "railway" in lower:
         return "railway"
-    if "city" in lower or "urban" in lower:
+    if any(token in lower for token in ("city", "urban", "commissionerate", "metro")):
         return "city_police"
+    if any(token in lower for token in ("crime branch", "cyber crime", "cid", "special task force", "task force", "economic offences", "anti narcotic", "crime wing", "crime and eou", "igi airport", "airport")):
+        return "other_police_unit"
     return "administrative_district"
 
 
 def stable_id(*parts: str) -> str:
     return hashlib.sha256("|".join(parts).encode("utf-8")).hexdigest()[:24]
+
+
+def category_display_labels(raw_headers: list[str]) -> list[str]:
+    """Return readable leaf labels, disambiguating repeated leaves in a source schema."""
+    leaves = [header.split(" | ")[-1] if " | " in header else header for header in raw_headers]
+    bases = [re.sub(r"\s*\([^)]*\)", "", leaf).strip() for leaf in leaves]
+    counts: dict[str, int] = {}
+    for base in bases:
+        counts[base] = counts.get(base, 0) + 1
+    labels: list[str] = []
+    for header, leaf, base in zip(raw_headers, leaves, bases):
+        if counts[base] <= 1:
+            labels.append(base)
+            continue
+        qualifiers = [value.strip() for value in re.findall(r"\(([^()]*)\)", leaf) if not value.strip().casefold().startswith("col.")]
+        qualifier = qualifiers[0] if qualifiers else ""
+        if not qualifier:
+            sections = header.split(" | ")[:-1]
+            qualifier = sections[-1] if sections else "source column"
+        labels.append(f"{base} ({qualifier})")
+    if len(set(labels)) != len(labels):
+        raise ValueError("A year source schema contains indistinguishable repeated category headers")
+    return labels
 
 
 def clean_numeric(token: str) -> tuple[Optional[int], Optional[str]]:
@@ -85,61 +110,76 @@ def parse_table(
     csv_path: Path,
     year: int,
     source_id: str,
-    geography_version: str = "ncrb-2020",
+    geography_version: str | None = None,
+    state_name_hint: str | None = None,
+    header_template: list[str] | None = None,
 ) -> list[Observation]:
-    observations: list[Observation] = []
+    """Parse a source table or a state fragment from tables_index.csv.
 
-    with csv_path.open("r", encoding="utf-8", newline="") as f:
+    Indexed fragments may have generic ``col_N`` headers and no repeated state
+    row. Their state comes from the download manifest and their category headers
+    from the matching year's t1 header template.
+    """
+    observations: list[Observation] = []
+    with csv_path.open("r", encoding="utf-8-sig", newline="") as f:
         reader = csv.reader(f)
         header = next(reader)
 
+    index_fragment = len(header) >= 4 and header[0].strip().casefold() == "section" and header[1].strip().casefold() == "sl_no"
+    if header_template is not None:
+        if len(header_template) != len(header):
+            raise ValueError(f"Header template width differs from source fragment: {csv_path}")
+        if index_fragment:
+            header = header_template
     col_count = len(header)
+    display_categories = category_display_labels(header[3:])
+    geography_version = geography_version or f"ncrb-{year}"
     current_state: Optional[str] = None
 
-    with csv_path.open("r", encoding="utf-8", newline="") as f:
+    with csv_path.open("r", encoding="utf-8-sig", newline="") as f:
         reader = csv.reader(f)
         next(reader)
         for row_idx, row in enumerate(reader, start=2):
             if not row or all(c.strip() == "" for c in row):
                 continue
 
-            geography_cell = row[0].strip() if len(row) > 0 else ""
+            state_cell = row[0].strip() if row else ""
+            geography_index = 2 if index_fragment else 2
+            region_name = row[geography_index].strip() if len(row) > geography_index else ""
 
-            # Skip sub-header row (column numbers under headers) — empty geography cell
-            if geography_cell == "":
+            if index_fragment:
+                if state_cell.lower().startswith("state:"):
+                    current_state = parse_state_line(state_cell)[0]
+                # t1 contains a numbered sub-header at row 2; other state
+                # fragments contain district rows with an empty section cell.
+                if not region_name or (state_cell == "" and region_name.isdigit()):
+                    continue
+            elif not state_cell:
                 continue
 
-            state_name, _ = parse_state_line(geography_cell)
-            if state_name and geography_cell.lower().startswith("state:"):
+            state_name, _ = parse_state_line(state_cell)
+            if state_cell.lower().startswith("state:"):
                 current_state = state_name
+            if current_state is None:
+                current_state = state_name_hint or state_name
 
             sl_no = row[1].strip() if len(row) > 1 else ""
-            region_name = row[2].strip() if len(row) > 2 else ""
             original_region_name = region_name
-
-            if current_state is None:
-                current_state = state_name
-
             region_type = classify_region(region_name)
             is_total = region_type == "aggregate"
-
             geography_id = stable_id("geo", current_state or "", region_name, str(year))
 
             for col_idx in range(3, col_count):
                 if col_idx >= len(row):
-                    break
+                    # A missing trailing CSV cell is not converted to a zero or
+                    # a synthetic observation.
+                    continue
                 raw_header = header[col_idx] if col_idx < len(header) else f"col_{col_idx}"
-                category_part = raw_header.split(" | ")[-1] if " | " in raw_header else raw_header
-                category_part = category_part.split("(")[0].strip()
-
+                category_part = display_categories[col_idx - 3]
                 value, missing_reason = clean_numeric(row[col_idx])
-                measure_type = "cases"
-                unit = "count"
-
                 quarantine_reason: Optional[str] = None
                 if is_total:
                     quarantine_reason = "aggregate_row_excluded_from_comparison"
-
                 obs = Observation(
                     observation_id=stable_id("obs", source_id, str(year), current_state or "", region_name, raw_header),
                     year=year,
@@ -152,8 +192,8 @@ def parse_table(
                     geography_version=geography_version,
                     category_id=stable_id("cat", category_part),
                     original_category=category_part,
-                    measure_type=measure_type,
-                    unit=unit,
+                    measure_type="cases",
+                    unit="count",
                     reported_value=value,
                     missing_reason=missing_reason,
                     law_framework="IPC" if year < 2024 else "BNS",
@@ -164,9 +204,7 @@ def parse_table(
                     quarantine_reason=quarantine_reason,
                 )
                 observations.append(obs)
-
     return observations
-
 
 def write_observations(observations: list[Observation], out_path: Path) -> None:
     out_path.parent.mkdir(parents=True, exist_ok=True)
@@ -283,37 +321,27 @@ def validate_totals(
     total_category: str = "Total Cognizable IPC crimes",
     total_category_bns: str = "Total Cognizable IPC/BNS crimes",
 ) -> list[Observation]:
-    """Validate that component sums match the total row value."""
-    result: list[Observation] = []
+    """Reconcile official aggregate totals against district official totals.
+
+    Crime category columns overlap hierarchically, so summing every category to
+    check an official grand total is not a valid reconciliation.
+    """
     total_labels = {total_category, total_category_bns}
-
-    # Group eligible (non-aggregate) observations by (year, state, region)
-    groups: dict[tuple, list[Observation]] = {}
+    reporting_unit_totals: dict[tuple[int, str], list[int]] = {}
     for obs in observations:
-        if obs.comparison_status != "eligible":
+        if obs.original_category not in total_labels or obs.reported_value is None:
             continue
-        key = (obs.year, obs.state_name, obs.original_region_name)
-        groups.setdefault(key, []).append(obs)
-
-    total_obs_map: dict[tuple, Observation] = {}
+        key = (obs.year, obs.state_name)
+        if obs.comparison_status == "eligible":
+            reporting_unit_totals.setdefault(key, []).append(obs.reported_value)
     for obs in observations:
-        if obs.original_category in total_labels and obs.comparison_status == "aggregate_only":
-            key = (obs.year, obs.state_name, obs.original_region_name)
-            total_obs_map[key] = obs
-
-    for key, group in groups.items():
-        total_obs = total_obs_map.get(key)
-        if total_obs is not None and total_obs.reported_value is not None:
-            component_sum = sum(
-                o.reported_value or 0 for o in group if o.original_category not in total_labels
-            )
-            if component_sum != total_obs.reported_value:
-                total_obs.quality_status = "totals_mismatch"
-                total_obs.quarantine_reason = f"total={total_obs.reported_value}, component_sum={component_sum}"
-            result.append(total_obs)
-        result.extend(group)
-
-    return result
+        if obs.original_category not in total_labels or obs.region_type != "aggregate" or obs.reported_value is None:
+            continue
+        values = reporting_unit_totals.get((obs.year, obs.state_name), [])
+        if values and sum(values) != obs.reported_value:
+            obs.quality_status = "totals_mismatch"
+            obs.quarantine_reason = f"official aggregate={obs.reported_value}, reporting-unit official-total sum={sum(values)}"
+    return observations
 
 
 def build_quality_report(

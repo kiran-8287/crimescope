@@ -1,6 +1,11 @@
 {
-  "release_id": "2020_cci_district_children",
-  "release_path": "data\\serving\\releases\\2020_cci_district_children",
-  "sqlite_path": "data\\serving\\releases\\2020_cci_district_children\\crimescope.sqlite",
-  "year": 2020
+    "release_id":  "ncrb-districtwise-2021-2024-5004bc089eed",
+    "release_path":  "data/serving/releases/ncrb-districtwise-2021-2024-5004bc089eed",
+    "sqlite_path":  "data/serving/releases/ncrb-districtwise-2021-2024-5004bc089eed/crimescope.sqlite",
+    "years":  [
+                  2021,
+                  2022,
+                  2023,
+                  2024
+              ]
 }

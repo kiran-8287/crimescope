@@ -1,0 +1,2205 @@
+{
+  "meta": {
+    "releaseId": "design-demo-v1",
+    "title": "Fictional regional sample",
+    "sourceLabel": "Synthetic interface fixtures — not NCRB findings",
+    "sourceUrl": null,
+    "years": [
+      2020,
+      2021,
+      2022,
+      2023,
+      2024
+    ],
+    "warnings": [
+      "All district names, figures, analytical scores and rules in demo mode are illustrative.",
+      "Population denominators are unavailable. Only counts and composition shares are enabled."
+    ]
+  },
+  "regions": [
+    {
+      "id": "r1",
+      "name": "Aster district",
+      "state": "North division",
+      "coverage": "Complete"
+    },
+    {
+      "id": "r2",
+      "name": "Brookfield district",
+      "state": "North division",
+      "coverage": "Complete"
+    },
+    {
+      "id": "r3",
+      "name": "Cedar district",
+      "state": "North division",
+      "coverage": "Complete"
+    },
+    {
+      "id": "r4",
+      "name": "Dale district",
+      "state": "North division",
+      "coverage": "Complete"
+    },
+    {
+      "id": "r5",
+      "name": "Elmwood district",
+      "state": "Central division",
+      "coverage": "Complete"
+    },
+    {
+      "id": "r6",
+      "name": "Fairview district",
+      "state": "Central division",
+      "coverage": "Complete"
+    },
+    {
+      "id": "r7",
+      "name": "Glen district",
+      "state": "Central division",
+      "coverage": "Complete"
+    },
+    {
+      "id": "r8",
+      "name": "Harbor district",
+      "state": "Central division",
+      "coverage": "Complete"
+    },
+    {
+      "id": "r9",
+      "name": "Iris district",
+      "state": "South division",
+      "coverage": "Complete"
+    },
+    {
+      "id": "r10",
+      "name": "Juniper district",
+      "state": "South division",
+      "coverage": "Partial"
+    },
+    {
+      "id": "r11",
+      "name": "Kingswood district",
+      "state": "South division",
+      "coverage": "Complete"
+    },
+    {
+      "id": "r12",
+      "name": "Linden district",
+      "state": "South division",
+      "coverage": "Complete"
+    }
+  ],
+  "observations": [
+    {
+      "regionId": "r1",
+      "region": "Aster district",
+      "state": "North division",
+      "year": 2020,
+      "category": "Theft",
+      "cases": 510
+    },
+    {
+      "regionId": "r1",
+      "region": "Aster district",
+      "state": "North division",
+      "year": 2020,
+      "category": "Burglary",
+      "cases": 319
+    },
+    {
+      "regionId": "r1",
+      "region": "Aster district",
+      "state": "North division",
+      "year": 2020,
+      "category": "Assault",
+      "cases": 221
+    },
+    {
+      "regionId": "r1",
+      "region": "Aster district",
+      "state": "North division",
+      "year": 2020,
+      "category": "Robbery",
+      "cases": 99
+    },
+    {
+      "regionId": "r1",
+      "region": "Aster district",
+      "state": "North division",
+      "year": 2021,
+      "category": "Theft",
+      "cases": 630
+    },
+    {
+      "regionId": "r1",
+      "region": "Aster district",
+      "state": "North division",
+      "year": 2021,
+      "category": "Burglary",
+      "cases": 344
+    },
+    {
+      "regionId": "r1",
+      "region": "Aster district",
+      "state": "North division",
+      "year": 2021,
+      "category": "Assault",
+      "cases": 206
+    },
+    {
+      "regionId": "r1",
+      "region": "Aster district",
+      "state": "North division",
+      "year": 2021,
+      "category": "Robbery",
+      "cases": 88
+    },
+    {
+      "regionId": "r1",
+      "region": "Aster district",
+      "state": "North division",
+      "year": 2022,
+      "category": "Theft",
+      "cases": 676
+    },
+    {
+      "regionId": "r1",
+      "region": "Aster district",
+      "state": "North division",
+      "year": 2022,
+      "category": "Burglary",
+      "cases": 320
+    },
+    {
+      "regionId": "r1",
+      "region": "Aster district",
+      "state": "North division",
+      "year": 2022,
+      "category": "Assault",
+      "cases": 183
+    },
+    {
+      "regionId": "r1",
+      "region": "Aster district",
+      "state": "North division",
+      "year": 2022,
+      "category": "Robbery",
+      "cases": 90
+    },
+    {
+      "regionId": "r1",
+      "region": "Aster district",
+      "state": "North division",
+      "year": 2023,
+      "category": "Theft",
+      "cases": 626
+    },
+    {
+      "regionId": "r1",
+      "region": "Aster district",
+      "state": "North division",
+      "year": 2023,
+      "category": "Burglary",
+      "cases": 282
+    },
+    {
+      "regionId": "r1",
+      "region": "Aster district",
+      "state": "North division",
+      "year": 2023,
+      "category": "Assault",
+      "cases": 184
+    },
+    {
+      "regionId": "r1",
+      "region": "Aster district",
+      "state": "North division",
+      "year": 2023,
+      "category": "Robbery",
+      "cases": 110
+    },
+    {
+      "regionId": "r1",
+      "region": "Aster district",
+      "state": "North division",
+      "year": 2024,
+      "category": "Theft",
+      "cases": 550
+    },
+    {
+      "regionId": "r1",
+      "region": "Aster district",
+      "state": "North division",
+      "year": 2024,
+      "category": "Burglary",
+      "cases": 284
+    },
+    {
+      "regionId": "r1",
+      "region": "Aster district",
+      "state": "North division",
+      "year": 2024,
+      "category": "Assault",
+      "cases": 225
+    },
+    {
+      "regionId": "r1",
+      "region": "Aster district",
+      "state": "North division",
+      "year": 2024,
+      "category": "Robbery",
+      "cases": 137
+    },
+    {
+      "regionId": "r2",
+      "region": "Brookfield district",
+      "state": "North division",
+      "year": 2020,
+      "category": "Theft",
+      "cases": 789
+    },
+    {
+      "regionId": "r2",
+      "region": "Brookfield district",
+      "state": "North division",
+      "year": 2020,
+      "category": "Burglary",
+      "cases": 373
+    },
+    {
+      "regionId": "r2",
+      "region": "Brookfield district",
+      "state": "North division",
+      "year": 2020,
+      "category": "Assault",
+      "cases": 213
+    },
+    {
+      "regionId": "r2",
+      "region": "Brookfield district",
+      "state": "North division",
+      "year": 2020,
+      "category": "Robbery",
+      "cases": 105
+    },
+    {
+      "regionId": "r2",
+      "region": "Brookfield district",
+      "state": "North division",
+      "year": 2021,
+      "category": "Theft",
+      "cases": 736
+    },
+    {
+      "regionId": "r2",
+      "region": "Brookfield district",
+      "state": "North division",
+      "year": 2021,
+      "category": "Burglary",
+      "cases": 331
+    },
+    {
+      "regionId": "r2",
+      "region": "Brookfield district",
+      "state": "North division",
+      "year": 2021,
+      "category": "Assault",
+      "cases": 217
+    },
+    {
+      "regionId": "r2",
+      "region": "Brookfield district",
+      "state": "North division",
+      "year": 2021,
+      "category": "Robbery",
+      "cases": 129
+    },
+    {
+      "regionId": "r2",
+      "region": "Brookfield district",
+      "state": "North division",
+      "year": 2022,
+      "category": "Theft",
+      "cases": 651
+    },
+    {
+      "regionId": "r2",
+      "region": "Brookfield district",
+      "state": "North division",
+      "year": 2022,
+      "category": "Burglary",
+      "cases": 336
+    },
+    {
+      "regionId": "r2",
+      "region": "Brookfield district",
+      "state": "North division",
+      "year": 2022,
+      "category": "Assault",
+      "cases": 266
+    },
+    {
+      "regionId": "r2",
+      "region": "Brookfield district",
+      "state": "North division",
+      "year": 2022,
+      "category": "Robbery",
+      "cases": 163
+    },
+    {
+      "regionId": "r2",
+      "region": "Brookfield district",
+      "state": "North division",
+      "year": 2023,
+      "category": "Theft",
+      "cases": 658
+    },
+    {
+      "regionId": "r2",
+      "region": "Brookfield district",
+      "state": "North division",
+      "year": 2023,
+      "category": "Burglary",
+      "cases": 411
+    },
+    {
+      "regionId": "r2",
+      "region": "Brookfield district",
+      "state": "North division",
+      "year": 2023,
+      "category": "Assault",
+      "cases": 335
+    },
+    {
+      "regionId": "r2",
+      "region": "Brookfield district",
+      "state": "North division",
+      "year": 2023,
+      "category": "Robbery",
+      "cases": 182
+    },
+    {
+      "regionId": "r2",
+      "region": "Brookfield district",
+      "state": "North division",
+      "year": 2024,
+      "category": "Theft",
+      "cases": 803
+    },
+    {
+      "regionId": "r2",
+      "region": "Brookfield district",
+      "state": "North division",
+      "year": 2024,
+      "category": "Burglary",
+      "cases": 515
+    },
+    {
+      "regionId": "r2",
+      "region": "Brookfield district",
+      "state": "North division",
+      "year": 2024,
+      "category": "Assault",
+      "cases": 373
+    },
+    {
+      "regionId": "r2",
+      "region": "Brookfield district",
+      "state": "North division",
+      "year": 2024,
+      "category": "Robbery",
+      "cases": 174
+    },
+    {
+      "regionId": "r3",
+      "region": "Cedar district",
+      "state": "North division",
+      "year": 2020,
+      "category": "Theft",
+      "cases": 716
+    },
+    {
+      "regionId": "r3",
+      "region": "Cedar district",
+      "state": "North division",
+      "year": 2020,
+      "category": "Burglary",
+      "cases": 369
+    },
+    {
+      "regionId": "r3",
+      "region": "Cedar district",
+      "state": "North division",
+      "year": 2020,
+      "category": "Assault",
+      "cases": 293
+    },
+    {
+      "regionId": "r3",
+      "region": "Cedar district",
+      "state": "North division",
+      "year": 2020,
+      "category": "Robbery",
+      "cases": 179
+    },
+    {
+      "regionId": "r3",
+      "region": "Cedar district",
+      "state": "North division",
+      "year": 2021,
+      "category": "Theft",
+      "cases": 728
+    },
+    {
+      "regionId": "r3",
+      "region": "Cedar district",
+      "state": "North division",
+      "year": 2021,
+      "category": "Burglary",
+      "cases": 455
+    },
+    {
+      "regionId": "r3",
+      "region": "Cedar district",
+      "state": "North division",
+      "year": 2021,
+      "category": "Assault",
+      "cases": 371
+    },
+    {
+      "regionId": "r3",
+      "region": "Cedar district",
+      "state": "North division",
+      "year": 2021,
+      "category": "Robbery",
+      "cases": 201
+    },
+    {
+      "regionId": "r3",
+      "region": "Cedar district",
+      "state": "North division",
+      "year": 2022,
+      "category": "Theft",
+      "cases": 895
+    },
+    {
+      "regionId": "r3",
+      "region": "Cedar district",
+      "state": "North division",
+      "year": 2022,
+      "category": "Burglary",
+      "cases": 574
+    },
+    {
+      "regionId": "r3",
+      "region": "Cedar district",
+      "state": "North division",
+      "year": 2022,
+      "category": "Assault",
+      "cases": 415
+    },
+    {
+      "regionId": "r3",
+      "region": "Cedar district",
+      "state": "North division",
+      "year": 2022,
+      "category": "Robbery",
+      "cases": 194
+    },
+    {
+      "regionId": "r3",
+      "region": "Cedar district",
+      "state": "North division",
+      "year": 2023,
+      "category": "Theft",
+      "cases": 1124
+    },
+    {
+      "regionId": "r3",
+      "region": "Cedar district",
+      "state": "North division",
+      "year": 2023,
+      "category": "Burglary",
+      "cases": 641
+    },
+    {
+      "regionId": "r3",
+      "region": "Cedar district",
+      "state": "North division",
+      "year": 2023,
+      "category": "Assault",
+      "cases": 399
+    },
+    {
+      "regionId": "r3",
+      "region": "Cedar district",
+      "state": "North division",
+      "year": 2023,
+      "category": "Robbery",
+      "cases": 170
+    },
+    {
+      "regionId": "r3",
+      "region": "Cedar district",
+      "state": "North division",
+      "year": 2024,
+      "category": "Theft",
+      "cases": 1251
+    },
+    {
+      "regionId": "r3",
+      "region": "Cedar district",
+      "state": "North division",
+      "year": 2024,
+      "category": "Burglary",
+      "cases": 613
+    },
+    {
+      "regionId": "r3",
+      "region": "Cedar district",
+      "state": "North division",
+      "year": 2024,
+      "category": "Assault",
+      "cases": 349
+    },
+    {
+      "regionId": "r3",
+      "region": "Cedar district",
+      "state": "North division",
+      "year": 2024,
+      "category": "Robbery",
+      "cases": 162
+    },
+    {
+      "regionId": "r4",
+      "region": "Dale district",
+      "state": "North division",
+      "year": 2020,
+      "category": "Theft",
+      "cases": 946
+    },
+    {
+      "regionId": "r4",
+      "region": "Dale district",
+      "state": "North division",
+      "year": 2020,
+      "category": "Burglary",
+      "cases": 607
+    },
+    {
+      "regionId": "r4",
+      "region": "Dale district",
+      "state": "North division",
+      "year": 2020,
+      "category": "Assault",
+      "cases": 439
+    },
+    {
+      "regionId": "r4",
+      "region": "Dale district",
+      "state": "North division",
+      "year": 2020,
+      "category": "Robbery",
+      "cases": 205
+    },
+    {
+      "regionId": "r4",
+      "region": "Dale district",
+      "state": "North division",
+      "year": 2021,
+      "category": "Theft",
+      "cases": 1197
+    },
+    {
+      "regionId": "r4",
+      "region": "Dale district",
+      "state": "North division",
+      "year": 2021,
+      "category": "Burglary",
+      "cases": 683
+    },
+    {
+      "regionId": "r4",
+      "region": "Dale district",
+      "state": "North division",
+      "year": 2021,
+      "category": "Assault",
+      "cases": 424
+    },
+    {
+      "regionId": "r4",
+      "region": "Dale district",
+      "state": "North division",
+      "year": 2021,
+      "category": "Robbery",
+      "cases": 181
+    },
+    {
+      "regionId": "r4",
+      "region": "Dale district",
+      "state": "North division",
+      "year": 2022,
+      "category": "Theft",
+      "cases": 1341
+    },
+    {
+      "regionId": "r4",
+      "region": "Dale district",
+      "state": "North division",
+      "year": 2022,
+      "category": "Burglary",
+      "cases": 657
+    },
+    {
+      "regionId": "r4",
+      "region": "Dale district",
+      "state": "North division",
+      "year": 2022,
+      "category": "Assault",
+      "cases": 375
+    },
+    {
+      "regionId": "r4",
+      "region": "Dale district",
+      "state": "North division",
+      "year": 2022,
+      "category": "Robbery",
+      "cases": 174
+    },
+    {
+      "regionId": "r4",
+      "region": "Dale district",
+      "state": "North division",
+      "year": 2023,
+      "category": "Theft",
+      "cases": 1287
+    },
+    {
+      "regionId": "r4",
+      "region": "Dale district",
+      "state": "North division",
+      "year": 2023,
+      "category": "Burglary",
+      "cases": 578
+    },
+    {
+      "regionId": "r4",
+      "region": "Dale district",
+      "state": "North division",
+      "year": 2023,
+      "category": "Assault",
+      "cases": 358
+    },
+    {
+      "regionId": "r4",
+      "region": "Dale district",
+      "state": "North division",
+      "year": 2023,
+      "category": "Robbery",
+      "cases": 204
+    },
+    {
+      "regionId": "r4",
+      "region": "Dale district",
+      "state": "North division",
+      "year": 2024,
+      "category": "Theft",
+      "cases": 1129
+    },
+    {
+      "regionId": "r4",
+      "region": "Dale district",
+      "state": "North division",
+      "year": 2024,
+      "category": "Burglary",
+      "cases": 551
+    },
+    {
+      "regionId": "r4",
+      "region": "Dale district",
+      "state": "North division",
+      "year": 2024,
+      "category": "Assault",
+      "cases": 418
+    },
+    {
+      "regionId": "r4",
+      "region": "Dale district",
+      "state": "North division",
+      "year": 2024,
+      "category": "Robbery",
+      "cases": 258
+    },
+    {
+      "regionId": "r5",
+      "region": "Elmwood district",
+      "state": "Central division",
+      "year": 2020,
+      "category": "Theft",
+      "cases": 1380
+    },
+    {
+      "regionId": "r5",
+      "region": "Elmwood district",
+      "state": "Central division",
+      "year": 2020,
+      "category": "Burglary",
+      "cases": 677
+    },
+    {
+      "regionId": "r5",
+      "region": "Elmwood district",
+      "state": "Central division",
+      "year": 2020,
+      "category": "Assault",
+      "cases": 385
+    },
+    {
+      "regionId": "r5",
+      "region": "Elmwood district",
+      "state": "Central division",
+      "year": 2020,
+      "category": "Robbery",
+      "cases": 179
+    },
+    {
+      "regionId": "r5",
+      "region": "Elmwood district",
+      "state": "Central division",
+      "year": 2021,
+      "category": "Theft",
+      "cases": 1334
+    },
+    {
+      "regionId": "r5",
+      "region": "Elmwood district",
+      "state": "Central division",
+      "year": 2021,
+      "category": "Burglary",
+      "cases": 599
+    },
+    {
+      "regionId": "r5",
+      "region": "Elmwood district",
+      "state": "Central division",
+      "year": 2021,
+      "category": "Assault",
+      "cases": 371
+    },
+    {
+      "regionId": "r5",
+      "region": "Elmwood district",
+      "state": "Central division",
+      "year": 2021,
+      "category": "Robbery",
+      "cases": 211
+    },
+    {
+      "regionId": "r5",
+      "region": "Elmwood district",
+      "state": "Central division",
+      "year": 2022,
+      "category": "Theft",
+      "cases": 1177
+    },
+    {
+      "regionId": "r5",
+      "region": "Elmwood district",
+      "state": "Central division",
+      "year": 2022,
+      "category": "Burglary",
+      "cases": 574
+    },
+    {
+      "regionId": "r5",
+      "region": "Elmwood district",
+      "state": "Central division",
+      "year": 2022,
+      "category": "Assault",
+      "cases": 436
+    },
+    {
+      "regionId": "r5",
+      "region": "Elmwood district",
+      "state": "Central division",
+      "year": 2022,
+      "category": "Robbery",
+      "cases": 269
+    },
+    {
+      "regionId": "r5",
+      "region": "Elmwood district",
+      "state": "Central division",
+      "year": 2023,
+      "category": "Theft",
+      "cases": 1125
+    },
+    {
+      "regionId": "r5",
+      "region": "Elmwood district",
+      "state": "Central division",
+      "year": 2023,
+      "category": "Burglary",
+      "cases": 673
+    },
+    {
+      "regionId": "r5",
+      "region": "Elmwood district",
+      "state": "Central division",
+      "year": 2023,
+      "category": "Assault",
+      "cases": 555
+    },
+    {
+      "regionId": "r5",
+      "region": "Elmwood district",
+      "state": "Central division",
+      "year": 2023,
+      "category": "Robbery",
+      "cases": 313
+    },
+    {
+      "regionId": "r5",
+      "region": "Elmwood district",
+      "state": "Central division",
+      "year": 2024,
+      "category": "Theft",
+      "cases": 1315
+    },
+    {
+      "regionId": "r5",
+      "region": "Elmwood district",
+      "state": "Central division",
+      "year": 2024,
+      "category": "Burglary",
+      "cases": 854
+    },
+    {
+      "regionId": "r5",
+      "region": "Elmwood district",
+      "state": "Central division",
+      "year": 2024,
+      "category": "Assault",
+      "cases": 644
+    },
+    {
+      "regionId": "r5",
+      "region": "Elmwood district",
+      "state": "Central division",
+      "year": 2024,
+      "category": "Robbery",
+      "cases": 313
+    },
+    {
+      "regionId": "r6",
+      "region": "Fairview district",
+      "state": "Central division",
+      "year": 2020,
+      "category": "Theft",
+      "cases": 1188
+    },
+    {
+      "regionId": "r6",
+      "region": "Fairview district",
+      "state": "Central division",
+      "year": 2020,
+      "category": "Burglary",
+      "cases": 580
+    },
+    {
+      "regionId": "r6",
+      "region": "Fairview district",
+      "state": "Central division",
+      "year": 2020,
+      "category": "Assault",
+      "cases": 440
+    },
+    {
+      "regionId": "r6",
+      "region": "Fairview district",
+      "state": "Central division",
+      "year": 2020,
+      "category": "Robbery",
+      "cases": 272
+    },
+    {
+      "regionId": "r6",
+      "region": "Fairview district",
+      "state": "Central division",
+      "year": 2021,
+      "category": "Theft",
+      "cases": 1143
+    },
+    {
+      "regionId": "r6",
+      "region": "Fairview district",
+      "state": "Central division",
+      "year": 2021,
+      "category": "Burglary",
+      "cases": 684
+    },
+    {
+      "regionId": "r6",
+      "region": "Fairview district",
+      "state": "Central division",
+      "year": 2021,
+      "category": "Assault",
+      "cases": 564
+    },
+    {
+      "regionId": "r6",
+      "region": "Fairview district",
+      "state": "Central division",
+      "year": 2021,
+      "category": "Robbery",
+      "cases": 319
+    },
+    {
+      "regionId": "r6",
+      "region": "Fairview district",
+      "state": "Central division",
+      "year": 2022,
+      "category": "Theft",
+      "cases": 1345
+    },
+    {
+      "regionId": "r6",
+      "region": "Fairview district",
+      "state": "Central division",
+      "year": 2022,
+      "category": "Burglary",
+      "cases": 873
+    },
+    {
+      "regionId": "r6",
+      "region": "Fairview district",
+      "state": "Central division",
+      "year": 2022,
+      "category": "Assault",
+      "cases": 658
+    },
+    {
+      "regionId": "r6",
+      "region": "Fairview district",
+      "state": "Central division",
+      "year": 2022,
+      "category": "Robbery",
+      "cases": 320
+    },
+    {
+      "regionId": "r6",
+      "region": "Fairview district",
+      "state": "Central division",
+      "year": 2023,
+      "category": "Theft",
+      "cases": 1710
+    },
+    {
+      "regionId": "r6",
+      "region": "Fairview district",
+      "state": "Central division",
+      "year": 2023,
+      "category": "Burglary",
+      "cases": 1016
+    },
+    {
+      "regionId": "r6",
+      "region": "Fairview district",
+      "state": "Central division",
+      "year": 2023,
+      "category": "Assault",
+      "cases": 658
+    },
+    {
+      "regionId": "r6",
+      "region": "Fairview district",
+      "state": "Central division",
+      "year": 2023,
+      "category": "Robbery",
+      "cases": 284
+    },
+    {
+      "regionId": "r6",
+      "region": "Fairview district",
+      "state": "Central division",
+      "year": 2024,
+      "category": "Theft",
+      "cases": 1984
+    },
+    {
+      "regionId": "r6",
+      "region": "Fairview district",
+      "state": "Central division",
+      "year": 2024,
+      "category": "Burglary",
+      "cases": 1013
+    },
+    {
+      "regionId": "r6",
+      "region": "Fairview district",
+      "state": "Central division",
+      "year": 2024,
+      "category": "Assault",
+      "cases": 584
+    },
+    {
+      "regionId": "r6",
+      "region": "Fairview district",
+      "state": "Central division",
+      "year": 2024,
+      "category": "Robbery",
+      "cases": 259
+    },
+    {
+      "regionId": "r7",
+      "region": "Glen district",
+      "state": "Central division",
+      "year": 2020,
+      "category": "Theft",
+      "cases": 1336
+    },
+    {
+      "regionId": "r7",
+      "region": "Glen district",
+      "state": "Central division",
+      "year": 2020,
+      "category": "Burglary",
+      "cases": 868
+    },
+    {
+      "regionId": "r7",
+      "region": "Glen district",
+      "state": "Central division",
+      "year": 2020,
+      "category": "Assault",
+      "cases": 654
+    },
+    {
+      "regionId": "r7",
+      "region": "Glen district",
+      "state": "Central division",
+      "year": 2020,
+      "category": "Robbery",
+      "cases": 318
+    },
+    {
+      "regionId": "r7",
+      "region": "Glen district",
+      "state": "Central division",
+      "year": 2021,
+      "category": "Theft",
+      "cases": 1711
+    },
+    {
+      "regionId": "r7",
+      "region": "Glen district",
+      "state": "Central division",
+      "year": 2021,
+      "category": "Burglary",
+      "cases": 1017
+    },
+    {
+      "regionId": "r7",
+      "region": "Glen district",
+      "state": "Central division",
+      "year": 2021,
+      "category": "Assault",
+      "cases": 659
+    },
+    {
+      "regionId": "r7",
+      "region": "Glen district",
+      "state": "Central division",
+      "year": 2021,
+      "category": "Robbery",
+      "cases": 285
+    },
+    {
+      "regionId": "r7",
+      "region": "Glen district",
+      "state": "Central division",
+      "year": 2022,
+      "category": "Theft",
+      "cases": 1998
+    },
+    {
+      "regionId": "r7",
+      "region": "Glen district",
+      "state": "Central division",
+      "year": 2022,
+      "category": "Burglary",
+      "cases": 1020
+    },
+    {
+      "regionId": "r7",
+      "region": "Glen district",
+      "state": "Central division",
+      "year": 2022,
+      "category": "Assault",
+      "cases": 588
+    },
+    {
+      "regionId": "r7",
+      "region": "Glen district",
+      "state": "Central division",
+      "year": 2022,
+      "category": "Robbery",
+      "cases": 261
+    },
+    {
+      "regionId": "r7",
+      "region": "Glen district",
+      "state": "Central division",
+      "year": 2023,
+      "category": "Theft",
+      "cases": 1998
+    },
+    {
+      "regionId": "r7",
+      "region": "Glen district",
+      "state": "Central division",
+      "year": 2023,
+      "category": "Burglary",
+      "cases": 908
+    },
+    {
+      "regionId": "r7",
+      "region": "Glen district",
+      "state": "Central division",
+      "year": 2023,
+      "category": "Assault",
+      "cases": 538
+    },
+    {
+      "regionId": "r7",
+      "region": "Glen district",
+      "state": "Central division",
+      "year": 2023,
+      "category": "Robbery",
+      "cases": 290
+    },
+    {
+      "regionId": "r7",
+      "region": "Glen district",
+      "state": "Central division",
+      "year": 2024,
+      "category": "Theft",
+      "cases": 1772
+    },
+    {
+      "regionId": "r7",
+      "region": "Glen district",
+      "state": "Central division",
+      "year": 2024,
+      "category": "Burglary",
+      "cases": 827
+    },
+    {
+      "regionId": "r7",
+      "region": "Glen district",
+      "state": "Central division",
+      "year": 2024,
+      "category": "Assault",
+      "cases": 595
+    },
+    {
+      "regionId": "r7",
+      "region": "Glen district",
+      "state": "Central division",
+      "year": 2024,
+      "category": "Robbery",
+      "cases": 366
+    },
+    {
+      "regionId": "r8",
+      "region": "Harbor district",
+      "state": "Central division",
+      "year": 2020,
+      "category": "Theft",
+      "cases": 1962
+    },
+    {
+      "regionId": "r8",
+      "region": "Harbor district",
+      "state": "Central division",
+      "year": 2020,
+      "category": "Burglary",
+      "cases": 1002
+    },
+    {
+      "regionId": "r8",
+      "region": "Harbor district",
+      "state": "Central division",
+      "year": 2020,
+      "category": "Assault",
+      "cases": 577
+    },
+    {
+      "regionId": "r8",
+      "region": "Harbor district",
+      "state": "Central division",
+      "year": 2020,
+      "category": "Robbery",
+      "cases": 256
+    },
+    {
+      "regionId": "r8",
+      "region": "Harbor district",
+      "state": "Central division",
+      "year": 2021,
+      "category": "Theft",
+      "cases": 1976
+    },
+    {
+      "regionId": "r8",
+      "region": "Harbor district",
+      "state": "Central division",
+      "year": 2021,
+      "category": "Burglary",
+      "cases": 898
+    },
+    {
+      "regionId": "r8",
+      "region": "Harbor district",
+      "state": "Central division",
+      "year": 2021,
+      "category": "Assault",
+      "cases": 532
+    },
+    {
+      "regionId": "r8",
+      "region": "Harbor district",
+      "state": "Central division",
+      "year": 2021,
+      "category": "Robbery",
+      "cases": 286
+    },
+    {
+      "regionId": "r8",
+      "region": "Harbor district",
+      "state": "Central division",
+      "year": 2022,
+      "category": "Theft",
+      "cases": 1764
+    },
+    {
+      "regionId": "r8",
+      "region": "Harbor district",
+      "state": "Central division",
+      "year": 2022,
+      "category": "Burglary",
+      "cases": 823
+    },
+    {
+      "regionId": "r8",
+      "region": "Harbor district",
+      "state": "Central division",
+      "year": 2022,
+      "category": "Assault",
+      "cases": 592
+    },
+    {
+      "regionId": "r8",
+      "region": "Harbor district",
+      "state": "Central division",
+      "year": 2022,
+      "category": "Robbery",
+      "cases": 365
+    },
+    {
+      "regionId": "r8",
+      "region": "Harbor district",
+      "state": "Central division",
+      "year": 2023,
+      "category": "Theft",
+      "cases": 1613
+    },
+    {
+      "regionId": "r8",
+      "region": "Harbor district",
+      "state": "Central division",
+      "year": 2023,
+      "category": "Burglary",
+      "cases": 913
+    },
+    {
+      "regionId": "r8",
+      "region": "Harbor district",
+      "state": "Central division",
+      "year": 2023,
+      "category": "Assault",
+      "cases": 751
+    },
+    {
+      "regionId": "r8",
+      "region": "Harbor district",
+      "state": "Central division",
+      "year": 2023,
+      "category": "Robbery",
+      "cases": 440
+    },
+    {
+      "regionId": "r8",
+      "region": "Harbor district",
+      "state": "Central division",
+      "year": 2024,
+      "category": "Theft",
+      "cases": 1783
+    },
+    {
+      "regionId": "r8",
+      "region": "Harbor district",
+      "state": "Central division",
+      "year": 2024,
+      "category": "Burglary",
+      "cases": 1155
+    },
+    {
+      "regionId": "r8",
+      "region": "Harbor district",
+      "state": "Central division",
+      "year": 2024,
+      "category": "Assault",
+      "cases": 903
+    },
+    {
+      "regionId": "r8",
+      "region": "Harbor district",
+      "state": "Central division",
+      "year": 2024,
+      "category": "Robbery",
+      "cases": 458
+    },
+    {
+      "regionId": "r9",
+      "region": "Iris district",
+      "state": "South division",
+      "year": 2020,
+      "category": "Theft",
+      "cases": 1715
+    },
+    {
+      "regionId": "r9",
+      "region": "Iris district",
+      "state": "South division",
+      "year": 2020,
+      "category": "Burglary",
+      "cases": 801
+    },
+    {
+      "regionId": "r9",
+      "region": "Iris district",
+      "state": "South division",
+      "year": 2020,
+      "category": "Assault",
+      "cases": 575
+    },
+    {
+      "regionId": "r9",
+      "region": "Iris district",
+      "state": "South division",
+      "year": 2020,
+      "category": "Robbery",
+      "cases": 354
+    },
+    {
+      "regionId": "r9",
+      "region": "Iris district",
+      "state": "South division",
+      "year": 2021,
+      "category": "Theft",
+      "cases": 1579
+    },
+    {
+      "regionId": "r9",
+      "region": "Iris district",
+      "state": "South division",
+      "year": 2021,
+      "category": "Burglary",
+      "cases": 894
+    },
+    {
+      "regionId": "r9",
+      "region": "Iris district",
+      "state": "South division",
+      "year": 2021,
+      "category": "Assault",
+      "cases": 735
+    },
+    {
+      "regionId": "r9",
+      "region": "Iris district",
+      "state": "South division",
+      "year": 2021,
+      "category": "Robbery",
+      "cases": 431
+    },
+    {
+      "regionId": "r9",
+      "region": "Iris district",
+      "state": "South division",
+      "year": 2022,
+      "category": "Theft",
+      "cases": 1757
+    },
+    {
+      "regionId": "r9",
+      "region": "Iris district",
+      "state": "South division",
+      "year": 2022,
+      "category": "Burglary",
+      "cases": 1138
+    },
+    {
+      "regionId": "r9",
+      "region": "Iris district",
+      "state": "South division",
+      "year": 2022,
+      "category": "Assault",
+      "cases": 890
+    },
+    {
+      "regionId": "r9",
+      "region": "Iris district",
+      "state": "South division",
+      "year": 2022,
+      "category": "Robbery",
+      "cases": 451
+    },
+    {
+      "regionId": "r9",
+      "region": "Iris district",
+      "state": "South division",
+      "year": 2023,
+      "category": "Theft",
+      "cases": 2229
+    },
+    {
+      "regionId": "r9",
+      "region": "Iris district",
+      "state": "South division",
+      "year": 2023,
+      "category": "Burglary",
+      "cases": 1374
+    },
+    {
+      "regionId": "r9",
+      "region": "Iris district",
+      "state": "South division",
+      "year": 2023,
+      "category": "Assault",
+      "cases": 930
+    },
+    {
+      "regionId": "r9",
+      "region": "Iris district",
+      "state": "South division",
+      "year": 2023,
+      "category": "Robbery",
+      "cases": 411
+    },
+    {
+      "regionId": "r9",
+      "region": "Iris district",
+      "state": "South division",
+      "year": 2024,
+      "category": "Theft",
+      "cases": 2682
+    },
+    {
+      "regionId": "r9",
+      "region": "Iris district",
+      "state": "South division",
+      "year": 2024,
+      "category": "Burglary",
+      "cases": 1430
+    },
+    {
+      "regionId": "r9",
+      "region": "Iris district",
+      "state": "South division",
+      "year": 2024,
+      "category": "Assault",
+      "cases": 844
+    },
+    {
+      "regionId": "r9",
+      "region": "Iris district",
+      "state": "South division",
+      "year": 2024,
+      "category": "Robbery",
+      "cases": 364
+    },
+    {
+      "regionId": "r10",
+      "region": "Juniper district",
+      "state": "South division",
+      "year": 2020,
+      "category": "Theft",
+      "cases": 1695
+    },
+    {
+      "regionId": "r10",
+      "region": "Juniper district",
+      "state": "South division",
+      "year": 2020,
+      "category": "Burglary",
+      "cases": 1098
+    },
+    {
+      "regionId": "r10",
+      "region": "Juniper district",
+      "state": "South division",
+      "year": 2020,
+      "category": "Assault",
+      "cases": 858
+    },
+    {
+      "regionId": "r10",
+      "region": "Juniper district",
+      "state": "South division",
+      "year": 2020,
+      "category": "Robbery",
+      "cases": 435
+    },
+    {
+      "regionId": "r10",
+      "region": "Juniper district",
+      "state": "South division",
+      "year": 2021,
+      "category": "Theft",
+      "cases": null
+    },
+    {
+      "regionId": "r10",
+      "region": "Juniper district",
+      "state": "South division",
+      "year": 2021,
+      "category": "Burglary",
+      "cases": null
+    },
+    {
+      "regionId": "r10",
+      "region": "Juniper district",
+      "state": "South division",
+      "year": 2021,
+      "category": "Assault",
+      "cases": null
+    },
+    {
+      "regionId": "r10",
+      "region": "Juniper district",
+      "state": "South division",
+      "year": 2021,
+      "category": "Robbery",
+      "cases": null
+    },
+    {
+      "regionId": "r10",
+      "region": "Juniper district",
+      "state": "South division",
+      "year": 2022,
+      "category": "Theft",
+      "cases": 2622
+    },
+    {
+      "regionId": "r10",
+      "region": "Juniper district",
+      "state": "South division",
+      "year": 2022,
+      "category": "Burglary",
+      "cases": 1398
+    },
+    {
+      "regionId": "r10",
+      "region": "Juniper district",
+      "state": "South division",
+      "year": 2022,
+      "category": "Assault",
+      "cases": 825
+    },
+    {
+      "regionId": "r10",
+      "region": "Juniper district",
+      "state": "South division",
+      "year": 2022,
+      "category": "Robbery",
+      "cases": 356
+    },
+    {
+      "regionId": "r10",
+      "region": "Juniper district",
+      "state": "South division",
+      "year": 2023,
+      "category": "Theft",
+      "cases": 2738
+    },
+    {
+      "regionId": "r10",
+      "region": "Juniper district",
+      "state": "South division",
+      "year": 2023,
+      "category": "Burglary",
+      "cases": 1274
+    },
+    {
+      "regionId": "r10",
+      "region": "Juniper district",
+      "state": "South division",
+      "year": 2023,
+      "category": "Assault",
+      "cases": 734
+    },
+    {
+      "regionId": "r10",
+      "region": "Juniper district",
+      "state": "South division",
+      "year": 2023,
+      "category": "Robbery",
+      "cases": 372
+    },
+    {
+      "regionId": "r10",
+      "region": "Juniper district",
+      "state": "South division",
+      "year": 2024,
+      "category": "Theft",
+      "cases": 2487
+    },
+    {
+      "regionId": "r10",
+      "region": "Juniper district",
+      "state": "South division",
+      "year": 2024,
+      "category": "Burglary",
+      "cases": 1129
+    },
+    {
+      "regionId": "r10",
+      "region": "Juniper district",
+      "state": "South division",
+      "year": 2024,
+      "category": "Assault",
+      "cases": 763
+    },
+    {
+      "regionId": "r10",
+      "region": "Juniper district",
+      "state": "South division",
+      "year": 2024,
+      "category": "Robbery",
+      "cases": 461
+    },
+    {
+      "regionId": "r11",
+      "region": "Kingswood district",
+      "state": "South division",
+      "year": 2020,
+      "category": "Theft",
+      "cases": 2511
+    },
+    {
+      "regionId": "r11",
+      "region": "Kingswood district",
+      "state": "South division",
+      "year": 2020,
+      "category": "Burglary",
+      "cases": 1339
+    },
+    {
+      "regionId": "r11",
+      "region": "Kingswood district",
+      "state": "South division",
+      "year": 2020,
+      "category": "Assault",
+      "cases": 790
+    },
+    {
+      "regionId": "r11",
+      "region": "Kingswood district",
+      "state": "South division",
+      "year": 2020,
+      "category": "Robbery",
+      "cases": 341
+    },
+    {
+      "regionId": "r11",
+      "region": "Kingswood district",
+      "state": "South division",
+      "year": 2021,
+      "category": "Theft",
+      "cases": 2641
+    },
+    {
+      "regionId": "r11",
+      "region": "Kingswood district",
+      "state": "South division",
+      "year": 2021,
+      "category": "Burglary",
+      "cases": 1229
+    },
+    {
+      "regionId": "r11",
+      "region": "Kingswood district",
+      "state": "South division",
+      "year": 2021,
+      "category": "Assault",
+      "cases": 708
+    },
+    {
+      "regionId": "r11",
+      "region": "Kingswood district",
+      "state": "South division",
+      "year": 2021,
+      "category": "Robbery",
+      "cases": 359
+    },
+    {
+      "regionId": "r11",
+      "region": "Kingswood district",
+      "state": "South division",
+      "year": 2022,
+      "category": "Theft",
+      "cases": 2414
+    },
+    {
+      "regionId": "r11",
+      "region": "Kingswood district",
+      "state": "South division",
+      "year": 2022,
+      "category": "Burglary",
+      "cases": 1096
+    },
+    {
+      "regionId": "r11",
+      "region": "Kingswood district",
+      "state": "South division",
+      "year": 2022,
+      "category": "Assault",
+      "cases": 741
+    },
+    {
+      "regionId": "r11",
+      "region": "Kingswood district",
+      "state": "South division",
+      "year": 2022,
+      "category": "Robbery",
+      "cases": 448
+    },
+    {
+      "regionId": "r11",
+      "region": "Kingswood district",
+      "state": "South division",
+      "year": 2023,
+      "category": "Theft",
+      "cases": 2146
+    },
+    {
+      "regionId": "r11",
+      "region": "Kingswood district",
+      "state": "South division",
+      "year": 2023,
+      "category": "Burglary",
+      "cases": 1143
+    },
+    {
+      "regionId": "r11",
+      "region": "Kingswood district",
+      "state": "South division",
+      "year": 2023,
+      "category": "Assault",
+      "cases": 922
+    },
+    {
+      "regionId": "r11",
+      "region": "Kingswood district",
+      "state": "South division",
+      "year": 2023,
+      "category": "Robbery",
+      "cases": 556
+    },
+    {
+      "regionId": "r11",
+      "region": "Kingswood district",
+      "state": "South division",
+      "year": 2024,
+      "category": "Theft",
+      "cases": 2232
+    },
+    {
+      "regionId": "r11",
+      "region": "Kingswood district",
+      "state": "South division",
+      "year": 2024,
+      "category": "Burglary",
+      "cases": 1419
+    },
+    {
+      "regionId": "r11",
+      "region": "Kingswood district",
+      "state": "South division",
+      "year": 2024,
+      "category": "Assault",
+      "cases": 1142
+    },
+    {
+      "regionId": "r11",
+      "region": "Kingswood district",
+      "state": "South division",
+      "year": 2024,
+      "category": "Robbery",
+      "cases": 605
+    },
+    {
+      "regionId": "r12",
+      "region": "Linden district",
+      "state": "South division",
+      "year": 2020,
+      "category": "Theft",
+      "cases": 2299
+    },
+    {
+      "regionId": "r12",
+      "region": "Linden district",
+      "state": "South division",
+      "year": 2020,
+      "category": "Burglary",
+      "cases": 1044
+    },
+    {
+      "regionId": "r12",
+      "region": "Linden district",
+      "state": "South division",
+      "year": 2020,
+      "category": "Assault",
+      "cases": 705
+    },
+    {
+      "regionId": "r12",
+      "region": "Linden district",
+      "state": "South division",
+      "year": 2020,
+      "category": "Robbery",
+      "cases": 427
+    },
+    {
+      "regionId": "r12",
+      "region": "Linden district",
+      "state": "South division",
+      "year": 2021,
+      "category": "Theft",
+      "cases": 2058
+    },
+    {
+      "regionId": "r12",
+      "region": "Linden district",
+      "state": "South division",
+      "year": 2021,
+      "category": "Burglary",
+      "cases": 1097
+    },
+    {
+      "regionId": "r12",
+      "region": "Linden district",
+      "state": "South division",
+      "year": 2021,
+      "category": "Assault",
+      "cases": 885
+    },
+    {
+      "regionId": "r12",
+      "region": "Linden district",
+      "state": "South division",
+      "year": 2021,
+      "category": "Robbery",
+      "cases": 534
+    },
+    {
+      "regionId": "r12",
+      "region": "Linden district",
+      "state": "South division",
+      "year": 2022,
+      "category": "Theft",
+      "cases": 2155
+    },
+    {
+      "regionId": "r12",
+      "region": "Linden district",
+      "state": "South division",
+      "year": 2022,
+      "category": "Burglary",
+      "cases": 1370
+    },
+    {
+      "regionId": "r12",
+      "region": "Linden district",
+      "state": "South division",
+      "year": 2022,
+      "category": "Assault",
+      "cases": 1102
+    },
+    {
+      "regionId": "r12",
+      "region": "Linden district",
+      "state": "South division",
+      "year": 2022,
+      "category": "Robbery",
+      "cases": 584
+    },
+    {
+      "regionId": "r12",
+      "region": "Linden district",
+      "state": "South division",
+      "year": 2023,
+      "category": "Theft",
+      "cases": 2683
+    },
+    {
+      "regionId": "r12",
+      "region": "Linden district",
+      "state": "South division",
+      "year": 2023,
+      "category": "Burglary",
+      "cases": 1701
+    },
+    {
+      "regionId": "r12",
+      "region": "Linden district",
+      "state": "South division",
+      "year": 2023,
+      "category": "Assault",
+      "cases": 1203
+    },
+    {
+      "regionId": "r12",
+      "region": "Linden district",
+      "state": "South division",
+      "year": 2023,
+      "category": "Robbery",
+      "cases": 550
+    },
+    {
+      "regionId": "r12",
+      "region": "Linden district",
+      "state": "South division",
+      "year": 2024,
+      "category": "Theft",
+      "cases": 3322
+    },
+    {
+      "regionId": "r12",
+      "region": "Linden district",
+      "state": "South division",
+      "year": 2024,
+      "category": "Burglary",
+      "cases": 1852
+    },
+    {
+      "regionId": "r12",
+      "region": "Linden district",
+      "state": "South division",
+      "year": 2024,
+      "category": "Assault",
+      "cases": 1129
+    },
+    {
+      "regionId": "r12",
+      "region": "Linden district",
+      "state": "South division",
+      "year": 2024,
+      "category": "Robbery",
+      "cases": 482
+    }
+  ],
+  "analysis": {
+    "runId": "illustrative-profile-2024",
+    "year": 2024,
+    "featureMode": "Category shares · standardised",
+    "variance": [
+      46.8,
+      27.4,
+      16.1,
+      9.7
+    ],
+    "loadings": [
+      {
+        "feature": "Theft",
+        "pc1": 0.71,
+        "pc2": -0.16
+      },
+      {
+        "feature": "Burglary",
+        "pc1": 0.49,
+        "pc2": 0.32
+      },
+      {
+        "feature": "Assault",
+        "pc1": -0.42,
+        "pc2": 0.63
+      },
+      {
+        "feature": "Robbery",
+        "pc1": -0.28,
+        "pc2": -0.69
+      }
+    ],
+    "points": [
+      {
+        "regionId": "r1",
+        "x": -1.65,
+        "y": 1.58,
+        "cluster": 0
+      },
+      {
+        "regionId": "r2",
+        "x": 0.5454913628597113,
+        "y": -1.3997504815426283,
+        "cluster": 1
+      },
+      {
+        "regionId": "r3",
+        "x": 2.0273697906080703,
+        "y": 0.3862510619854662,
+        "cluster": 2
+      },
+      {
+        "regionId": "r4",
+        "x": -1.5836735962118622,
+        "y": 1.5608817375921757,
+        "cluster": 0
+      },
+      {
+        "regionId": "r5",
+        "x": -0.20569717279472624,
+        "y": -1.2698400162281345,
+        "cluster": 1
+      },
+      {
+        "regionId": "r6",
+        "x": 1.149305590908325,
+        "y": 0.2972456660433028,
+        "cluster": 2
+      },
+      {
+        "regionId": "r7",
+        "x": -1.781325284153495,
+        "y": 1.5050499001915962,
+        "cluster": 0
+      },
+      {
+        "regionId": "r8",
+        "x": 0.45878370139783087,
+        "y": -1.1343661352602399,
+        "cluster": 1
+      },
+      {
+        "regionId": "r9",
+        "x": 2.0649983759129897,
+        "y": 0.24032344944477535,
+        "cluster": 2
+      },
+      {
+        "regionId": "r10",
+        "x": -1.4563043119363743,
+        "y": 1.4169520199571586,
+        "cluster": 0
+      },
+      {
+        "regionId": "r11",
+        "x": -0.10568992211800379,
+        "y": -1.004120610329572,
+        "cluster": 1
+      },
+      {
+        "regionId": "r12",
+        "x": 1.1300046029211694,
+        "y": 0.22001880333057416,
+        "cluster": 2
+      }
+    ],
+    "profiles": [
+      {
+        "name": "Profile A",
+        "values": [
+          55,
+          25,
+          13,
+          7
+        ]
+      },
+      {
+        "name": "Profile B",
+        "values": [
+          35,
+          21,
+          30,
+          14
+        ]
+      },
+      {
+        "name": "Profile C",
+        "values": [
+          43,
+          19,
+          19,
+          19
+        ]
+      }
+    ],
+    "silhouette": 0.41,
+    "stability": 0.78
+  },
+  "rules": [
+    {
+      "id": "rule1",
+      "antecedent": "Elevated theft share",
+      "consequent": "Elevated burglary share",
+      "support": 0.28,
+      "confidence": 0.71,
+      "lift": 1.43,
+      "count": 16
+    },
+    {
+      "id": "rule2",
+      "antecedent": "Elevated assault share",
+      "consequent": "Elevated robbery share",
+      "support": 0.21,
+      "confidence": 0.63,
+      "lift": 1.31,
+      "count": 12
+    },
+    {
+      "id": "rule3",
+      "antecedent": "Elevated robbery share",
+      "consequent": "Elevated assault share",
+      "support": 0.21,
+      "confidence": 0.67,
+      "lift": 1.38,
+      "count": 12
+    }
+  ],
+  "issues": [
+    {
+      "id": "q1",
+      "region": "Juniper district",
+      "type": "Missing records",
+      "status": "Open",
+      "detail": "Four category observations are unavailable for 2021; retained as null."
+    },
+    {
+      "id": "q2",
+      "region": "All regions",
+      "type": "Population",
+      "status": "Unavailable",
+      "detail": "No compatible population series has been supplied. Rate comparisons are disabled."
+    },
+    {
+      "id": "q3",
+      "region": "All regions",
+      "type": "Data provenance",
+      "status": "Demo only",
+      "detail": "Synthetic records support interface testing only. Replace through the API adapter."
+    }
+  ]
+}

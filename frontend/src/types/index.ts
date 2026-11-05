@@ -1,0 +1,11 @@
+export type Category = string;
+export type Observation = { regionId:string; region:string; state:string; year:number; category:Category; categoryLabel?:string; cases:number|null; unit?:string; qualityStatus?:string };
+export type Region = { id:string; name:string; state:string; year?:number; regionType?:string; cohortId?:string; coverage:'Complete'|'Partial' };
+export type Point = { regionId:string; x:number; y:number; cluster:number };
+export type Analysis = { runId:string; year:number; featureMode:string; variance:number[]; loadings:{feature:string; pc1:number; pc2:number}[]; points:Point[]; profiles:{name:string; values:number[]}[]; silhouette:number|null; stability:number|null };
+export type Rule = {id:string; antecedent:string; consequent:string; support:number; confidence:number; lift:number; count:number};
+export type QualityIssue = {id:string; region:string; type:string; status:string; detail:string};
+export type CategoryMeta={id:string;label:string;years:number[];rolesByYear?:Record<string,string[]>;sourceHeaders?:Record<string,string[]>};
+export type ComparisonPair={id:string;fromYear:number;toYear:number;geographyMatch:boolean;categoryMatch:boolean;status:string;reason?:string|null};
+export type Dataset = { meta:{ releaseId:string; datasetId?:string; title:string; sourceLabel:string; sourceUrl:string|null; geographyScope?:string; years:number[]; warnings:string[]; categories?:CategoryMeta[]; unitTypes?:string[]; dataClassification?:string; dataSha256?:string; sourceExport?:{datasetId:string;path:string;sha256:string}; servingDatabase?:{releaseId:string;path:string;scope:string;year:number|number[];rowCount:number;sqliteSha256:string}; categoryDisplay?:{compositionSharesAvailable:boolean;reason:string;defaultTrendRole:string}; comparisonPairs?:ComparisonPair[]; unsupportedComparison?:string; sourceCoverageGaps?:unknown }; regions:Region[]; observations:Observation[]; analysis:Analysis; methods?:Record<string,any>; rules:Rule[]; issues:QualityIssue[]; qualitySummary?:{observations:number;missing:number;coverage:Array<{id:string;state:string;region:string;regionType:string;year:number;supplied:number;known:number}>}|null };
+export type Filters = { year:number; state:string; category:string; metric:'count'|'share'; unitType:string };

@@ -1,6 +1,6 @@
 # CrimeScope — Project Status
 
-**Date:** 2026-11-04
+**Date:** 2026-11-05
 **Phase:** I — Report, demonstration and handoff (COMPLETE)
 
 ## Repository state
@@ -8,6 +8,11 @@
 - Phase I complete: findings, final report, demo script, deployment guide, reproducibility instructions
 
 ## Phase I deliverables
+
+## Real-data frontend integration (2026-11-05)
+- Dashboard API reads the verified Andhra Pradesh 2020–2024 processed export; current SQLite serving release remains the narrower 2020 crimes-against-children slice.
+- Frontend environment is configured for API mode at localhost:4000; methods without verified compatible adapters show unavailable states.
+- See `docs/REAL_DATA_INTEGRATION_VERIFICATION.md` and `progress/WORK_LOG.md` for scope and validation status.
 
 ### Documentation
 - `docs/findings.md` — 7 evidence-backed findings with limitations
@@ -69,3 +74,18 @@
 
 - Node.js v24.15.0, Python 3.14.5, Windows 11
 - Repository: https://github.com/kiran-8287/crimescope.git (branch: master)
+
+## Supplied frontend integration — 2026-11-05
+
+- Replaced `frontend/` with the supplied implementation from `crimescope-frontend-package/frontend/`; the extracted package remains unchanged as a reference.
+- Saved the previous frontend at `A:\Projects\crimescope-frontend-backups\frontend-before-20261105-001048\frontend` (excluding installed dependencies and generated build output). No existing frontend environment files were present.
+- Preserved the npm workspace structure and reconciled dependencies through the root `package-lock.json`. The frontend is configured for demo data with `VITE_API_BASE_URL=http://localhost:3001/api/v1`; the existing backend and its API are not connected or modified by this integration.
+- Integration adjustments: excluded `vite.config.ts` from frontend TypeScript checking because the workspace installs Vite 6 for this app while backend Vitest retains Vite 5; renamed the copied `ui.tsx` to `UI.tsx` in a two-step rename to match the supplied imports on Windows. The other copied source/support files match the supplied package; its standalone lockfile and generated `dist/` were excluded.
+- Validation: frontend typecheck passed; 3 included tests passed; production build passed. All 9 route URLs and all 9 page modules returned HTTP 200 from the workspace Vite server.
+- Browser interaction and visual checks remain unverified because browser automation is unavailable in this environment. HTTP route checks do not verify filters, navigation interactions, exports, responsive layout, or browser runtime errors.
+- `npm install` reported 8 dependency audit advisories (4 moderate, 2 high, 2 critical); dependencies were not force-upgraded as part of this frontend integration.
+- Start command from the repository root: `npm run dev --workspace frontend`; current local URL: `http://localhost:5173/`.
+
+## Current integration state (2026-11-05)
+
+The diagnostic fixes are implemented and checked as recorded in `docs/REAL_DATA_INTEGRATION_VERIFICATION.md`. Current analysis run `ap-2024-admin-leaf-log1p-zscore-20261105-v3` is published through `analysis/output/runs/current.json`; older analytical artifacts are preserved. The dashboard intentionally uses the processed five-year Andhra Pradesh CSV and labels the narrower 2020 SQLite release separately. Current views preserve null gaps and disable category shares. Frontend and backend production builds passed; frontend tests passed (4), backend API tests passed (4), Python tests passed (4), and backend typecheck passed. The live port-4000 API served the new association route successfully. Browser visual verification remains outstanding.

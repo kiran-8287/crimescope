@@ -63,6 +63,7 @@ def cross_sectional_anomalies(
                     {
                         "year": year,
                         "region": r["region_name"],
+                        "region_id": r.get("region_id"),
                         "state_name": r["state_name"],
                         "category": cat,
                         "value": r["total"],
