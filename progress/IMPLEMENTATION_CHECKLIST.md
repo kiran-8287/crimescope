@@ -2,6 +2,14 @@
 
 Derived from CRIMESCOPE_AI_IDE_MASTER_ROADMAP.md. Implement in dependency order, verify each stage, keep progress records. Mark complete only when code exists, outputs are generated from real data, checks pass, and documentation records what happened.
 
+## Real-data connection (2026-11-05)
+- [x] Inspect data/release compatibility and preserve current serving pointer
+- [x] Add dashboard endpoint for curated processed export and expose provenance/limitations
+- [x] Configure frontend API mode and explicit method-unavailable states
+- [ ] Add paginated association rules endpoint and verified saved-result adapters
+- [x] Run live dashboard API smoke check, test suite, typechecks and production build
+- [ ] Add paginated association rules endpoint and compatible saved-result adapters
+
 ## Phase A — Repository and scope
 - [ ] Inspect existing repository, README, AGENTS.md, dependency files, datasets
 - [ ] Record current state in progress/STATUS.md
@@ -116,15 +124,17 @@ Derived from CRIMESCOPE_AI_IDE_MASTER_ROADMAP.md. Implement in dependency order,
 - [ ] scripts/verify_release.py
 
 ## Frontend pages
-- [ ] Overview
-- [ ] Regional comparison
-- [ ] Trends
-- [ ] Data quality
-- [ ] PCA
-- [ ] Clusters
-- [ ] Unusual changes
-- [ ] Association rules
-- [ ] Methodology and sources
+- [x] Overview (supplied demo frontend)
+- [x] Regional comparison (supplied demo frontend)
+- [x] Trends (supplied demo frontend)
+- [x] Data quality (supplied demo frontend)
+- [x] PCA (supplied demo frontend)
+- [x] Clusters (supplied demo frontend)
+- [x] Unusual changes (supplied demo frontend)
+- [x] Association rules (supplied demo frontend)
+- [x] Methodology and sources (supplied demo frontend)
+
+The supplied frontend pages are present and the production build passes. Browser interaction and visual checks are still unverified; the pages run in demo mode and are not connected to the existing backend.
 
 ## Backend endpoints
 - [ ] GET /health
@@ -178,3 +188,22 @@ Derived from CRIMESCOPE_AI_IDE_MASTER_ROADMAP.md. Implement in dependency order,
 - [ ] README, final report, demo script, deployment instructions complete
 - [ ] Fresh environment can reproduce documented workflow
 - [ ] No fabricated data, model metrics, safety labels, or completion claims
+- [x] Add dashboard endpoint for curated processed export and expose provenance/limitations
+- [x] Configure frontend API mode and explicit method-unavailable states
+- [ ] Add paginated association rule endpoint and verified saved-result adapters
+- [ ] Run full backend/frontend tests, production build, and API smoke test
+- [x] Add paginated association endpoint and independent validated saved-result adapters
+- [x] Run backend API tests, frontend TypeScript/production build, backend build, Python analysis tests and service smoke checks (see `docs/REAL_DATA_INTEGRATION_VERIFICATION.md`)
+
+## Real-data integration correction (2026-11-05)
+
+- [x] Resolve category IDs to metadata labels in page displays and keep IDs in stored records
+- [x] Label the Andhra Pradesh processed dataset and distinct SQLite release separately
+- [x] Use year-specific categories, administrative-district default, bounded chart categories and disable unverified shares
+- [x] Permit only supported geography/category trend pairs and preserve absent observations
+- [x] Record the 38 missing trailing 2020 source cells without imputing values
+- [x] Regenerate PCA and dependent clustering with documented feature preprocessing and provenance
+- [x] Connect validated PCA, clustering, cross-sectional anomaly and association results
+- [x] Test the PCA variance calculation against SVD and test category hierarchy/share guard
+- [ ] Browser visual verification (not performed)
+- [ ] Classify the omitted trailing source cells beyond what the available source exports establish

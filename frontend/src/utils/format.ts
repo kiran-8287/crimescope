@@ -1,0 +1,2 @@
+export const number=(v:number|null, digits=0)=>v===null?'Unavailable':new Intl.NumberFormat('en-IN',{maximumFractionDigits:digits}).format(v);
+export function downloadCsv(rows:Record<string,unknown>[],filename:string){import('./metrics.js').then(({toCsv})=>{const url=URL.createObjectURL(new Blob(['\uFEFF'+toCsv(rows)],{type:'text/csv;charset=utf-8;'}));const a=document.createElement('a');a.href=url;a.download=filename;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)})}

@@ -1,0 +1,9 @@
+export type Category = 'Theft' | 'Burglary' | 'Assault' | 'Robbery';
+export type Observation = { regionId:string; region:string; state:string; year:number; category:Category; cases:number|null };
+export type Region = { id:string; name:string; state:string; coverage:'Complete'|'Partial' };
+export type Point = { regionId:string; x:number; y:number; cluster:number };
+export type Analysis = { runId:string; year:number; featureMode:string; variance:number[]; loadings:{feature:string; pc1:number; pc2:number}[]; points:Point[]; profiles:{name:string; values:number[]}[]; silhouette:number; stability:number };
+export type Rule = {id:string; antecedent:string; consequent:string; support:number; confidence:number; lift:number; count:number};
+export type QualityIssue = {id:string; region:string; type:string; status:string; detail:string};
+export type Dataset = { meta:{ releaseId:string; title:string; sourceLabel:string; sourceUrl:string|null; years:number[]; warnings:string[] }; regions:Region[]; observations:Observation[]; analysis:Analysis; rules:Rule[]; issues:QualityIssue[] };
+export type Filters = { year:number; state:string; category:string; metric:'count'|'share' };

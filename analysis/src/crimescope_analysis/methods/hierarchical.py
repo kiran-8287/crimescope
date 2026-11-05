@@ -7,6 +7,7 @@ import json
 import math
 from pathlib import Path
 from typing import Optional
+from crimescope_analysis.features.matrix import vectors_from_matrix
 
 
 def load_feature_matrix(csv_path: Path) -> list[dict]:
@@ -23,22 +24,32 @@ def load_feature_matrix(csv_path: Path) -> list[dict]:
 def build_matrix(
     rows: list[dict],
     year: int,
+    feature_mode: str = "raw_counts",
 ) -> dict:
     year_rows = [r for r in rows if r["year"] == year]
-    regions = sorted({r["region_name"] for r in year_rows})
+    def key(row: dict) -> str:
+        return row.get("region_id") or f"{row.get('state_name', '')}|{row['region_name']}"
+    regions = sorted({key(r) for r in year_rows})
     categories = sorted({r["category"] for r in year_rows})
 
     matrix: dict[str, dict[str, int]] = {}
     for reg in regions:
         matrix[reg] = {cat: 0 for cat in categories}
     for r in year_rows:
-        matrix[r["region_name"]][r["category"]] = r["total"]
+        matrix[key(r)][r["category"]] = r["total"]
 
+    region_ids = {key(r): r.get("region_id") for r in year_rows if r.get("region_id")}
+    region_labels = {key(r): f"{r.get('state_name', '')} · {r['region_name']}".strip(" ·") for r in year_rows}
+    category_ids = {r["category"]: r.get("category_id") for r in year_rows if r.get("category_id")}
     return {
         "year": year,
         "regions": regions,
         "categories": categories,
         "matrix": matrix,
+        "region_ids": region_ids,
+        "region_labels": region_labels,
+        "category_ids": category_ids,
+        "feature_mode": feature_mode,
     }
 
 
@@ -75,6 +86,7 @@ def hierarchical_clustering(
     matrix = matrix_data["matrix"]
 
     n_regions = len(regions)
+    feature_mode = matrix_data.get("feature_mode", "raw_counts")
     if n_regions < 2:
         return {
             "year": matrix_data["year"],
@@ -86,9 +98,7 @@ def hierarchical_clustering(
         }
 
     # Build vectors
-    vectors = []
-    for reg in regions:
-        vectors.append([float(matrix[reg][cat]) for cat in categories])
+    vectors = vectors_from_matrix(matrix_data, feature_mode)
 
     # Initial: each region is its own cluster
     clusters = [[i] for i in range(n_regions)]
@@ -140,7 +150,8 @@ def hierarchical_clustering(
             {
                 "cluster_id": ci,
                 "size": len(c),
-                "regions": [regions[i] for i in c],
+                "regions": [matrix_data.get("region_labels", {}).get(regions[i], regions[i]) for i in c],
+                "region_ids": [matrix_data.get("region_ids", {}).get(regions[i]) for i in c],
             }
         )
 
@@ -149,6 +160,7 @@ def hierarchical_clustering(
         "linkage": linkage,
         "n_regions": n_regions,
         "n_categories": len(categories),
+        "feature_mode": feature_mode,
         "max_clusters": max_clusters,
         "merge_history": merge_history,
         "clusters": final_clusters,
@@ -160,13 +172,14 @@ def run_hierarchical(
     output_dir: Path,
     years: list[int],
     max_clusters: int = 3,
+    feature_mode: str = "raw_counts",
 ) -> dict:
     output_dir.mkdir(parents=True, exist_ok=True)
     rows = load_feature_matrix(input_csv)
 
     results = {}
     for year in years:
-        matrix_data = build_matrix(rows, year)
+        matrix_data = build_matrix(rows, year, feature_mode=feature_mode)
         hr = hierarchical_clustering(matrix_data, max_clusters=max_clusters)
         results[year] = hr
         with (output_dir / f"hierarchical_{year}.json").open("w", encoding="utf-8") as f:
@@ -176,5 +189,6 @@ def run_hierarchical(
         "method": "07_hierarchical_clustering",
         "years_analyzed": years,
         "max_clusters": max_clusters,
+        "feature_mode": feature_mode,
         "output_dir": str(output_dir),
     }

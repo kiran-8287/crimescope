@@ -8,6 +8,7 @@ import math
 import random
 from pathlib import Path
 from typing import Optional
+from crimescope_analysis.features.matrix import vectors_from_matrix
 
 
 def load_feature_matrix(csv_path: Path) -> list[dict]:
@@ -24,22 +25,32 @@ def load_feature_matrix(csv_path: Path) -> list[dict]:
 def build_matrix(
     rows: list[dict],
     year: int,
+    feature_mode: str = "raw_counts",
 ) -> dict:
     year_rows = [r for r in rows if r["year"] == year]
-    regions = sorted({r["region_name"] for r in year_rows})
+    def key(row: dict) -> str:
+        return row.get("region_id") or f"{row.get('state_name', '')}|{row['region_name']}"
+    regions = sorted({key(r) for r in year_rows})
     categories = sorted({r["category"] for r in year_rows})
 
     matrix: dict[str, dict[str, int]] = {}
     for reg in regions:
         matrix[reg] = {cat: 0 for cat in categories}
     for r in year_rows:
-        matrix[r["region_name"]][r["category"]] = r["total"]
+        matrix[key(r)][r["category"]] = r["total"]
 
+    region_ids = {key(r): r.get("region_id") for r in year_rows if r.get("region_id")}
+    region_labels = {key(r): f"{r.get('state_name', '')} · {r['region_name']}".strip(" ·") for r in year_rows}
+    category_ids = {r["category"]: r.get("category_id") for r in year_rows if r.get("category_id")}
     return {
         "year": year,
         "regions": regions,
         "categories": categories,
         "matrix": matrix,
+        "region_ids": region_ids,
+        "region_labels": region_labels,
+        "category_ids": category_ids,
+        "feature_mode": feature_mode,
     }
 
 
@@ -60,6 +71,7 @@ def kmeans(
 
     n_regions = len(regions)
     n_categories = len(categories)
+    feature_mode = matrix_data.get("feature_mode", "raw_counts")
 
     if n_regions < k:
         return {
@@ -74,9 +86,7 @@ def kmeans(
         }
 
     # Build data vectors
-    vectors = []
-    for reg in regions:
-        vectors.append([float(matrix[reg][cat]) for cat in categories])
+    vectors = vectors_from_matrix(matrix_data, feature_mode)
 
     # K-means++ initialization
     random.seed(seed)
@@ -138,12 +148,13 @@ def kmeans(
     # Cluster regions
     clusters = []
     for c in range(k):
-        members = [regions[i] for i in range(n_regions) if assignments[i] == c]
+        members = [matrix_data.get("region_labels", {}).get(regions[i], regions[i]) for i in range(n_regions) if assignments[i] == c]
         clusters.append(
             {
                 "cluster_id": c,
                 "size": cluster_sizes[c],
                 "regions": members,
+                "region_ids": [matrix_data.get("region_ids", {}).get(regions[i]) for i in range(n_regions) if assignments[i] == c],
                 "centroid": {
                     categories[j]: round(centroids[c][j], 4) for j in range(n_categories)
                 },
@@ -155,12 +166,14 @@ def kmeans(
         "k": k,
         "n_regions": n_regions,
         "n_categories": n_categories,
+        "feature_mode": feature_mode,
         "max_iterations": max_iterations,
         "seed": seed,
         "inertia": round(inertia, 6),
         "cluster_sizes": cluster_sizes,
         "clusters": clusters,
-        "assignments": {regions[i]: assignments[i] for i in range(n_regions)},
+        "assignments": {matrix_data.get("region_ids", {}).get(regions[i], regions[i]): assignments[i] for i in range(n_regions)},
+        "assignment_records": [{"region": matrix_data.get("region_labels", {}).get(regions[i], regions[i]), "region_id": matrix_data.get("region_ids", {}).get(regions[i]), "cluster_id": assignments[i]} for i in range(n_regions)],
     }
 
 
@@ -169,13 +182,14 @@ def run_kmeans(
     output_dir: Path,
     years: list[int],
     k_values: list[int],
+    feature_mode: str = "raw_counts",
 ) -> dict:
     output_dir.mkdir(parents=True, exist_ok=True)
     rows = load_feature_matrix(input_csv)
 
     results = {}
     for year in years:
-        matrix_data = build_matrix(rows, year)
+        matrix_data = build_matrix(rows, year, feature_mode=feature_mode)
         year_results = {}
         for k in k_values:
             if k <= len(matrix_data["regions"]):
@@ -189,5 +203,6 @@ def run_kmeans(
         "method": "06_kmeans",
         "years_analyzed": years,
         "k_values": k_values,
+        "feature_mode": feature_mode,
         "output_dir": str(output_dir),
     }

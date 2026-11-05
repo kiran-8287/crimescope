@@ -1,29 +1,12 @@
-export function Bar({ children, className }: { children: React.ReactNode; className?: string }) {
-  return <div className={className}>{children}</div>;
-}
-
-export function Card({ children, className }: { children: React.ReactNode; className?: string }) {
-  return (
-    <div className={`rounded-lg border bg-card text-card-foreground shadow-sm ${className}`}>
-      {children}
-    </div>
-  );
-}
-
-export function CardHeader({
-  children,
-  className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return <div className={`flex flex-col space-y-1.5 p-6 ${className}`}>{children}</div>;
-}
-
-export function CardTitle({ children, className }: { children: React.ReactNode; className?: string }) {
-  return <h3 className={`text-lg font-semibold leading-none tracking-tight ${className}`}>{children}</h3>;
-}
-
-export function CardContent({ children, className }: { children: React.ReactNode; className?: string }) {
-  return <div className={`p-6 pt-0 ${className}`}>{children}</div>;
-}
+import {useEffect,useState,type ReactNode} from 'react';
+import {ArrowUpRight,Info,Download} from 'lucide-react';
+import {useFilters} from '../context/useFilters';
+import {useData} from '../context/DataContext';
+import {downloadCsv} from '../utils/format';
+export function Panel({title,subtitle,action,children,className=''}:{title:string;subtitle?:string;action?:ReactNode;children:ReactNode;className?:string}){return <section className={`panel ${className}`}><div className="panel-head"><div><h2>{title}</h2>{subtitle&&<p>{subtitle}</p>}</div>{action}</div>{children}</section>}
+export function Notice({children}:{children:ReactNode}){return <div className="notice"><Info size={16}/><span>{children}</span></div>}
+export function Empty({children='No records match this selection.'}:{children?:ReactNode}){return <div className="empty"><Info size={24}/><p>{children}</p></div>}
+export function Stat({label,value,detail}:{label:string;value:string;detail:string}){return <div className="stat"><span className="eyebrow">{label}</span><strong>{value}</strong><span className="stat-detail">{detail}<ArrowUpRight size={14}/></span></div>}
+export function Badge({children,tone='neutral'}:{children:ReactNode;tone?:string}){return <span className={`badge ${tone}`}>{children}</span>}
+export function ExportButton({rows,name='crimescope'}:{rows:Record<string,unknown>[];name?:string}){const {isDemo}=useData();return <button className="button" disabled={!rows.length} onClick={()=>downloadCsv(rows,`${isDemo?'DEMO_':''}${name}.csv`)}><Download size={15}/>Export CSV</button>}
+export function Filters(){const {data}=useData();const {filters,update,reset,states,categories,years,unitTypes}=useFilters();const selected=categories.find(c=>c.id===filters.category);const [query,setQuery]=useState(selected?.label??'');useEffect(()=>setQuery(selected?.label??''),[filters.category,filters.year]);const names:Record<string,string>={administrative_district:'Administrative districts',city_police:'City-police units',railway:'Railway units'};return <div className="filterbar"><label>Year<select value={filters.year} onChange={e=>update('year',e.target.value)}>{years.map(y=><option key={y}>{y}</option>)}</select></label><label>State / UT<select value={filters.state} onChange={e=>update('state',e.target.value)}><option value="all">All states / UTs</option>{states.map(s=><option key={s}>{s}</option>)}</select></label><label>Reporting units<select value={filters.unitType} onChange={e=>update('unitType',e.target.value)}><option value="all">All unit types</option>{unitTypes.map(t=><option key={t} value={t}>{names[t]??t}</option>)}</select></label><label>Category search<input list="crimescope-category-options" value={query} placeholder="All categories" onChange={e=>{const value=e.target.value;setQuery(value);if(value==='')update('category','all');else{const match=categories.find(c=>c.label.toLocaleLowerCase()===value.toLocaleLowerCase());if(match)update('category',match.id)}}} onBlur={()=>{if(query&&!categories.some(c=>c.label.toLocaleLowerCase()===query.toLocaleLowerCase()))setQuery(selected?.label??'')}}/><datalist id="crimescope-category-options">{categories.map(c=><option key={c.id} value={c.label}/>)}</datalist></label>{data.meta.categoryDisplay?.compositionSharesAvailable&&<label>Metric<select value={filters.metric} onChange={e=>update('metric',e.target.value)}><option value="count">Reported cases</option><option value="share">Category share (%)</option></select></label>}<button className="text-button" onClick={reset}>Reset</button></div>}

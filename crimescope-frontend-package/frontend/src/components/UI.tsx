@@ -1,0 +1,12 @@
+import type {ReactNode} from 'react';
+import {ArrowUpRight,Info,Download} from 'lucide-react';
+import {useFilters} from '../context/useFilters';
+import {useData} from '../context/DataContext';
+import {downloadCsv} from '../utils/format';
+export function Panel({title,subtitle,action,children,className=''}:{title:string;subtitle?:string;action?:ReactNode;children:ReactNode;className?:string}){return <section className={`panel ${className}`}><div className="panel-head"><div><h2>{title}</h2>{subtitle&&<p>{subtitle}</p>}</div>{action}</div>{children}</section>}
+export function Notice({children}:{children:ReactNode}){return <div className="notice"><Info size={16}/><span>{children}</span></div>}
+export function Empty({children='No records match this selection.'}:{children?:ReactNode}){return <div className="empty"><Info size={24}/><p>{children}</p></div>}
+export function Stat({label,value,detail}:{label:string;value:string;detail:string}){return <div className="stat"><span className="eyebrow">{label}</span><strong>{value}</strong><span className="stat-detail">{detail}<ArrowUpRight size={14}/></span></div>}
+export function Badge({children,tone='neutral'}:{children:ReactNode;tone?:string}){return <span className={`badge ${tone}`}>{children}</span>}
+export function ExportButton({rows,name='crimescope'}:{rows:Record<string,unknown>[];name?:string}){const {isDemo}=useData();return <button className="button" disabled={!rows.length} onClick={()=>downloadCsv(rows,`${isDemo?'DEMO_':''}${name}.csv`)}><Download size={15}/>Export CSV</button>}
+export function Filters(){const {filters,update,reset,states,categories,years}=useFilters();return <div className="filterbar"><label>Year<select value={filters.year} onChange={e=>update('year',e.target.value)}>{years.map(y=><option key={y}>{y}</option>)}</select></label><label>Division<select value={filters.state} onChange={e=>update('state',e.target.value)}><option value="all">All divisions</option>{states.map(s=><option key={s}>{s}</option>)}</select></label><label>Category<select value={filters.category} onChange={e=>update('category',e.target.value)}><option value="all">All selected categories</option>{categories.map(s=><option key={s}>{s}</option>)}</select></label><label>Metric<select value={filters.metric} onChange={e=>update('metric',e.target.value)}><option value="count">Reported cases</option><option value="share">Category share (%)</option></select></label><button className="text-button" onClick={reset}>Reset</button></div>}

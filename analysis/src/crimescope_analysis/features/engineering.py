@@ -12,14 +12,13 @@ from typing import Optional
 
 def load_observations(csv_path: Path) -> list[dict]:
     rows: list[dict] = []
-    with csv_path.open("r", encoding="utf-8", newline="") as f:
+    with csv_path.open("r", encoding="utf-8-sig", newline="") as f:
         reader = csv.DictReader(f)
         for row in reader:
-            row["total"] = int(row["total"]) if row.get("total") else 0
             row["year"] = int(row["year"])
-            row["reported_value"] = (
-                int(row["reported_value"]) if row.get("reported_value") else None
-            )
+            value = row.get("reported_value", "")
+            row["reported_value"] = int(value) if value not in ("", None) else None
+            row["total"] = row["reported_value"]
             rows.append(row)
     return rows
 
@@ -32,92 +31,72 @@ def aggregate_by_region_year(
     observations: list[dict],
     category: Optional[str] = None,
 ) -> list[dict]:
-    """Aggregate observations to one row per (year, state, region, category)."""
+    """Keep one region-ID/category/year row and preserve missing cells as null."""
     buckets: dict[tuple, dict] = {}
     for obs in observations:
-        if obs.get("quality_status") != "valid":
-            continue
-        if obs.get("comparison_status") != "eligible":
+        if obs.get("quality_status") != "valid" or obs.get("comparison_status") != "eligible":
             continue
         if category and obs["original_category"] != category:
             continue
-        key = (obs["year"], obs["state_name"], obs["region_name"], obs["original_category"])
+        key = (obs["year"], obs.get("geography_id"), obs["state_name"], obs["region_name"], obs["category_id"])
         if key not in buckets:
             buckets[key] = {
-                "year": obs["year"],
-                "state_name": obs["state_name"],
-                "region_name": obs["region_name"],
-                "region_type": obs["region_type"],
-                "category": obs["original_category"],
-                "category_id": obs["category_id"],
-                "values": [],
+                "year": obs["year"], "state_name": obs["state_name"], "region_name": obs["region_name"],
+                "region_id": obs.get("geography_id"), "region_type": obs["region_type"],
+                "geography_version": obs.get("geography_version"), "law_framework": obs.get("law_framework"),
+                "category": obs["original_category"], "category_id": obs["category_id"], "values": [],
             }
         if obs["reported_value"] is not None:
             buckets[key]["values"].append(obs["reported_value"])
 
     result: list[dict] = []
-    for b in buckets.values():
-        vals = b["values"]
-        b["total"] = sum(vals) if vals else 0
-        b["count"] = len(vals)
-        b["mean"] = round(sum(vals) / len(vals), 4) if vals else 0
-        result.append(b)
+    for bucket in buckets.values():
+        values = bucket["values"]
+        bucket["total"] = sum(values) if values else None
+        bucket["count"] = len(values)
+        bucket["mean"] = round(sum(values) / len(values), 4) if values else None
+        del bucket["values"]
+        result.append(bucket)
     return result
 
+def compute_shares(region_year_rows: list[dict]) -> list[dict]:
+    """Shares are unavailable until a mutually exclusive category set is verified."""
+    return [{**row, "share_of_region_total": None} for row in region_year_rows]
 
-def compute_shares(
-    region_year_rows: list[dict],
-) -> list[dict]:
-    """Compute each category's share of total cases within a (year, region)."""
-    groups: dict[tuple, list[dict]] = {}
+def compute_year_change(region_year_rows: list[dict]) -> list[dict]:
+    """Compute changes only inside state cohorts with exact unit/category sets and same law."""
+    allowed_pairs = [(2020, 2021), (2021, 2022), (2022, 2023)]
+    by_state_year: dict[tuple[str, int], list[dict]] = {}
     for row in region_year_rows:
-        key = (row["year"], row["state_name"], row["region_name"])
-        groups.setdefault(key, []).append(row)
-
-    result: list[dict] = []
-    for key, rows in groups.items():
-        total = sum(r["total"] for r in rows)
-        for r in rows:
-            r2 = dict(r)
-            r2["share_of_region_total"] = round(r["total"] / total, 6) if total else 0
-            result.append(r2)
-    return result
-
-
-def compute_year_change(
-    region_year_rows: list[dict],
-) -> list[dict]:
-    """Compute year-over-year change for each (region, category)."""
-    groups: dict[tuple, dict] = {}
-    for row in region_year_rows:
-        key = (row["state_name"], row["region_name"], row["category"])
-        groups.setdefault(key, []).append(row)
-
-    result: list[dict] = []
-    for key, rows in groups.items():
-        rows_sorted = sorted(rows, key=lambda r: r["year"])
-        for i in range(1, len(rows_sorted)):
-            prev = rows_sorted[i - 1]
-            curr = rows_sorted[i]
-            prev_total = prev["total"]
-            curr_total = curr["total"]
-            abs_change = curr_total - prev_total
-            pct_change = round((abs_change / prev_total) * 100, 4) if prev_total else None
-            result.append(
-                {
-                    "year": curr["year"],
-                    "prev_year": prev["year"],
-                    "state_name": curr["state_name"],
-                    "region_name": curr["region_name"],
-                    "category": curr["category"],
-                    "prev_total": prev_total,
-                    "curr_total": curr_total,
-                    "abs_change": abs_change,
-                    "pct_change": pct_change,
-                }
-            )
-    return result
-
+        by_state_year.setdefault((row["state_name"], row["year"]), []).append(row)
+    results: list[dict] = []
+    for from_year, to_year in allowed_pairs:
+        states = {state for state, year in by_state_year if year == from_year} & {state for state, year in by_state_year if year == to_year}
+        for state in sorted(states):
+            previous = by_state_year[(state, from_year)]
+            current = by_state_year[(state, to_year)]
+            units_prev = {(r["region_type"], r["region_name"]) for r in previous}
+            units_curr = {(r["region_type"], r["region_name"]) for r in current}
+            cats_prev = {r["category_id"] for r in previous}
+            cats_curr = {r["category_id"] for r in current}
+            frameworks = {r["law_framework"] for r in previous + current}
+            if units_prev != units_curr or cats_prev != cats_curr or len(frameworks) != 1:
+                continue
+            prev_map = {(r["region_type"], r["region_name"], r["category_id"]): r for r in previous}
+            curr_map = {(r["region_type"], r["region_name"], r["category_id"]): r for r in current}
+            for key in sorted(prev_map.keys() & curr_map.keys()):
+                prev, curr = prev_map[key], curr_map[key]
+                if prev["total"] is None or curr["total"] is None:
+                    continue
+                absolute = curr["total"] - prev["total"]
+                results.append({"year": to_year, "prev_year": from_year, "state_name": state,
+                                "region_type": curr["region_type"], "region_name": curr["region_name"],
+                                "region_id": curr["region_id"], "prev_region_id": prev["region_id"],
+                                "category": curr["category"], "category_id": curr["category_id"],
+                                "law_framework": curr["law_framework"], "prev_total": prev["total"],
+                                "curr_total": curr["total"], "abs_change": absolute,
+                                "pct_change": round((absolute / prev["total"]) * 100, 4) if prev["total"] else None})
+    return results
 
 def run_feature_engineering(
     input_csv: Path,
@@ -130,9 +109,8 @@ def run_feature_engineering(
 
     output_csv.parent.mkdir(parents=True, exist_ok=True)
     fields = [
-        "year", "state_name", "region_name", "region_type",
-        "category", "category_id", "total", "count", "mean",
-        "share_of_region_total",
+        "year", "state_name", "region_name", "region_id", "region_type", "geography_version", "law_framework",
+        "category", "category_id", "total", "count", "mean", "share_of_region_total",
     ]
     with output_csv.open("w", encoding="utf-8", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=fields)
@@ -142,8 +120,8 @@ def run_feature_engineering(
 
     changes_csv = output_csv.with_name(output_csv.stem + "_year_change.csv")
     changes_fields = [
-        "year", "prev_year", "state_name", "region_name",
-        "category", "prev_total", "curr_total", "abs_change", "pct_change",
+        "year", "prev_year", "state_name", "region_type", "region_name", "region_id", "prev_region_id",
+        "category", "category_id", "law_framework", "prev_total", "curr_total", "abs_change", "pct_change",
     ]
     with changes_csv.open("w", encoding="utf-8", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=changes_fields)
