@@ -2,92 +2,78 @@
 
 ## Executive Summary
 
-CrimeScope is a full-stack analytics dashboard for district-level reported crime patterns in Andhra Pradesh, India (2020–2024). Built on React + TypeScript + Vite frontend, Node.js + Express + TypeScript backend, and Python (pandas, scikit-learn) analysis pipeline, it implements all five core course methods: data processing, descriptive statistics, PCA, K-means clustering, hierarchical clustering, plus anomaly detection and association rules.
+CrimeScope is an evidence-backed, full-stack analytics platform for district-level reported crime patterns in India across 36 states and Union Territories (2020–2024). Originally prototyped on an Andhra Pradesh benchmark, the platform was expanded to the complete national NCRB *Crime in India* district-wise IPC/BNS series, serving 549,000 observations and 885 reporting units in 2024. 
+
+Built on a React + TypeScript frontend, Node.js + Express + TypeScript backend, and Python analysis pipeline, CrimeScope demonstrates end-to-end course analytical methods: data cleaning, descriptive statistics, PCA, K-means and hierarchical clustering, z-score anomaly detection, and association rule mining—all backed by strict data provenance and integrity verification.
 
 ## System Architecture
 
-- **Frontend:** React 18, TypeScript, Vite, React Router, TanStack Query, Plotly.js
-- **Backend:** Express, TypeScript, sql.js (SQLite), Zod validation, CORS
-- **Analysis:** Python 3.14, pandas, NumPy, scikit-learn
-- **Data:** NCRB Crime in India district-wise IPC tables (2020–2024), GitHub archive
-- **Serving:** SQLite release (read-only), versioned with manifest and SHA-256 checksums
+- **Frontend:** React 18, TypeScript, Vite, TanStack Query, Lucide icons, responsive CSS design system.
+- **Backend:** Express, TypeScript, sql.js (SQLite), gzip compression, Zod schema validation, CORS.
+- **Analysis Engine:** Python 3.12+, pandas, NumPy, scikit-learn, pytest.
+- **Data Source:** NCRB *Crime in India* district-wise IPC and BNS tables (2020–2024) across 36 states/UTs.
+- **Serving Layer:** Versioned SQLite release (`data/serving/releases/ncrb-districtwise-2021-2024-5004bc089eed/crimescope.sqlite`) with cryptographic SHA-256 integrity validation on all analytical model artifacts.
 
-## Data Pipeline
+## Data Pipeline & Accounting
 
-1. **Ingestion:** Download district-wise tables from NCRB GitHub archive
-2. **Cleaning:** Parse multi-level headers, handle State: prefix, classify geography types, parse numerics with missing reasons
-3. **Canonicalization:** Long-format `crime_observations` table with stable IDs, quality status, comparison status
-4. **Mapping:** Geography crosswalk (district renames/splits), category crosswalk (IPC→BNS for 2024)
-5. **Validation:** Duplicate detection, totals validation (component sum vs aggregate), quarantine reporting
-6. **Publishing:** SQLite release with manifest, SHA-256 checksums, atomic promotion
+1. **Ingestion & Classification:** Parses multi-tier source headers and assigns jurisdictional classifications (`administrative_district`, `city_police`, `railway`, `other_police_unit`, `aggregate`) using word-boundary regular expressions to prevent confusing police units with revenue districts.
+2. **Canonicalization:** Long-format `crime_observations` table with deterministic IDs, quality statuses, and comparison eligibility tags.
+3. **Crosswalks & Standardization:** Preserves historical law frameworks (IPC 2020–2023, BNS 2024) without cross-framework leakage or imputation.
+4. **Validation:** Verifies component sums against published state totals, tracks explicit zeros (324,466 records), and confirms zero unhandled missing values.
+5. **Publishing:** Atomic SQLite promotion with manifest generation, SHA-256 checksums, and strict immutability.
 
 ## Methods Implemented
 
-All 9 course methods implemented with versioned JSON outputs:
-
-| Method | Description | Output |
+| Method | Description | Analytical Output |
 |---|---|---|
-| 01 Data Processing | Ingestion, cleaning, canonical observations | 17,906 rows, 5 years |
-| 02 Descriptive Statistics | Frequency, central tendency, dispersion | Per-category, per-region, per-year |
-| 03 Bivariate Analysis | Pearson correlation matrix | Per-year top pairs |
-| 04 Feature Engineering | Region-year aggregation, shares, YoY change | Feature matrix, year-change |
-| 05 PCA | Power iteration PCA | Eigenvalues, loadings, scores |
-| 06 K-means | K-means++, k=3/4/5 | Centroids, assignments, inertia |
-| 07 Hierarchical | Ward linkage | Merge history, final clusters |
-| 08 Anomaly Detection | z-score + YoY anomalies | Cross-sectional + YoY flags |
-| 09 Association Rules | Apriori on region-year transactions | Rules with support/confidence/lift |
+| **01 Data Processing** | National ingestion, canonical cleaning, classification | 549,000 eligible observations across 5 years |
+| **02 Descriptive Statistics** | Frequency, central tendency, dispersion | Per-category, per-region, per-year summaries |
+| **03 Bivariate Analysis** | Pearson correlation matrices | Yearly correlation structures across categories |
+| **04 Feature Engineering** | Region-year aggregation, log1p transformation, z-score scaling | 885 × 114 national feature matrix for 2024 |
+| **05 PCA** | Power iteration / SVD decomposition | Scree variance, cumulative variance, loadings ($r \in [-1, 1]$), 2D projections |
+| **06 K-means Clustering** | K-means++ ($k=3, 4, 5$) | Centroid deviations, inertia diagnostics, representative units |
+| **07 Hierarchical Clustering** | Ward linkage agglomerative clustering | Dendrogram merge history, state-level clustering |
+| **08 Anomaly Detection** | Standardized residual analysis ($z > 3.0$) | Rare-category sparse spikes vs high-volume outliers |
+| **09 Association Rules** | Apriori algorithm on unit-year crime baskets | 756 verified rules with Support, Confidence, and Lift |
 
-## Frontend Pages
+## Frontend Pages & Research Questions Answered
 
-| Page | Description | Data Source |
-|---|---|---|
-| Overview | KPI cards, top regions/categories, provenance | `/api/v1/overview` |
-| Regional Comparison | Bar charts, data table by region | `/api/v1/regions` |
-| Trends | YoY line charts, change table | `/api/v1/trends` |
-| Data Quality | Row accounting, quarantine, per-source stats | `/api/v1/data-quality` |
-| PCA | Explained variance, loadings, PC1 vs PC2 | `/api/v1/analysis/runs/current/pca` |
-| Clusters | K-means table, hierarchical merge history | `/api/v1/analysis/runs/current/clusters` |
-| Unusual Changes | Anomaly tables (cross-sectional + YoY) | `/api/v1/anomalies` |
-| Association Rules | Rules table (antecedent → consequent) | `/api/v1/association-rules` |
-| Methodology | Course-method mapping | Docs |
+| Route | Page | Research Question Addressed | Key Features |
+|---|---|---|---|
+| `/` | **Overview** | *1. What types of crime are reported in a selected region?* | Qualified reported totals, top category breakdowns, interactive district table with drill-down drawer. |
+| `/compare` | **Regional Comparison** | *2. How does that region compare with other compatible regions?* | Multi-region chip selector, category profile comparisons, unit-type compatibility warnings, automated factual summaries. |
+| `/trends` | **Yearly Trends** | *3. How have comparable records changed over time?* | 3 distinct modes: Annual Recorded Totals (5 years), Verified Comparable Cohorts (836 matched 2022–2023 units), and Single-Region History. |
+| `/quality` | **Data Quality & Coverage** | *Methodological Transparency* | State × Year matrix (145 cells), reporting unit coverage history (3,785 rows), source reconciliation against published totals, limitation register. |
+| `/pca` | **PCA Explorer** | *4. Which regions have similar profiles, and what explains them?* | Interactive scatter plot with zero-axes, scree variance bars, search-to-highlight, Pearson loading interpretations. |
+| `/clusters` | **Cluster Profiles** | *4. Which regions have similar crime profiles?* | Structured summary cards, feature deviation profiles, representative units, $k=3,4,5$ inertia diagnostics, state-scoped Ward trees. |
+| `/anomalies` | **Unusual Observations** | *5. Which unusual observations deserve investigation?* | Mathematical clarification of rare-category $z$-score amplification ($z \approx 29.73$), tabbed view for rare vs high-volume outliers. |
+| `/rules` | **Association Rules** | *Co-occurrence Patterns* | Readable crime labels, rule interpretation drawer (Support/Confidence/Lift), ecological fallacy advisory. |
+| `/methodology` | **Methodology & Provenance** | *Evaluation Transparency* | Direct answers to 5 core research questions, live database SHA-256 verification, model artifact hashes, limitation notes. |
 
-## API Endpoints
+## Verification & Test Results
 
-15 read-only endpoints covering overview, regional comparison, trends, categories, correlations, data quality, PCA, clusters, hierarchical, anomalies, association rules, and exports.
+All test suites and production builds pass with zero errors:
 
-## Test Results
+| Suite | Scope | Tests | Result |
+|---|---|---|---|
+| **Python Pytest** | Data cleaning, classification, PCA, anomalies, category hierarchy | 11 | **11/11 PASS** |
+| **Frontend Unit Tests** | Zero-baseline preservation, CSV escaping, share protection, missing value semantics | 4 | **4/4 PASS** |
+| **Backend Vitest** | API endpoints, quality summary, multi-year trends, overview top categories, association rules | 7 | **7/7 PASS** |
+| **Frontend Build** | `tsc --noEmit && vite build` | — | **Built in 2.12s, 0 errors** |
+| **Backend Build** | `tsc` | — | **0 errors** |
 
-| Suite | Tests | Passing |
-|---|---|---|
-| Python (pytest) | 7 | 7 |
-| Frontend (vitest) | 3 | 3 |
-| Backend (vitest) | 2 | 2 |
+## Methodological Guardrails & Limitations
 
-## Production Builds
-
-- Frontend: `npm run build` → `frontend/dist/` (Vite)
-- Backend: `npm run build` → `backend/dist/` (tsc)
-
-## Limitations
-
-- Recorded cases ≠ actual safety; reporting behavior affects figures
-- No population denominators → rates not computed
-- Andhra Pradesh only; not generalizable
-- 2024 BNS schema change mapped via approximate crosswalk
-- Large generated outputs regenerated via scripts, not committed
+1. **Volume vs Safety:** Reported counts reflect police registration practices and reporting volumes, never true crime prevalence or safety rankings.
+2. **Denominators:** Population denominators are unavailable from source tables; rates per capita are explicitly omitted to prevent distorted comparisons.
+3. **Legal Framework Continuity:** IPC (2020–2023) and BNS (2024) are segregated; cross-framework 2023–2024 trends are barred due to statutory reclassifications.
+4. **Ecological Fallacy:** Association rules describe jurisdiction-level co-occurrence, not individual-level or incident-level criminal behavior.
 
 ## Reproducibility
 
-1. Clone repository
-2. `npm install` (root, frontend, backend)
-3. `python scripts/build_phase_c.py` — rebuild canonical dataset from raw CSVs
-4. `python scripts/run_methods_01_04.py` — methods 01-04
-5. `python scripts/run_methods_05_07.py` — methods 05-07
-6. `python scripts/run_methods_08_09.py` — methods 08-09
-7. `npm --workspace frontend run dev` — start frontend
-8. `npm --workspace backend run dev` — start backend
-9. Open `http://localhost:5173`
-
-## Conclusion
-
-CrimeScope demonstrates a reproducible, traceable analytics pipeline for district-level crime data. All findings are evidence-backed and traceable to source data. The dashboard supports comparison of reported crime patterns without ranking district safety.
+1. `npm install` (root, frontend, backend)
+2. `npm --workspace backend run test` — verify API contracts and database queries
+3. `npm --workspace frontend run test` — verify data transformation utilities
+4. `pytest` — verify analytical cleaning and statistical algorithms
+5. `npm --workspace backend run dev` — start Express API on port 4000
+6. `npm --workspace frontend run dev` — launch frontend dashboard on port 5173

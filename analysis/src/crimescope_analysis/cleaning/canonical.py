@@ -40,6 +40,25 @@ class Observation:
 STATE_PREFIX = re.compile(r"^State:\s*(.+?)\s*$")
 TOTAL_TOKENS = {"total districts", "total", "total districts ", "total districts\t"}
 
+EXPLICIT_ADMINISTRATIVE_DISTRICTS = {
+    "bengaluru rural",
+    "bangalore rural",
+}
+
+REGION_ACRONYMS = {
+    "railway": [r"\bgrp\b", r"\bsrp\b"],
+    "city_police": [r"\bcommr\b", r"\bcommissionarate\b", r"\bdcp\b", r"\bcp\b"],
+    "other_police_unit": [
+        r"\brural\b", r"\bstf\b", r"\beow\b", r"\brpo\b", r"\bsou\b", r"\bssb\b",
+        r"\bkgf\b", r"\bcid\b", r"\bcrime branch\b", r"\bcyber\b",
+        r"\bspecial task force\b", r"\beconomic offences\b", r"\banti narcotic\b",
+        r"\bcrime wing\b", r"\bcrime and eou\b", r"\bigi airport\b", r"\bairport\b",
+        r"\bspl cell\b", r"\bvigilance\b", r"\bbureau of investigation\b",
+        r"\banti terrorist squad\b", r"\bpolice district\b", r"\bpolice dist\b",
+        r"\bpolice\b", r"\bother units\b"
+    ]
+}
+
 
 def parse_state_line(raw: str) -> tuple[str, str]:
     m = STATE_PREFIX.match(raw.strip())
@@ -52,12 +71,21 @@ def classify_region(name: str) -> str:
     lower = name.lower().strip()
     if lower in TOTAL_TOKENS or lower == "":
         return "aggregate"
+    if lower in EXPLICIT_ADMINISTRATIVE_DISTRICTS:
+        return "administrative_district"
     if "railway" in lower:
         return "railway"
+    for pat in REGION_ACRONYMS["railway"]:
+        if re.search(pat, lower):
+            return "railway"
     if any(token in lower for token in ("city", "urban", "commissionerate", "metro")):
         return "city_police"
-    if any(token in lower for token in ("crime branch", "cyber crime", "cid", "special task force", "task force", "economic offences", "anti narcotic", "crime wing", "crime and eou", "igi airport", "airport")):
-        return "other_police_unit"
+    for pat in REGION_ACRONYMS["city_police"]:
+        if re.search(pat, lower):
+            return "city_police"
+    for pat in REGION_ACRONYMS["other_police_unit"]:
+        if re.search(pat, lower):
+            return "other_police_unit"
     return "administrative_district"
 
 

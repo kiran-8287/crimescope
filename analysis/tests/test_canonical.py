@@ -25,9 +25,27 @@ def test_clean_numeric():
 
 def test_classify_region():
     assert classify_region("Anantapur") == "administrative_district"
-    assert classify_region("Guntakal Railway") == "railway"
-    assert classify_region("Vijayawada City") == "city_police"
+    assert classify_region("South Andaman") == "administrative_district"
+    assert classify_region("Bengaluru Rural") == "administrative_district"
     assert classify_region("Total Districts") == "aggregate"
+    # Railway
+    assert classify_region("Guntakal Railway") == "railway"
+    assert classify_region("GRP Raipur") == "railway"
+    assert classify_region("SRP(Cuttack)") == "railway"
+    # City police
+    assert classify_region("Vijayawada City") == "city_police"
+    assert classify_region("Ernakulam Commr") == "city_police"
+    assert classify_region("Bhopal Commissionarate") == "city_police"
+    assert classify_region("DCP BBSR") == "city_police"
+    assert classify_region("CP Amritsar") == "city_police"
+    # Other police units
+    assert classify_region("Ahmedabad Rural") == "other_police_unit"
+    assert classify_region("Cyber Ahmedabad Range") == "other_police_unit"
+    assert classify_region("EOW") == "other_police_unit"
+    assert classify_region("Spl Cell") == "other_police_unit"
+    assert classify_region("STF") == "other_police_unit"
+    assert classify_region("Baruipur Police") == "other_police_unit"
+    assert classify_region("Sundarban Police") == "other_police_unit"
 
 
 def test_stable_id():
