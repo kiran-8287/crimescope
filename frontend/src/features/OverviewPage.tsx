@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowUpRight, BarChart2, Eye } from 'lucide-react';
 import { PageTitle } from '../components/Layout';
-import { Panel, Filters, Stat, Notice, Badge, ExportButton, RegionDetailDrawer } from '../components/UI';
+import { Panel, Filters, Stat, Notice, Badge, UnitTypeBadge, ExportButton, RegionDetailDrawer } from '../components/UI';
 import { Lines, Bars, colors } from '../components/Charts';
 import { DataTable } from '../components/DataTable';
 import { useAnalytics } from '../context/useAnalytics';
@@ -128,6 +128,12 @@ export default function OverviewPage() {
 
       <Filters />
 
+      {filters.unitType === 'administrative_district' && (
+        <Notice tone="neutral">
+          <strong>Jurisdiction classification note:</strong> Reporting units in this view are classified as administrative districts via naming heuristics and exclusion rules from source tables. They have not been validated against official state revenue gazetteers or Survey of India / Census district boundary definitions.
+        </Notice>
+      )}
+
       <div className="stats">
         <Stat
           label="Reported cases in selected reporting units"
@@ -225,9 +231,7 @@ export default function OverviewPage() {
               key: 'regionType',
               label: 'Unit type',
               render: (r: any) => (
-                <Badge tone={r.regionType === 'administrative_district' ? 'neutral' : 'amber'}>
-                  {String(r.regionType).replace('_', ' ')}
-                </Badge>
+                <UnitTypeBadge regionType={r.regionType} verificationStatus={r.verificationStatus} />
               )
             },
             {

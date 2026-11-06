@@ -13,20 +13,22 @@ describe("Backend module", () => {
     const { app } = await import("../app.js");
     const response = await request(app).get("/api/v1/dashboard").expect(200);
     expect(response.body.meta.geographyScope).toBe("36 state/UT fragments in 2021-2024 plus partial Andhra Pradesh in 2020");
-    expect(response.body.meta.releaseId).toBe("ncrb-districtwise-2021-2024-5004bc089eed");
+    expect(response.body.meta.releaseId).toBe("ncrb-districtwise-2021-2024-fd2d8578be56");
     expect(response.body.methods.pca.status).toBe("available");
     expect(response.body.methods.kmeans.status).toBe("available");
     expect(response.body.methods.anomalies.status).toBe("available");
     expect(response.body.methods.association.status).toBe("available");
-    expect(response.body.methods.pca.result.explained_variance_ratio[0]).toBeCloseTo(0.1833151, 6);
+    // New cohort: 774 admin districts (corrected from 783). EVR[0] = 15.91%
+    expect(response.body.methods.pca.result.explained_variance_ratio[0]).toBeCloseTo(0.1591084, 6);
   }, 30000);
 
   it("paginates rules and rejects filters below saved mining thresholds", async () => {
     const { app } = await import("../app.js");
     const page = await request(app).get("/api/v1/analysis/association-rules?year=2024&limit=2&offset=0").expect(200);
     expect(page.body.status).toBe("available");
-    expect(page.body.nTransactions).toBe(826);
-    expect(page.body.total).toBe(756);
+    // New cohort: 774 admin districts → 739 transactions (35 had 0 qualifying items), 697 rules
+    expect(page.body.nTransactions).toBe(739);
+    expect(page.body.total).toBe(697);
     expect(page.body.rules).toHaveLength(2);
     expect(page.body.rules[0]).toHaveProperty("supportCount");
     await request(app).get("/api/v1/analysis/association-rules?minSupport=0.1").expect(400);
@@ -55,11 +57,12 @@ describe("Backend module", () => {
     expect(years).toContain(2023);
     expect(years).toContain(2024);
 
-    // Verified 2022-2023 cohort should be available with over 800 matched units
+    // Verified 2022-2023 cohort: 749 name-matched administrative districts, 22 excluded units (1 from 2022, 21 from 2023)
     const pair2223 = res.body.meta.comparisonPairs.find((p: any) => p.id === "2022-2023");
     expect(pair2223).toBeDefined();
     expect(pair2223.status).toBe("available");
-    expect(pair2223.matchedUnitsCount).toBeGreaterThan(800);
+    expect(pair2223.matchedUnitsCount).toBe(749);
+    expect(pair2223.excludedUnitsCount).toBe(22);
   }, 30000);
 
   it("serves top category totals with parent groups and counts in overview", async () => {
@@ -69,8 +72,9 @@ describe("Backend module", () => {
     expect(res.body.topCategories.length).toBeGreaterThan(10);
     const grandTotal = res.body.topCategories.find((c: any) => c.role === "official_total");
     expect(grandTotal).toBeDefined();
-    expect(grandTotal.cases).toBe(3235393);
-    expect(grandTotal.units).toBe(885);
+    // New cohort: 774 admin districts (corrected classification). Grand total 2024 = 2,740,258.
+    expect(grandTotal.cases).toBe(2740258);
+    expect(grandTotal.units).toBe(774);
   }, 30000);
 
   it("preserves confirmed raw-to-serving benchmark values", async () => {

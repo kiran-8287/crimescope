@@ -48,8 +48,28 @@ export function Stat({ label, value, detail }: { label: string; value: string; d
   );
 }
 
-export function Badge({ children, tone = 'neutral' }: { children: ReactNode; tone?: string }) {
-  return <span className={`badge ${tone}`}>{children}</span>;
+export function Badge({ children, tone = 'neutral', title }: { children: ReactNode; tone?: string; title?: string }) {
+  return <span className={`badge ${tone}`} title={title}>{children}</span>;
+}
+
+export function UnitTypeBadge({ regionType, verificationStatus }: { regionType?: string; verificationStatus?: string }) {
+  const type = regionType ?? 'administrative_district';
+  if (type === 'administrative_district') {
+    const isVerified = verificationStatus === 'source_verified';
+    return (
+      <Badge
+        tone={isVerified ? 'green' : 'neutral'}
+        title={isVerified ? 'Source-verified administrative district' : 'Inferred from source naming patterns; not verified against state gazetteers'}
+      >
+        {isVerified ? 'district (verified)' : 'district (inferred)'}
+      </Badge>
+    );
+  }
+  return (
+    <Badge tone="amber">
+      {String(type).replace('_', ' ')}
+    </Badge>
+  );
 }
 
 export function ExportButton({ rows, name = 'crimescope' }: { rows: Record<string, unknown>[]; name?: string }) {
@@ -68,7 +88,7 @@ export function Filters({ fixedYear, hideCategory = false }: { fixedYear?: numbe
 
   const unitTypeLabels: Record<string, string> = {
     all: 'All reporting units',
-    administrative_district: 'Administrative districts',
+    administrative_district: 'Administrative districts (inferred)',
     city_police: 'City-police commissionerates',
     railway: 'Railway police units',
     other_police_unit: 'Specialized & rural police units',

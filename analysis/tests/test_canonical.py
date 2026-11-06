@@ -32,6 +32,9 @@ def test_classify_region():
     assert classify_region("Guntakal Railway") == "railway"
     assert classify_region("GRP Raipur") == "railway"
     assert classify_region("SRP(Cuttack)") == "railway"
+    assert classify_region("W.Rly Ahmedabad") == "railway"
+    assert classify_region("W.Rly Vadodara") == "railway"
+    assert classify_region("W Rly Ahmedabad") == "railway"
     # City police
     assert classify_region("Vijayawada City") == "city_police"
     assert classify_region("Ernakulam Commr") == "city_police"
@@ -46,6 +49,17 @@ def test_classify_region():
     assert classify_region("STF") == "other_police_unit"
     assert classify_region("Baruipur Police") == "other_police_unit"
     assert classify_region("Sundarban Police") == "other_police_unit"
+    assert classify_region("All Districts") == "other_police_unit"
+    assert classify_region("Crime") == "other_police_unit"
+    assert classify_region("Narcotics") == "other_police_unit"
+    assert classify_region("K.G.F.") == "other_police_unit"
+    assert classify_region("Jaipur Crime") == "other_police_unit"
+    assert classify_region("SOG") == "other_police_unit"
+    assert classify_region("Kanpur Outer") == "other_police_unit"
+    assert classify_region("Lucknow Grameen") == "other_police_unit"
+    # Explicit administrative districts
+    assert classify_region("Kanpur Dehat") == "administrative_district"
+    assert classify_region("Bengaluru Rural") == "administrative_district"
 
 
 def test_stable_id():

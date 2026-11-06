@@ -330,7 +330,7 @@ export default function TrendsPage() {
       )}
 
       <Notice>
-        <strong>Comparability boundaries:</strong> 2020 covers Andhra Pradesh only; 2021–2022 includes district reorganization in Andhra Pradesh; 2022–2023 has 836 matched administrative districts under IPC; 2023–2024 transitions to the Bharatiya Nyaya Sanhita (BNS) framework.
+        <strong>Comparability boundaries:</strong> 2020 covers Andhra Pradesh only; 2021–2022 includes district reorganization in Andhra Pradesh; 2022–2023 has 749 matched administrative districts under IPC; 2023–2024 transitions to the Bharatiya Nyaya Sanhita (BNS) framework.
       </Notice>
     </>
   );

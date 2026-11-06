@@ -23,7 +23,7 @@ export default function MethodologyPage() {
     {
       num: 3,
       q: 'How have comparable records changed over time?',
-      ans: 'Answered via Yearly Trends, separating annual volume totals, verified pairwise cohorts (e.g. 836 matched 2022–2023 districts), and single-region historical trajectories.'
+      ans: 'Answered via Yearly Trends, separating annual volume totals, verified pairwise cohorts (e.g. 749 matched 2022–2023 districts), and single-region historical trajectories.'
     },
     {
       num: 4,
@@ -51,7 +51,7 @@ export default function MethodologyPage() {
     {
       name: 'Principal Component Analysis (PCA)',
       code: '05_pca',
-      desc: 'Decomposes log1p and standardized feature matrices across 885 units. PC1 captures 18.3% variance (overall volume); PC2 captures 4.4% variance (property vs bodily offense balance).'
+      desc: 'Decomposes log1p and standardized feature matrices across 774 administrative districts. PC1 captures 15.9% variance (overall recording volume); PC2 captures 4.6% variance (property vs bodily offense balance). Reported loadings are scaled component loadings (v_ij × √λ_i), not exact Pearson correlations.'
     },
     {
       name: 'K-Means Clustering',
@@ -66,12 +66,12 @@ export default function MethodologyPage() {
     {
       name: 'Statistical Anomaly Screening',
       code: '08_anomalies',
-      desc: 'Calculates per-category z-scores within the 2024 cross-sectional cohort. Separates rare-category indicators (where single positive counts produce z ≈ 29.7) from high-volume outliers.'
+      desc: 'Calculates per-category z-scores within the 2024 cross-sectional cohort. Separates rare-category indicators (where single positive counts produce z ≈ 28.0) from high-volume outliers.'
     },
     {
       name: 'Association Rule Mining (Apriori)',
       code: '09_association',
-      desc: 'Mines frequent category presence rules across 885 unit-level transactions using a threshold of ≥ 10 cases per item. Evaluates Support, Confidence, and Lift.'
+      desc: 'Mines frequent category presence rules across 739 qualifying district-level transactions (items with count ≥ 10 cases). Evaluates Support, Confidence, and Lift.'
     }
   ];
 
@@ -151,7 +151,7 @@ export default function MethodologyPage() {
                     <dt>Feature Mode</dt>
                     <dd><code>log1p_zscore</code> (Log1p + per-feature z-scores)</dd>
                     <dt>Cohort Size</dt>
-                    <dd>885 reporting units × 131 leaf features</dd>
+                    <dd>{data.analysis?.points?.length || 774} administrative districts × 131 leaf features</dd>
                     <dt>Source Dataset Hash</dt>
                     <dd><code style={{ fontSize: '0.75rem' }}>{data.meta.dataSha256}</code></dd>
                   </dl>

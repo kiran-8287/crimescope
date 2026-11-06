@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { X, Search, BarChart3, AlertCircle } from 'lucide-react';
 import { useAnalytics } from '../context/useAnalytics';
 import { PageTitle } from '../components/Layout';
-import { Filters, Panel, Notice, ExportButton, Badge } from '../components/UI';
+import { Filters, Panel, Notice, ExportButton, Badge, UnitTypeBadge } from '../components/UI';
 import { Bars, colors } from '../components/Charts';
 import { DataTable } from '../components/DataTable';
 import { number } from '../utils/format';
@@ -30,7 +30,15 @@ export default function RegionalComparisonPage() {
     }
   }, [params, eligible]);
 
-  // Clean selections if eligible units change
+  // Clean selections if eligible units change, and clear explicitly when state or unitType filter changes
+  const prevFilterStateRef = useRef({ state: filters.state, unitType: filters.unitType });
+  useEffect(() => {
+    if (prevFilterStateRef.current.state !== filters.state || prevFilterStateRef.current.unitType !== filters.unitType) {
+      setSelection([]);
+      prevFilterStateRef.current = { state: filters.state, unitType: filters.unitType };
+    }
+  }, [filters.state, filters.unitType]);
+
   useEffect(() => {
     setSelection(prev => prev.filter(id => eligible.some(r => r.id === id)));
   }, [eligible]);
@@ -124,9 +132,7 @@ export default function RegionalComparisonPage() {
                 >
                   <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: colors[i % colors.length] }} />
                   <span>{unit.name} <small style={{ color: '#6b7280' }}>({unit.state})</small></span>
-                  <Badge tone={unit.regionType === 'administrative_district' ? 'neutral' : 'amber'}>
-                    {unit.regionType?.replace('_', ' ')}
-                  </Badge>
+                  <UnitTypeBadge regionType={unit.regionType} verificationStatus={(unit as any).verificationStatus} />
                   <button
                     type="button"
                     className="text-button"
@@ -265,9 +271,7 @@ export default function RegionalComparisonPage() {
                   key: 'regionType',
                   label: 'Unit type',
                   render: (r: any) => (
-                    <Badge tone={r.regionType === 'administrative_district' ? 'neutral' : 'amber'}>
-                      {String(r.regionType).replace('_', ' ')}
-                    </Badge>
+                    <UnitTypeBadge regionType={r.regionType} verificationStatus={r.verificationStatus} />
                   )
                 },
                 { key: 'category', label: 'Category' },

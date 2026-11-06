@@ -22,17 +22,30 @@ export async function getDashboardView(query: { year: number; state: string; uni
   const taxonomy = readJson("config/category_hierarchy.json");
   const categoryDefs = new Map<string, any>(taxonomy.categories.map((item: any) => [item.id, item]));
 
+  const EXPLICIT_VERIFIED_DISTRICTS = new Set([
+    "bengaluru rural",
+    "bangalore rural",
+    "kanpur dehat"
+  ]);
+
   const regionRows = rows("SELECT geography_id AS id, year, state_name AS state, region_name AS name, region_type AS regionType FROM crime_observations WHERE comparison_status='eligible' AND region_type!='aggregate' GROUP BY geography_id,year,state_name,region_name,region_type ORDER BY year,state_name,region_name");
-  const regions = regionRows.map(r => ({
-    ...r,
-    year: Number(r.year),
-    id: String(r.id),
-    state: String(r.state),
-    name: String(r.name),
-    regionType: String(r.regionType),
-    coverage: "Complete" as const,
-    cohortId: undefined as string | undefined
-  }));
+  const regions = regionRows.map(r => {
+    const isExplicit = EXPLICIT_VERIFIED_DISTRICTS.has(String(r.name).toLowerCase().trim());
+    const verificationStatus = r.regionType === 'administrative_district'
+      ? (isExplicit ? 'source_verified' : 'regex_inferred')
+      : 'pattern_matched';
+    return {
+      ...r,
+      year: Number(r.year),
+      id: String(r.id),
+      state: String(r.state),
+      name: String(r.name),
+      regionType: String(r.regionType),
+      verificationStatus,
+      coverage: "Complete" as const,
+      cohortId: undefined as string | undefined
+    };
+  });
 
   const categories = taxonomy.categories.map((item: any) => ({
     id: item.id,
@@ -109,7 +122,14 @@ export async function getDashboardView(query: { year: number; state: string; uni
     const addYear = (year: number, categoryId: string | undefined) => {
       if (!categoryId) return;
       const q = `SELECT geography_id AS regionId,region_name AS region,state_name AS state,region_type AS regionType,year,category_id AS category,original_category AS categoryLabel,reported_value AS cases,unit,quality_status AS qualityStatus,missing_reason AS missingReason FROM crime_observations WHERE year=${year} AND ${qualityScope}${selectedState}${selectedType} AND category_id=${sqlText(categoryId)} ORDER BY state_name,region_name`;
-      observationRows.push(...rows(q));
+      const obs = rows(q).map(row => {
+        const isExplicit = EXPLICIT_VERIFIED_DISTRICTS.has(String(row.region).toLowerCase().trim());
+        const verificationStatus = row.regionType === 'administrative_district'
+          ? (isExplicit ? 'source_verified' : 'regex_inferred')
+          : 'pattern_matched';
+        return { ...row, verificationStatus };
+      });
+      observationRows.push(...obs);
     };
 
     if (view === "trends" || view === "overview") {
@@ -258,6 +278,7 @@ export async function getDashboardView(query: { year: number; state: string; uni
       warnings: [
         "Coverage: 2021–2024 · 36 states/UTs (2020 coverage is limited to Andhra Pradesh).",
         "Aggregate rows are retained for reconciliation and excluded from reporting-unit sums.",
+        "Administrative-district units are inferred from source naming patterns and not verified against state gazetteers.",
         "Reporting unit types are kept separate; missing values remain null.",
         "2023 uses IPC and 2024 uses BNS; no unsupported cross-framework trend is inferred.",
         "Category shares are disabled because mutually exclusive categories are not verified; population denominators are unavailable."

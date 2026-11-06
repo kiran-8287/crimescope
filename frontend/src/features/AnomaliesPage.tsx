@@ -39,7 +39,7 @@ export default function AnomaliesPage() {
         isRare,
         isHighVolume,
         isModerate,
-        cohortSize: 885,
+        cohortSize: 774,
         zeroPctEstimate: isRare ? '> 99.5%' : val > 100 ? '< 50%' : '~ 85%'
       };
     });
@@ -85,17 +85,17 @@ export default function AnomaliesPage() {
         <Stat
           label="Methodology & Threshold"
           value="|z| ≥ 2.5"
-          detail="Sample mean and standard deviation across 885 reporting units"
+          detail="Sample mean and standard deviation across 774 administrative districts"
         />
       </div>
 
-      {/* Mathematical Callout Explaining z = 29.72 */}
+      {/* Mathematical Callout Explaining z = 27.96 */}
       <div style={{ margin: '1.25rem 0 1rem 0', padding: '1rem', background: '#fefce8', borderLeft: '4px solid #eab308', borderRadius: '6px' }}>
         <h4 style={{ margin: '0 0 0.3rem 0', color: '#854d0e', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-          <Info size={18} /> Mathematical Note: Why 1 Case Can Produce a Z-Score of 29.72
+          <Info size={18} /> Mathematical Note: Why 1 Case Can Produce a Z-Score of ~28
         </h4>
         <p style={{ margin: 0, fontSize: '0.875rem', color: '#713f12', lineHeight: 1.5 }}>
-          In a national cohort of N = 885 districts, if 884 districts report <strong>0</strong> cases and exactly <strong>1</strong> district reports <strong>1</strong> case, the cohort mean is μ = 1/885 ≈ 0.00113 and the standard deviation is σ = √(1/885) ≈ 0.0336. The resulting z-score is z = (1 - μ) / σ ≈ √(885 - 1) = √884 ≈ 29.73. Thus, extreme z-scores with small positive counts are <em>mathematically expected for sparse categories</em> and reflect category rarity rather than high crime volume.
+          In a national cohort of N = 774 administrative districts, if 773 districts report <strong>0</strong> cases and exactly <strong>1</strong> district reports <strong>1</strong> case, the cohort mean is μ = 1/774 ≈ 0.00129 and the standard deviation is σ = √(1/774) ≈ 0.0359. The resulting z-score is z = (1 - μ) / σ = √(774 - 1) = √773 ≈ 27.80. Thus, extreme z-scores with small positive counts are <em>mathematically expected for sparse categories</em> and reflect category rarity rather than high crime volume.
         </p>
       </div>
 
@@ -269,7 +269,7 @@ export default function AnomaliesPage() {
             <h4 style={{ margin: '0.5rem 0 0.3rem 0', fontSize: '0.9rem' }}>Reference Distribution Context</h4>
             {selectedAnomaly.isRare ? (
               <p>
-                This category is virtually unrecorded across the nation: over 99% of the 885 reporting units reported exactly <strong>0</strong> cases in 2024. Because national variance is extremely small, {selectedAnomaly.region}’s record of {selectedAnomaly.cases} case{selectedAnomaly.cases > 1 ? 's' : ''} creates a $z$-score of +{selectedAnomaly.zScore.toFixed(2)}σ. This reflects category rarity rather than high recorded volume.
+                This category is virtually unrecorded across the nation: over 99% of the 774 administrative districts reported exactly <strong>0</strong> cases in 2024. Because national variance is extremely small, {selectedAnomaly.region}’s record of {selectedAnomaly.cases} case{selectedAnomaly.cases > 1 ? 's' : ''} creates a $z$-score of +{selectedAnomaly.zScore.toFixed(2)}σ. This reflects category rarity rather than high recorded volume.
               </p>
             ) : (
               <p>

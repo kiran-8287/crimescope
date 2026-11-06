@@ -1,80 +1,99 @@
 # CrimeScope — Project Status
 
-**Date:** 2026-11-06  
-**Phase:** Full Real-Data Dashboard Modernization & Research-Question Alignment (COMPLETE)
-
-## Repository State
-- Master branch verified and synchronized.
-- Backend, frontend, and analytical pipeline fully reconciled.
-- Production builds passing:
-  - Frontend: `tsc --noEmit && vite build` (Built in 2.2s, 0 errors)
-  - Backend: `tsc` (0 errors)
-- Tests passing:
-  - Vitest Backend Tests: 7/7 passing (API endpoints, quality summary, trends multi-year, overview top categories, association rules pagination/thresholds, raw-to-serving benchmark checks).
-  - Node Frontend Tests: 4/4 passing (null protection, zero-baseline preservation, CSV escaping, category share protection).
-  - Python Pytest: 11/11 passing (canonical cleaning, PCA regression, anomaly detection, category hierarchy).
+**Date:** 2026-11-07  
+**Phase:** Focused Verification Pass COMPLETE — Release & Method Alignment Verified
 
 ---
 
-## Implemented Improvements by Page & Feature
+## 1. Active Release & System Invariants
 
-### 1. Global & Architectural Upgrades
-- **Jurisdictional Classification Engine:** Documented in `docs/CLASSIFICATION_AUDIT.md` and `docs/APPLICATION_AUDIT.md`. Reconciled police commissionerates, railway units, rural police divisions, and specialized crime wings. Updated `classify_region()` in `analysis/src/crimescope_analysis/cleaning/canonical.py` with boundary-aware regex patterns (`\bgrp\b`, `\bsrp\b`, `\bcommr\b`, `\brural\b`, `\bstf\b`, `\beow\b`, etc.) while protecting multi-word revenue districts (e.g., Bengaluru Rural, South Andaman). Verified via expanded test suite in `analysis/tests/test_canonical.py`.
-- **UI Styling & Design Tokens:** Added missing component classes in `frontend/src/styles/index.css` (`.button.small`, `.notice.warning`, `.notice.amber`, `.category-dropdown-panel search input`).
-- **Simplified Global Banners:** Replaced technical database hash descriptions with concise summary: `Coverage: 2021–2024 · 36 states/UTs`, with contextual note when 2020 is selected: `2020 coverage is limited to Andhra Pradesh.`
-- **Category Display Layer:** Added clean display names, parent groups, and tooltips containing exact raw source wording.
-- **Universal Regional Details Drawer:** Created `RegionDetailDrawer` in `UI.tsx`, accessible across all pages, linking regional profiles, K-means cluster assignment, PCA coordinates, and flagged anomalies.
+| Item | Value | Verification |
+|---|---|---|
+| **Serving release** | `ncrb-districtwise-2021-2024-fe84a087b3f0` | `data/serving/current.json` ✅ |
+| **SQLite SHA-256** | `e7470a94544c6599e316485a6adba095ca4f18103bcfbeac1ce4ff4b18528513` | Manifest verified ✅ |
+| **Analysis run** | `ncrb-national-2024-admin-log1p-zscore-20261106-v3` | `analysis/output/runs/current.json` ✅ |
+| **Analytical Cohort** | **783 administrative districts** in 2024 | Regex-inferred (`regex_inferred`) ✅ |
+| **PCA Variance** | PC1 = 16.24%, PC2 = 4.53% | Direct SVD & EVR verified ✅ |
+| **PCA Loadings** | Pearson $r$ on $\log(1+x)$ + $z$-score features | $|\Delta r| \le 0.000549$ across all 131 features ✅ |
+| **PC1 vs. Volume** | $r(\ln(1 + \text{Total Cognizable}), \text{PC1}) = -0.8727$ | Volume association confirmed ($n=783$) ✅ |
+| **Association Rules** | 708 rules across 744 qualifying transactions | $|\Delta \text{lift}| \le 0.000050$ (4-decimal rounding) ✅ |
+| **Transaction Basis** | 744 of 783 districts ($\ge 1$ item $\ge 10$ cases) | 39 sparse districts excluded, documented ✅ |
+| **Rollback Release** | `ncrb-districtwise-2021-2024-5004bc089eed` | Preserved on disk, unchanged ✅ |
 
-### 2. Data Quality & Coverage (`/quality`)
-- **Root Cause Resolved:** Fixed issue where frontend attempted to calculate quality metrics from an empty observation array; resolved year-specific ID joining failure.
-- **Dedicated Quality Summary:** Served directly from backend with exact counts: 549,000 observations, 324,466 explicit zeros, 0 missing, 21,022 aggregate rows separated.
-- **Four Integrated Views:**
-  1. State × Year Reporting Matrix with completeness percentages.
-  2. Reporting Unit History across 2020–2024 with cross-year identities.
-  3. Source Reconciliation against published state aggregate rows.
-  4. Quality & Limitation Register detailing AP 2020 trailing gaps and IPC/BNS transitions.
+---
 
-### 3. Yearly Trends (`/trends`)
-- **Root Cause Resolved:** Removed strict national 100% equality restriction on pairwise comparisons; replaced hardcoded Andhra Pradesh "20 and 28 units" text with dynamic metadata.
-- **Three Selectable Modes:**
-  1. *Annual Recorded Totals:* National or state-level totals across all 5 years (2020–2024) with category and framework notes.
-  2. *Verified Comparable Cohorts:* Connected values for verified common cohorts (836 matched districts between 2022 and 2023 with 44 excluded units documented).
-  3. *Single-Region History:* Historical trajectory for any chosen reporting unit across all years.
+## 2. Explicit Zeros Reconciliation
 
-### 4. Overview (`/`)
-- **Headline Clarification:** Explicitly qualified as `"Reported cases in selected reporting units"`.
-- **Top Categories Breakdown:** Replaced empty text catalog with real recorded case totals, parent groups, and unit counts for top categories.
-- **Interactive Regional Table:** Sorted by reported cases descending; includes action buttons to inspect district profiles or launch comparisons.
+Under identical eligibility and aggregate filter scope (`comparison_status='eligible' AND region_type!='aggregate'`):
 
-### 5. Regional Comparison (`/compare`)
-- **Intentional Selection Flow:** Removed arbitrary preselection of first 3 units; URL parameter support (`/compare?region=...`).
-- **Searchable Picker with Chips:** Selected units rendered as dismissible chips with state, unit type, and color indicators.
-- **Multi-Category Profiles & Commentary:** Compares top major offense categories side by side and generates automated factual comparative summaries.
-- **Unit Type Comparability Warning:** Alerts users when comparing administrative districts with urban commissionerates.
+| Metric | Old Release (`5004bc089eed`) | New Release (`fe84a087b3f0`) | Delta |
+|---|---|---|---|
+| **Retained Observations** | 549,000 | 549,000 | +0 |
+| **Explicit Zeros (`value = 0`)** | 324,466 | 324,466 | +0 |
+| **Missing Values (`NULL`)** | 0 | 0 | +0 |
+| **Common Source Cells** | 549,000 | 549,000 | — |
+| **Unchanged Cell Values** | 549,000 | 549,000 | 100.0% |
+| **Changed Cell Values** | 0 | 0 | 0 |
+| **Null-to-Zero Transitions** | 0 | 0 | 0 |
+| **Zero-to-Null Transitions** | 0 | 0 | 0 |
 
-### 6. PCA Explorer (`/pca`)
-- **Plotting & Axis Geometry:** Fitted SVG viewBox with dynamic padding so no points are clipped; added numerical axis ticks and zero lines.
-- **Interactive Inspection:** Search and click selection highlighting points with outer rings and opening detailed coordinate inspectors.
-- **Variance & Loading Transparency:** Added Scree and cumulative variance bars; clearly explained loadings as Pearson correlations ($r \in [-1, 1]$); documented why PC1 captures overall reporting volume.
+### Reconciliation of the 6,061 Zero Difference
+- **Total explicit zeros across all rows in SQLite:** **330,527** (across 570,022 total rows).
+- **Explicit zeros in retained eligible observations:** **324,466** (across 549,000 eligible rows).
+- **Explicit zeros in segregated state aggregate rows:** **6,061** (across 21,022 aggregate rows).
+- **Explicit zeros in quarantined non-aggregate rows:** **0**.
+- **Exact identity:** $324,466 + 6,061 = 330,527$ ($\Delta = 0$).
+- **Conclusion:** The difference between 324,466 and 330,527 was purely **metric scope** (eligible reporting units vs. full database including state summary rows). Both releases have identically 324,466 zeros in comparative scope.
 
-### 7. Cluster Profiles (`/clusters`)
-- **Replaced Wall of Text:** Replaced comma-separated paragraph lists with structured cluster summary cards.
-- **Distinguishing Profiles & Diagnostics:** Displays feature deviations, cluster size distribution, and inertia (elbow) diagnostics for $k=3, 4, 5$.
-- **Representative Units & Searchable Tables:** Highlights representative units closest to cluster centroids and provides searchable member lists.
-- **Four-Member Outlier Deep-Dive:** Documented why Cluster 1 contains exactly 4 units (Bidar, Bilaspur, Gwalior, Balodbazar) due to rare-category standardization.
-- **State Hierarchical Clustering:** Separated state-level agglomerative Ward clustering with state selector dropdown.
+---
 
-### 8. Unusual Observations (`/anomalies`)
-- **Reference Distribution Context:** Clarified why single positive counts in rare categories mathematically yield $z \approx 29.73$.
-- **Categorized Views:** Tabbed filtering for Rare-Category Flags vs High-Volume Outliers.
-- **Distribution Inspection Drawer:** Clicking any observation explains its position in the national distribution and cohort zero proportion.
+## 3. 2022–2023 Verified Matched Cohort Fixtures
 
-### 9. Association Rules (`/rules`)
-- **Readable Labels & Metrics:** Cleaned antecedent and consequent labels with original labels in tooltips.
-- **Rule Interpretation Drawer:** Plain-language explanation of Support, Confidence, and Lift for any selected rule.
-- **Ecological Fallacy Advisory:** Prominently explains that unit-level co-occurrence does not imply incident-level causation.
+Independently established from SQLite `fe84a087b3f0` (Scope: `administrative_district`, `eligible`, `Total Cognizable IPC/BNS crimes`):
 
-### 10. Methodology & Provenance (`/methodology`)
-- **Structured Framework:** Answers the 5 core research questions.
-- **Expandable Live Provenance:** Displays active release ID, database path, SQLite SHA256, and analytical model run ID.
-- **Limitations & Safe Interpretation:** Documents absence of population denominators and why counts reflect volume rather than safety rankings.
+| Component | 2022 | 2023 |
+|---|---|---|
+| **Annual Eligible Units** | 761 | 779 |
+| **Name-Matched Common Units** | **752** | **752** |
+| **Excluded from Matched Cohort** | 9 (only in 2022) | 27 (only in 2023) |
+| **Matched Endpoint Total** | 2,804,269 | 2,892,616 |
+| **Excluded Units Total** | 14,990 | 50,400 |
+| **Annual Reported Total** | 2,819,259 | 2,943,016 |
+| **Reconciliation Identity** | $2,804,269 + 14,990 = 2,819,259$ ✅ | $2,892,616 + 50,400 = 2,943,016$ ✅ |
+
+- **Sample 2022 exclusions (9 units):** W.Rly Ahmedabad, W.Rly Vadodara, K.G.F., Kerala All Districts, Osmanabad, etc.
+- **Sample 2023 exclusions (27 units):** W Rly Ahmedabad, W Rly Vadodara, Nurpur, Dharashiv, Nagaland Crime, etc.
+- **Regression test:** `frontend/tests/trend_contract.test.mjs` asserts all 9 exact numbers independently of backend code.
+
+---
+
+## 4. Full-Stack Browser Verification Results
+
+Automated browser testing executed using system Google Chrome (`v157.0.8103.38`) via Playwright:
+
+| Route | Tested Features | Result | Artifact |
+|---|---|---|---|
+| `/` (Overview) | 27,42,809 grand total cases, 783 admin districts, top category bars | PASS ✅ | `01_overview.png` |
+| `/compare` | Searchable unit picker, chip tags, unit-type compatibility warning | PASS ✅ | `02_compare.png` |
+| `/trends` | 3 modes, 752 matched units, 2020 AP-only separation, IPC/BNS statutory break | PASS ✅ | `03_trends.png` |
+| `/pca` | Responsive SVG scatter, 16.24% EVR, $r=-0.87$ volume label, no "urban scale" | PASS ✅ | `04_pca.png` |
+| `/clusters` | Cluster cards, $k=3,4,5$ diagnostics, centroid feature deviations | PASS ✅ | `05_clusters.png` |
+| `/anomalies` | 4 tabs (All, Rare, Intermediate 4–19, High-volume), $z \approx 28.0$ note | PASS ✅ | `06_anomalies.png` |
+| `/rules` | Support/Conf/Lift, ecological fallacy advisory, 744 qualifying transactions note | PASS ✅ | `07_rules.png` |
+| `/quality` | 5,49,000 retained observations, 3,24,466 zeros, 0 missing, 21,022 aggregates | PASS ✅ | `08_quality.png` |
+| `/methodology` | 5 core research questions, live release (`fe84a087b3f0`), live run (`v3`) | PASS ✅ | `09_methodology.png` |
+| Filter Interaction | Applied State="Andhra Pradesh" filter; verified selective update | PASS ✅ | `10_overview_ap_filter.png` |
+
+### Infrastructure Issue Discovered and Fixed
+- An orphaned Node background process (`PID 6512`) had previously bound IPv6 `[::1]:4000`, causing incoming browser requests to serve old in-memory data.
+- The process was identified via `netstat`, terminated with `taskkill`, and the backend was cleanly re-bound to all interfaces.
+
+---
+
+## 5. Test Suite Summary
+
+- **Python Tests (`pytest`):** 11/11 passed in 0.64s ✅
+- **Frontend Tests (`node --test`):** 9/9 passed in 94ms ✅
+- **Backend Tests (`vitest`):** 7/7 passed in 8.45s ✅
+- **Frontend Build (`vite build`):** 0 errors, built in 2.27s ✅
+- **Browser E2E Tests (`playwright` + Chrome):** All 9 routes verified and screenshotted ✅
