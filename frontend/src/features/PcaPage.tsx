@@ -346,8 +346,8 @@ export default function PcaPage() {
 
       {/* Feature Loadings Definition and Table */}
       <Panel
-        title="Feature Loadings & Component Correlations"
-        subtitle={`Select component to inspect feature contributions (values are Pearson correlations r ∈ [-1.0, 1.0]).`}
+        title="Feature Loadings & Scaled Components"
+        subtitle={`Select component to inspect feature contributions (values are scaled component loadings: lij = vij × √λi).`}
         action={
           <div style={{ display: 'flex', gap: '0.3rem' }}>
             <button
@@ -368,7 +368,7 @@ export default function PcaPage() {
         }
       >
         <div style={{ padding: '0.75rem', background: '#eff6ff', borderLeft: '3px solid #3b82f6', borderRadius: '4px', fontSize: '0.85rem', marginBottom: '1rem' }}>
-          <strong>Mathematical Definition:</strong> The loading values reported here represent factor loadings (the Pearson correlation r(X_j, PC_i) = v_ij × √λ_i between feature j and principal component i on standardized variables). They quantify the magnitude and direction of association, distinct from normalized eigenvector weights whose sum of squares equals 1.
+          <strong>Mathematical Definition:</strong> The loading values reported here represent scaled component loadings (l_ij = v_ij × √λ_i, where v_ij is the eigenvector component and λ_i is the eigenvalue). Under standardized features, scaled component loadings approximate feature-component associations; however, depending on variance divisor conventions (N vs N-1), they are formally scaled component loadings rather than exact sample Pearson correlations. They quantify the magnitude and direction of association, distinct from normalized eigenvector weights whose sum of squares equals 1.
         </div>
 
         <div className="grid two-col">
@@ -380,7 +380,7 @@ export default function PcaPage() {
               <thead>
                 <tr style={{ borderBottom: '1px solid #e5e7eb', textAlign: 'left' }}>
                   <th style={{ padding: '0.4rem' }}>Category</th>
-                  <th style={{ padding: '0.4rem', textAlign: 'right' }}>Correlation (r)</th>
+                  <th style={{ padding: '0.4rem', textAlign: 'right' }}>Scaled Loading (v_ij √λ_i)</th>
                 </tr>
               </thead>
               <tbody>
@@ -404,7 +404,7 @@ export default function PcaPage() {
               <thead>
                 <tr style={{ borderBottom: '1px solid #e5e7eb', textAlign: 'left' }}>
                   <th style={{ padding: '0.4rem' }}>Category</th>
-                  <th style={{ padding: '0.4rem', textAlign: 'right' }}>Correlation (r)</th>
+                  <th style={{ padding: '0.4rem', textAlign: 'right' }}>Scaled Loading (v_ij √λ_i)</th>
                 </tr>
               </thead>
               <tbody>
@@ -423,7 +423,7 @@ export default function PcaPage() {
       </Panel>
 
       <Notice>
-        <strong>Analytical cohort & volume effects:</strong> The PCA model is fitted on 885 reporting units using log1p-transformed and standardized counts ($\log(1+x)$) across 131 leaf and component crime categories. Because population denominators are not available, PC1 primarily reflects overall reporting volume. Position in PCA space represents profile structure, not a measure of community safety.
+        <strong>Analytical cohort & volume effects:</strong> The PCA model is fitted on 774 administrative districts using log1p-transformed and standardized counts ($\log(1+x)$) across 131 leaf and component crime categories. Because population denominators are not available, PC1 primarily reflects overall reporting volume ($r = -0.88$ with log-volume, $r = -0.71$ with raw volume). Position in PCA space represents profile structure, not a measure of community safety.
       </Notice>
 
       <RegionDetailDrawer

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useData } from '../context/DataContext';
 import { PageTitle } from '../components/Layout';
-import { Panel, Stat, Notice, Badge, ExportButton } from '../components/UI';
+import { Panel, Stat, Notice, Badge, UnitTypeBadge, ExportButton } from '../components/UI';
 import { DataTable } from '../components/DataTable';
 import { number } from '../utils/format';
 
@@ -206,9 +206,7 @@ export default function DataQualityPage() {
                 key: 'regionType',
                 label: 'Unit Type',
                 render: r => (
-                  <Badge tone={r.regionType === 'administrative_district' ? 'neutral' : 'amber'}>
-                    {String(r.regionType).replace('_', ' ')}
-                  </Badge>
+                  <UnitTypeBadge regionType={String(r.regionType)} />
                 )
               },
               ...data.meta.years.map(y => ({

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Network, Search, Layers, X, Info, ExternalLink } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import { PageTitle } from '../components/Layout';
-import { Panel, Notice, Badge, ExportButton, Filters, RegionDetailDrawer, Stat } from '../components/UI';
+import { Panel, Notice, Badge, UnitTypeBadge, ExportButton, Filters, RegionDetailDrawer, Stat } from '../components/UI';
 import { Bars, colors } from '../components/Charts';
 import { DataTable } from '../components/DataTable';
 import { cleanCategoryName } from '../utils/categories';
@@ -344,10 +344,8 @@ export default function ClustersPage() {
                 {
                   key: 'region_type',
                   label: 'Unit Type',
-                  render: r => (
-                    <Badge tone={r.region_type === 'administrative_district' ? 'neutral' : 'amber'}>
-                      {String(r.region_type ?? 'administrative_district').replace('_', ' ')}
-                    </Badge>
+                  render: (r: any) => (
+                    <UnitTypeBadge regionType={r.region_type as string} verificationStatus={r.verificationStatus as string} />
                   )
                 },
                 {

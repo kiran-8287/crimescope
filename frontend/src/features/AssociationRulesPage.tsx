@@ -62,8 +62,8 @@ export default function AssociationRulesPage() {
         />
         <Stat
           label="Cohort Transactions"
-          value={number(payload?.nTransactions ?? 885)}
-          detail="1 transaction = 1 reporting unit profile (items with count ≥ 10)"
+          value={number(payload?.nTransactions ?? 739)}
+          detail="Districts with ≥ 1 category with ≥ 10 cases (35 sparse districts excluded)"
         />
         <Stat
           label="Item Threshold"
@@ -295,7 +295,7 @@ export default function AssociationRulesPage() {
           <div style={{ fontSize: '0.85rem', lineHeight: '1.5', color: '#374151' }}>
             <h4 style={{ margin: '0.5rem 0 0.3rem 0', fontSize: '0.9rem' }}>Plain-Language Interpretation</h4>
             <p>
-              Among the 885 reporting units in 2024, <strong>{selectedRule.confidencePct}</strong> of districts that recorded at least 10 cases of <em>{selectedRule.cleanAntecedent}</em> also recorded at least 10 cases of <em>{selectedRule.cleanConsequent}</em>.
+              Among the {payload?.nTransactions ?? 739} qualifying reporting units in 2024, <strong>{selectedRule.confidencePct}</strong> of districts that recorded at least 10 cases of <em>{selectedRule.cleanAntecedent}</em> also recorded at least 10 cases of <em>{selectedRule.cleanConsequent}</em>.
             </p>
             <p>
               With a Lift of <strong>{selectedRule.liftFormatted}×</strong>, these two crime types co-occur {selectedRule.liftFormatted} times more frequently than if their presence across jurisdictions were statistically independent.

@@ -1,0 +1,62 @@
+{
+  "overview": {
+    "title": "CrimeScope · Regional analytics",
+    "heading": "Reported crime overview",
+    "hasGrandTotal": false,
+    "hasUnitsCount": true,
+    "hasTopCategories": true
+  },
+  "compare": {
+    "hasPicker": true,
+    "hasDisclaimer": true
+  },
+  "trends": {
+    "hasModes": true,
+    "hasMatchedCohortCount": true,
+    "has2020Note": true,
+    "hasStatutoryNote": true
+  },
+  "pca": {
+    "hasSvg": true,
+    "hasVariance": true,
+    "hasVolumeLabel": true,
+    "hasNoUrbanScale": true
+  },
+  "clusters": {
+    "hasCards": true,
+    "hasDeviations": true
+  },
+  "anomalies": {
+    "hasTabs": true,
+    "hasIntermediateTab": true,
+    "hasZScores": true
+  },
+  "rules": {
+    "hasSupportConfLift": true,
+    "hasEcologicalAdvisory": true,
+    "hasTransactionsNote": true
+  },
+  "quality": {
+    "hasTotalObs": true,
+    "hasZeros": true,
+    "hasZeroMissing": true
+  },
+  "methodology": {
+    "hasQuestions": true,
+    "hasReleaseId": true,
+    "hasRunId": true
+  },
+  "stateFilter": {
+    "applied": true,
+    "hasAndhraText": true,
+    "hasAnantapur": false
+  },
+  "network": {
+    "responsesCount": 12,
+    "maxPayloadKb": "3010.7",
+    "noMegabyteBloat": false
+  },
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ]
+}
