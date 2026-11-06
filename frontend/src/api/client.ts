@@ -5,10 +5,17 @@ const configuredBase=(import.meta.env.VITE_API_BASE_URL??'http://localhost:4000/
 // Accept either a full API base (`…/api/v1`) or the backend origin (`…:4000`).
 const base=/\/api\/v1$/i.test(configuredBase)?configuredBase:`${configuredBase}/api/v1`;
 // This is the ONLY integration boundary. Replace with endpoint composition if your API differs.
-export async function fetchDataset(signal?:AbortSignal):Promise<Dataset>{
+export async function fetchDataset(query:{view?:string;year?:number;state?:string;unitType?:string;category?:string}={},signal?:AbortSignal):Promise<Dataset>{
  if(dataMode==='demo')return structuredClone(demoDataset);
  if(dataMode!=='api')throw new Error('VITE_DATA_MODE must be demo or api.');
- const response=await fetch(`${base}/dashboard`,{signal,headers:{Accept:'application/json'}});
+ const qs=new URLSearchParams();
+ if(query.view)qs.set('view',query.view);
+ if(query.year!==undefined)qs.set('year',String(query.year));
+ if(query.state)qs.set('state',query.state);
+ if(query.unitType)qs.set('unitType',query.unitType);
+ if(query.category)qs.set('category',query.category);
+ const url=`${base}/dashboard${qs.toString()?'?'+qs.toString():''}`;
+ const response=await fetch(url,{signal,headers:{Accept:'application/json'}});
  if(!response.ok)throw new Error(`API request failed (${response.status}). Check the backend and CORS settings.`);
  const data:unknown=await response.json();
  validateDataset(data);return data;
