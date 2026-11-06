@@ -1,6 +1,6 @@
 {
-    "release_id": "ncrb-districtwise-2021-2024-fd2d8578be56",
-    "release_path": "data/serving/releases/ncrb-districtwise-2021-2024-fd2d8578be56",
-    "sqlite_path": "data/serving/releases/ncrb-districtwise-2021-2024-fd2d8578be56/crimescope.sqlite",
+    "release_id": "ncrb-districtwise-2021-2024-ecec48b772bc",
+    "release_path": "data/serving/releases/ncrb-districtwise-2021-2024-ecec48b772bc",
+    "sqlite_path": "data/serving/releases/ncrb-districtwise-2021-2024-ecec48b772bc/crimescope.sqlite",
     "years": [2021, 2022, 2023, 2024]
 }

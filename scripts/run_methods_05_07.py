@@ -15,7 +15,7 @@ from crimescope_analysis.methods.hierarchical import run_hierarchical  # noqa: E
 
 FEATURE_CSV = Path("analysis/output/method_04_feature_engineering.csv")
 OUTPUT_DIR = Path("analysis/output")
-YEARS = [2020, 2021, 2022, 2023, 2024]
+YEARS = [2021, 2022, 2023, 2024]
 K_VALUES = [3, 4, 5]
 
 

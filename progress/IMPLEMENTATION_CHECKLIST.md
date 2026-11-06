@@ -190,7 +190,7 @@ The supplied frontend pages are present and the production build passes. Browser
 - [ ] No fabricated data, model metrics, safety labels, or completion claims
 - [x] Add dashboard endpoint for curated processed export and expose provenance/limitations
 - [x] Configure frontend API mode and explicit method-unavailable states
-- [ ] Add paginated association rule endpoint and verified saved-result adapters
+- [x] Exclude 2020 from active scope; preserve historical 2020 data
 - [ ] Run full backend/frontend tests, production build, and API smoke test
 - [x] Add paginated association endpoint and independent validated saved-result adapters
 - [x] Run backend API tests, frontend TypeScript/production build, backend build, Python analysis tests and service smoke checks (see `docs/REAL_DATA_INTEGRATION_VERIFICATION.md`)

@@ -25,7 +25,7 @@ def sha256(path: Path) -> str:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--stage-dir", default="data/interim/expanded_national_2021_2024")
+    parser.add_argument("--stage-dir", default="data/interim/rebuilt_national_2021_2024_v3")
     args = parser.parse_args()
     stage = Path(args.stage_dir)
     if not stage.is_absolute():
@@ -98,8 +98,8 @@ def main() -> None:
     report = json.loads(quality_path.read_text(encoding="utf-8"))
     manifest = {
         "release_id": release_id, "status": "staged_validated", "release_type": "expanded_districtwise_ipc_bns",
-        "created_at_utc": datetime.now(timezone.utc).isoformat(), "years": [2020,2021,2022,2023,2024],
-        "geography_scope": "36 state/UT fragments in 2021-2024 plus partial Andhra Pradesh in 2020",
+        "created_at_utc": datetime.now(timezone.utc).isoformat(), "years": [2021,2022,2023,2024],
+        "geography_scope": "36 state/UT fragments in 2021-2024",
         "source_dataset": {"path": "data/interim/expanded_national_2021_2024/crime_observations_multi_year.csv", "sha256": dataset_hash},
         "sqlite": {"path": "data/interim/expanded_national_2021_2024/crimescope.sqlite", "sha256": sha256(db_path)},
         "rows": checks["row_count"], "source_files": report["summary"]["total_sources"],

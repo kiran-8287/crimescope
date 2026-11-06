@@ -71,7 +71,7 @@ export async function getDashboardView(query: { year: number; state: string; uni
   const years = [...new Set(regions.map(r => r.year))].sort((a, b) => a - b);
 
   // Compute pairwise comparisons
-  const comparisonPairs = [[2020, 2021], [2022, 2023]].map(([fromYear, toYear]) => {
+  const comparisonPairs = [[2022, 2023]].map(([fromYear, toYear]) => {
     const scopeRows = regions.filter(r => (r.year === fromYear || r.year === toYear) && (query.state === "all" || r.state === query.state) && (query.unitType === "all" || r.regionType === query.unitType));
     const key = (r: typeof regions[number]) => `${r.state}|${r.regionType}|${r.name}`;
     const from = scopeRows.filter(r => r.year === fromYear), to = scopeRows.filter(r => r.year === toYear);
@@ -79,15 +79,10 @@ export async function getDashboardView(query: { year: number; state: string; uni
     const commonKeys = new Set([...left].filter(k => right.has(k)));
     const ca = categoryForYear(fromYear), cb = categoryForYear(toYear);
     const categoryMatch = !!ca && !!cb && (query.category === "all" || ca === cb);
-
-    // 2020 is only Andhra Pradesh: at national scope, cannot compare 2020-2021
-    const national2020 = fromYear === 2020 && query.state === "all";
-    const available = commonKeys.size > 0 && categoryMatch && !national2020;
+    const available = commonKeys.size > 0 && categoryMatch;
 
     let reason: string | null = null;
-    if (national2020) {
-      reason = "2020 coverage is limited to Andhra Pradesh; select Andhra Pradesh to view the 2020–2021 comparable cohort.";
-    } else if (!categoryMatch) {
+    if (!categoryMatch) {
       reason = "Selected category is not available in both comparison years; no crosswalk applied.";
     } else if (commonKeys.size === 0) {
       reason = "No matching reporting units found in both years for the selected scope.";
@@ -171,7 +166,7 @@ export async function getDashboardView(query: { year: number; state: string; uni
     };
   });
 
-  const qualityReport = readJson("data/interim/expanded_national_2021_2024/quality_report.json");
+  const qualityReport = readJson("data/interim/rebuilt_national_2021_2024_v3/quality_report.json");
 
   let qualitySummary: any = null;
   if (view === "quality") {
@@ -276,7 +271,7 @@ export async function getDashboardView(query: { year: number; state: string; uni
       validRows: release.valid_observations,
       excludedDuplicates: release.excluded_duplicate_observations,
       warnings: [
-        "Coverage: 2021–2024 · 36 states/UTs (2020 coverage is limited to Andhra Pradesh).",
+        "Coverage: 2021–2024 · 36 states/UTs. Source coverage varies by year; not every year contains an identical set of districts.",
         "Aggregate rows are retained for reconciliation and excluded from reporting-unit sums.",
         "Administrative-district units are inferred from source naming patterns and not verified against state gazetteers.",
         "Reporting unit types are kept separate; missing values remain null.",

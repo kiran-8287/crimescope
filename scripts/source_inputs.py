@@ -28,7 +28,7 @@ def _header(path: Path) -> list[str]:
         return next(csv.reader(handle))
 
 
-def load_source_inputs(root: Path = ROOT, include_2020: bool = True) -> list[dict]:
+def load_source_inputs(root: Path = ROOT, include_2020: bool = False) -> list[dict]:
     manifest_path = root / "data/raw/download_manifest_2021_2024.json"
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     if manifest.get("schema_version") != 1 or manifest.get("status") != "complete":
@@ -104,4 +104,4 @@ def dataset_source_manifest(inputs: list[dict]) -> dict:
             "sha256": _sha256(item["path"]), "partial": item.get("partial", False),
             "header_template_source": item.get("header_template_source"),
         })
-    return {"years": grouped, "selection_source": "data/raw/download_manifest_2021_2024.json plus explicit partial 2020 Andhra Pradesh input"}
+    return {"years": grouped, "selection_source": "data/raw/download_manifest_2021_2024.json (active scope: 2021–2024)"}

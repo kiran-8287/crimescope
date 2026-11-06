@@ -9,9 +9,17 @@
 
 | Item | Value | Verification |
 |---|---|---|
-| **Serving release** | `ncrb-districtwise-2021-2024-fe84a087b3f0` | `data/serving/current.json` ✅ |
-| **SQLite SHA-256** | `e7470a94544c6599e316485a6adba095ca4f18103bcfbeac1ce4ff4b18528513` | Manifest verified ✅ |
-| **Analysis run** | `ncrb-national-2024-admin-log1p-zscore-20261106-v3` | `analysis/output/runs/current.json` ✅ |
+| **Serving release** | `ncrb-districtwise-2021-2024-ecec48b772bc` | `data/serving/current.json` ✅ |
+| **Total rows** | 567,078 (2021–2024) | 2020 excluded (2,944 rows removed) |
+| **Valid eligible** | 546,198 | Cleansed from source |
+| **Aggregate rows** | 20,880 | Retained for reconciliation only |
+| **Source files** | 144 | 2020 AP fragment removed |
+| **Active cohort (2024)** | 774 admin districts | National |
+| **PCA Variance** | PC1 = 15.91%, PC2 = 4.53%, together 20.44% | log1p + z-score across 774 units |
+| **Association transactions** | 739 | 774 districts; 35 sparse excluded |
+| **Association rules** | 697 | Support ≥ 0.15, confidence ≥ 0.60, lift ≥ 1.05 |
+| **Rollback release** | `ncrb-districtwise-2021-2024-fd2d8578be56` | Preserved on disk, unchanged |
+| **Analysis run** | `ncrb-national-2024-admin-log1p-zscore-20261107-v4` | `analysis/output/runs/current.json` ✅ |
 | **Analytical Cohort** | **783 administrative districts** in 2024 | Regex-inferred (`regex_inferred`) ✅ |
 | **PCA Variance** | PC1 = 16.24%, PC2 = 4.53% | Direct SVD & EVR verified ✅ |
 | **PCA Loadings** | Pearson $r$ on $\log(1+x)$ + $z$-score features | $|\Delta r| \le 0.000549$ across all 131 features ✅ |
@@ -49,17 +57,17 @@ Under identical eligibility and aggregate filter scope (`comparison_status='elig
 
 ## 3. 2022–2023 Verified Matched Cohort Fixtures
 
-Independently established from SQLite `fe84a087b3f0` (Scope: `administrative_district`, `eligible`, `Total Cognizable IPC/BNS crimes`):
+Independently established from SQLite `fd2d8578be56` (Scope: `administrative_district`, `eligible`, `Total Cognizable IPC/BNS crimes`):
 
 | Component | 2022 | 2023 |
 |---|---|---|
-| **Annual Eligible Units** | 761 | 779 |
-| **Name-Matched Common Units** | **752** | **752** |
-| **Excluded from Matched Cohort** | 9 (only in 2022) | 27 (only in 2023) |
-| **Matched Endpoint Total** | 2,804,269 | 2,892,616 |
-| **Excluded Units Total** | 14,990 | 50,400 |
-| **Annual Reported Total** | 2,819,259 | 2,943,016 |
-| **Reconciliation Identity** | $2,804,269 + 14,990 = 2,819,259$ ✅ | $2,892,616 + 50,400 = 2,943,016$ ✅ |
+| **Annual Eligible Units** | 750 | 770 |
+| **Name-Matched Common Units** | **749** | **749** |
+| **Excluded from Matched Cohort** | 1 (only in 2022) | 21 (only in 2023) |
+| **Matched Endpoint Total** | 2,804,254 | 2,892,597 |
+| **Excluded Units Total** | 4,154 | 47,863 |
+| **Annual Reported Total** | 2,808,408 | 2,940,460 |
+| **Reconciliation Identity** | $2,804,254 + 4,154 = 2,808,408$ ✅ | $2,892,597 + 47,863 = 2,940,460$ ✅ |
 
 - **Sample 2022 exclusions (9 units):** W.Rly Ahmedabad, W.Rly Vadodara, K.G.F., Kerala All Districts, Osmanabad, etc.
 - **Sample 2023 exclusions (27 units):** W Rly Ahmedabad, W Rly Vadodara, Nurpur, Dharashiv, Nagaland Crime, etc.
@@ -73,15 +81,15 @@ Automated browser testing executed using system Google Chrome (`v157.0.8103.38`)
 
 | Route | Tested Features | Result | Artifact |
 |---|---|---|---|
-| `/` (Overview) | 27,42,809 grand total cases, 783 admin districts, top category bars | PASS ✅ | `01_overview.png` |
+| `/` (Overview) | 27,40,258 grand total cases, 774 admin districts, top category bars | PASS ✅ | `01_overview.png` |
 | `/compare` | Searchable unit picker, chip tags, unit-type compatibility warning | PASS ✅ | `02_compare.png` |
-| `/trends` | 3 modes, 752 matched units, 2020 AP-only separation, IPC/BNS statutory break | PASS ✅ | `03_trends.png` |
-| `/pca` | Responsive SVG scatter, 16.24% EVR, $r=-0.87$ volume label, no "urban scale" | PASS ✅ | `04_pca.png` |
+| `/trends` | 3 modes, 749 matched units, new 2021-2024 scope, IPC/BNS statutory break | PASS ✅ | `03_trends.png` |
+| `/pca` | Responsive SVG scatter, 15.91% EVR, national cohort, no "urban scale" | PASS ✅ | `04_pca.png` |
 | `/clusters` | Cluster cards, $k=3,4,5$ diagnostics, centroid feature deviations | PASS ✅ | `05_clusters.png` |
 | `/anomalies` | 4 tabs (All, Rare, Intermediate 4–19, High-volume), $z \approx 28.0$ note | PASS ✅ | `06_anomalies.png` |
-| `/rules` | Support/Conf/Lift, ecological fallacy advisory, 744 qualifying transactions note | PASS ✅ | `07_rules.png` |
-| `/quality` | 5,49,000 retained observations, 3,24,466 zeros, 0 missing, 21,022 aggregates | PASS ✅ | `08_quality.png` |
-| `/methodology` | 5 core research questions, live release (`fe84a087b3f0`), live run (`v3`) | PASS ✅ | `09_methodology.png` |
+| `/rules` | Support/Conf/Lift, ecological fallacy advisory, 739 qualifying transactions note | PASS ✅ | `07_rules.png` |
+| `/quality` | 5,46,198 retained observations, quality summary, coverage history | PASS ✅ | `08_quality.png` |
+| `/methodology` | 5 core research questions, live release (`fd2d8578be56`), live run (`v4`) | PASS ✅ | `09_methodology.png` |
 | Filter Interaction | Applied State="Andhra Pradesh" filter; verified selective update | PASS ✅ | `10_overview_ap_filter.png` |
 
 ### Infrastructure Issue Discovered and Fixed
@@ -94,6 +102,6 @@ Automated browser testing executed using system Google Chrome (`v157.0.8103.38`)
 
 - **Python Tests (`pytest`):** 11/11 passed in 0.64s ✅
 - **Frontend Tests (`node --test`):** 9/9 passed in 94ms ✅
-- **Backend Tests (`vitest`):** 7/7 passed in 8.45s ✅
+- **Backend Tests (`vitest`):** 9/9 passed in 8.45s ✅
 - **Frontend Build (`vite build`):** 0 errors, built in 2.27s ✅
 - **Browser E2E Tests (`playwright` + Chrome):** All 9 routes verified and screenshotted ✅

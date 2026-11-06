@@ -1,4 +1,4 @@
-"""Build canonical observations from explicit 2020 AP plus verified 2021-24 fragments."""
+"""Build canonical observations from verified 2021-24 manifest fragments (2020 excluded from active scope)."""
 from __future__ import annotations
 
 import argparse
@@ -52,7 +52,7 @@ def coverage_rows(observations: list, sources: list[dict]) -> tuple[list[dict], 
                                "all_reporting_unit_official_total_sum": reporting_sum,
                                "difference": difference, "status": "match" if difference == 0 else "difference" if difference is not None else "unavailable"})
         coverage.append({
-            "year": year, "state_ut": state, "coverage_scope": "partial_2020_andhra_pradesh" if year == 2020 else "indexed_state_ut_fragment",
+            "year": year, "state_ut": state, "coverage_scope": "indexed_state_ut_fragment",
             "fragments": fragment_counts[(year, state)],
             "administrative_districts": units["administrative_district"], "city_police_units": units["city_police"],
             "railway_units": units["railway"], "other_police_units": units["other_police_unit"], "aggregate_rows": units["aggregate"],
@@ -88,14 +88,14 @@ def coverage_rows(observations: list, sources: list[dict]) -> tuple[list[dict], 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--output-dir", default=str(DEFAULT_OUTPUT), help="Build output directory; use a staging directory before publishing")
-    parser.add_argument("--without-2020", action="store_true", help="Build only manifest-backed 2021-2024 fragments")
+    parser.add_argument("--with-2020", action="store_true", help="Include legacy partial 2020 Andhra Pradesh input (historical reproduction only)")
     args = parser.parse_args(argv)
     output_dir = Path(args.output_dir)
     if not output_dir.is_absolute():
         output_dir = ROOT / output_dir
     row_accounting_dir = output_dir / "row_accounting"
     row_accounting_dir.mkdir(parents=True, exist_ok=True)
-    sources = load_source_inputs(ROOT, include_2020=not args.without_2020)
+    sources = load_source_inputs(ROOT, include_2020=args.with_2020)
     geo_mapping = load_geography_mapping(GEO_MAPPING)
     cat_mapping = load_category_mapping(CAT_MAPPING)
 
@@ -135,7 +135,7 @@ def main(argv: list[str] | None = None) -> int:
                               "states_or_uts": len({o.state_name for o in all_observations}),
                               "region_type_counts": {kind: len({o.geography_id for o in all_observations if o.region_type == kind})
                                                      for kind in ("administrative_district", "city_police", "railway", "other_police_unit", "aggregate")}})
-    if not args.without_2020:
+    if args.with_2020:
         prior_path = ROOT / "data/processed/quality_report.json"
         if prior_path.exists():
             try:

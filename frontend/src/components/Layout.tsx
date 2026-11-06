@@ -67,8 +67,6 @@ export function Layout(){
 
         {isDemo ? (
           <div className="demo-strip"><span>DESIGN PREVIEW</span> Fictional regions and sample results. No real crime or safety findings.</div>
-        ) : filters.year === 2020 ? (
-          <div className="notice warning"><Database size={16}/><span><strong>2020 coverage is limited to Andhra Pradesh.</strong> All other states begin reporting in the 2021 national cohort.</span></div>
         ) : (
           <div className="notice"><Database size={16}/><span><strong>Coverage: 2021–2024 · 36 states/UTs.</strong> Reported records reflect police recording practices and population sizes.</span></div>
         )}

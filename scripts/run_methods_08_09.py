@@ -13,7 +13,7 @@ from crimescope_analysis.methods.association import run_association_rules  # noq
 
 FEATURE_CSV = Path("analysis/output/method_04_feature_engineering.csv")
 OUTPUT_DIR = Path("analysis/output")
-YEARS = [2020, 2021, 2022, 2023, 2024]
+YEARS = [2021, 2022, 2023, 2024]
 
 
 def main() -> int:

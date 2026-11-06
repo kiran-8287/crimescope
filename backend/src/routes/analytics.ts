@@ -10,7 +10,11 @@ import {
 const analyticsRouter = Router();
 
 analyticsRouter.get("/regions", async (_req: Request, res: Response) => {
-  const year = parseInt(_req.query.year as string) || 2020;
+  const year = parseInt(_req.query.year as string) || 2024;
+  if (year < 2021 || year > 2024) {
+    res.status(400).json({ status: "error", code: "unsupported_year", message: `Year ${year} is not supported. Active scope is 2021–2024.` });
+    return;
+  }
   const category = (_req.query.category as string) || undefined;
   try {
     res.json(get_regional_comparison(year, category));
@@ -46,7 +50,11 @@ analyticsRouter.get("/trends", async (_req: Request, res: Response) => {
 });
 
 analyticsRouter.get("/categories/top", async (_req: Request, res: Response) => {
-  const year = parseInt(_req.query.year as string) || 2020;
+  const year = parseInt(_req.query.year as string) || 2024;
+  if (year < 2021 || year > 2024) {
+    res.status(400).json({ status: "error", code: "unsupported_year", message: `Year ${year} is not supported. Active scope is 2021–2024.` });
+    return;
+  }
   const top_n = parseInt(_req.query.top_n as string) || 10;
   try {
     res.json(get_top_categories(year, top_n));
@@ -60,7 +68,11 @@ analyticsRouter.get("/categories/top", async (_req: Request, res: Response) => {
 });
 
 analyticsRouter.get("/correlations", async (_req: Request, res: Response) => {
-  const year = parseInt(_req.query.year as string) || 2020;
+  const year = parseInt(_req.query.year as string) || 2024;
+  if (year < 2021 || year > 2024) {
+    res.status(400).json({ status: "error", code: "unsupported_year", message: `Year ${year} is not supported. Active scope is 2021–2024.` });
+    return;
+  }
   const top_n = parseInt(_req.query.top_n as string) || 10;
   try {
     res.json(get_correlation_pairs(year, top_n));

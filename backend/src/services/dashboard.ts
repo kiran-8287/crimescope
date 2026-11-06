@@ -14,15 +14,15 @@ function csv(text: string): string[][] {
 }
 const root = existsSync(resolve(process.cwd(), "config/data_snapshot_manifest.json")) ? process.cwd() : resolve(process.cwd(), "..");
 const read = (p: string) => readFileSync(resolve(root, p), "utf8");
-const supportedPairs: [number, number][] = [[2020, 2021], [2022, 2023]];
+const supportedPairs: [number, number][] = [[2022, 2023]];
 let dashboardCache: any = null;
 
 export function getDashboard() {
   if (dashboardCache) return dashboardCache;
-  const manifest = JSON.parse(read("data/interim/expanded_national_2021_2024/staging_release_manifest.json"));
+  const manifest = JSON.parse(read("data/interim/rebuilt_national_2021_2024_v3/staging_release_manifest.json"));
   const taxonomy = JSON.parse(read("config/category_hierarchy.json"));
   const categoryDefs = new Map(taxonomy.categories.map((c: any) => [c.id, c]));
-  const [header, ...records] = csv(read("data/interim/expanded_national_2021_2024/crime_observations_multi_year.csv"));
+  const [header, ...records] = csv(read("data/interim/rebuilt_national_2021_2024_v3/crime_observations_multi_year.csv"));
   const ix = Object.fromEntries(header.map((h, i) => [h, i]));
   const rows = records.filter(r => r[ix.quality_status] === "valid" && r[ix.comparison_status] === "eligible");
   const regions = new Map<string, any>(), categories = new Map<string, any>(), unknownCategories = new Set<string>();
@@ -57,9 +57,9 @@ export function getDashboard() {
   const years = [...new Set(observations.map(o => o.year))].sort();
   const current = JSON.parse(read("data/serving/current.json"));
   const releaseManifest = JSON.parse(read(`data/serving/releases/${current.release_id}/release_manifest.json`));
-  const quality = JSON.parse(read("data/interim/expanded_national_2021_2024/quality_report.json"));
+  const quality = JSON.parse(read("data/interim/rebuilt_national_2021_2024_v3/quality_report.json"));
   const gapReport = quality.source_cell_completeness_investigation ?? null;
-  const warnings = ["2021–2024 cover 36 manifest-selected state/UT fragments per year; 2020 Andhra Pradesh is explicitly partial.", "Aggregate rows are retained for reconciliation and excluded from district sums.", "District, city-police, railway and other police units are reported separately.", "2023 uses IPC and 2024 uses BNS; no unsupported cross-framework trend is inferred.", "Category shares are disabled because a complete mutually-exclusive category set has not been verified.", "No population denominators are available; rates cannot be calculated."];
+  const warnings = ["Coverage: 2021–2024 · 36 states/UTs. Source coverage varies by year; not every year contains an identical set of districts.", "Aggregate rows are retained for reconciliation and excluded from district sums.", "District, city-police, railway and other police units are reported separately.", "2023 uses IPC and 2024 uses BNS; no unsupported cross-framework trend is inferred.", "Category shares are disabled because a complete mutually-exclusive category set has not been verified.", "No population denominators are available; rates cannot be calculated."];
   const categoryArray = [...categories.values()].map(c => ({ ...c, years: c.years.sort((a: number, b: number) => a - b) }));
   const saved = loadCurrentAnalysis(manifest.source_dataset.sha256);
   dashboardCache = {

@@ -12,8 +12,8 @@ describe("Backend module", () => {
   it("serves independently validated saved methods in the dashboard", async () => {
     const { app } = await import("../app.js");
     const response = await request(app).get("/api/v1/dashboard").expect(200);
-    expect(response.body.meta.geographyScope).toBe("36 state/UT fragments in 2021-2024 plus partial Andhra Pradesh in 2020");
-    expect(response.body.meta.releaseId).toBe("ncrb-districtwise-2021-2024-fd2d8578be56");
+    expect(response.body.meta.geographyScope).toBe("36 state/UT fragments in 2021-2024");
+    expect(response.body.meta.releaseId).toBe("ncrb-districtwise-2021-2024-ecec48b772bc");
     expect(response.body.methods.pca.status).toBe("available");
     expect(response.body.methods.kmeans.status).toBe("available");
     expect(response.body.methods.anomalies.status).toBe("available");
@@ -38,7 +38,7 @@ describe("Backend module", () => {
     const { app } = await import("../app.js");
     const res = await request(app).get("/api/v1/dashboard?view=quality").expect(200);
     expect(res.body.qualitySummary).toBeDefined();
-    expect(res.body.qualitySummary.observations).toBe(549000);
+    expect(res.body.qualitySummary.observations).toBe(546198);
     expect(res.body.qualitySummary.explicitZeros).toBeGreaterThan(300000);
     expect(res.body.qualitySummary.missing).toBe(0);
     expect(Array.isArray(res.body.qualitySummary.byStateYear)).toBe(true);
@@ -75,6 +75,18 @@ describe("Backend module", () => {
     // New cohort: 774 admin districts (corrected classification). Grand total 2024 = 2,740,258.
     expect(grandTotal.cases).toBe(2740258);
     expect(grandTotal.units).toBe(774);
+  }, 30000);
+
+  it("rejects unsupported year 2020 with clear error", async () => {
+    const { app } = await import("../app.js");
+    await request(app).get("/api/v1/dashboard?view=overview&year=2020").expect(400);
+  }, 30000);
+
+  it("rejects unsupported year 2020 on analytics endpoints", async () => {
+    const { app } = await import("../app.js");
+    await request(app).get("/api/v1/regions?year=2020").expect(400);
+    await request(app).get("/api/v1/categories/top?year=2020").expect(400);
+    await request(app).get("/api/v1/correlations?year=2020").expect(400);
   }, 30000);
 
   it("preserves confirmed raw-to-serving benchmark values", async () => {

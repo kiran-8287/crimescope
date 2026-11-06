@@ -21,12 +21,8 @@ export default function OverviewPage() {
   const pairs = data.meta.comparisonPairs?.filter(p => p.status === 'available') ?? [];
   const selectedLabel = filters.category === 'all' ? 'Official reported total' : categoryLabel(data, filters.category);
 
-  // Annual recorded totals series for all available years
-  // CRITICAL COMPARABILITY SAFEGUARD: 2020 is partial Andhra Pradesh only.
-  // When filters.state === 'all', 2020 must NOT be plotted on the same continuous line
-  // as the 2021–2024 national observations.
+  // Annual recorded totals series for all available years (2021–2024 active scope).
   const nationalAnnualSeriesValues: (number | null)[] = labels.map(() => null);
-  const ap2020StandaloneSeriesValues: (number | null)[] = labels.map(() => null);
 
   for (const year of data.meta.years) {
     const categoryAtYear = filters.category === 'all'
@@ -39,12 +35,7 @@ export default function OverviewPage() {
     const sum = known.length ? known.reduce<number>((a, b) => a + (b ?? 0), 0) : null;
 
     const yearIdx = data.meta.years.indexOf(year);
-    if (year === 2020 && filters.state === 'all') {
-      // Isolate 2020 AP-only point so it does NOT connect to 2021 national total
-      ap2020StandaloneSeriesValues[yearIdx] = sum;
-    } else {
-      nationalAnnualSeriesValues[yearIdx] = sum;
-    }
+    nationalAnnualSeriesValues[yearIdx] = sum;
   }
 
   // Connected pairwise comparison series for verified stable cohorts
@@ -78,7 +69,6 @@ export default function OverviewPage() {
   const chartSeries = filters.state === 'all'
     ? [
         { name: `National annual totals (2021–2024) · ${selectedLabel}`, values: nationalAnnualSeriesValues },
-        { name: `2020 Andhra Pradesh only · ${selectedLabel}`, values: ap2020StandaloneSeriesValues },
         ...totalSeries
       ]
     : [
@@ -86,14 +76,16 @@ export default function OverviewPage() {
         ...totalSeries
       ];
 
-  const detailRows = chartSeries.flatMap(series =>
-    series.values.flatMap((value, i) => value === null ? [] : [{
-      id: `${series.name}-${labels[i]}`,
-      period: series.name,
-      year: Number(labels[i]),
-      category: selectedLabel,
-      cases: value
-    }])
+  const detailRows = chartSeries.flatMap((series): { id: string; period: string; year: number; category: string; cases: number | null }[] =>
+    series.values.flatMap((value, i): { id: string; period: string; year: number; category: string; cases: number | null }[] =>
+      value === null ? [] : [{
+        id: `${series.name}-${labels[i]}`,
+        period: series.name,
+        year: Number(labels[i]),
+        category: selectedLabel,
+        cases: value
+      }]
+    )
   );
 
   // Top category counts for the category breakdown

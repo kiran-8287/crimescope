@@ -24,7 +24,7 @@ function csvResponse(res: Response, filename: string, rows: any[], columns: stri
 }
 
 downloadRouter.get("/export/canonical", (_req: Request, res: Response) => {
-  const path = join(REPO_ROOT, "data", "interim", "expanded_national_2021_2024", "crime_observations_multi_year.csv");
+  const path = join(REPO_ROOT, "data", "interim", "rebuilt_national_2021_2024_v3", "crime_observations_multi_year.csv");
   if (!existsSync(path)) {
     res.status(404).json({ status: "error", code: "not_found", message: "Canonical dataset not found" });
     return;
@@ -36,7 +36,7 @@ downloadRouter.get("/export/canonical", (_req: Request, res: Response) => {
 });
 
 downloadRouter.get("/export/quality-report", (_req: Request, res: Response) => {
-  const path = join(REPO_ROOT, "data", "interim", "expanded_national_2021_2024", "quality_report.json");
+  const path = join(REPO_ROOT, "data", "interim", "rebuilt_national_2021_2024_v3", "quality_report.json");
   if (!existsSync(path)) {
     res.status(404).json({ status: "error", code: "not_found", message: "Quality report not found" });
     return;
@@ -48,7 +48,7 @@ downloadRouter.get("/export/quality-report", (_req: Request, res: Response) => {
 });
 
 downloadRouter.get("/export/quarantined", (_req: Request, res: Response) => {
-  const path = join(REPO_ROOT, "data", "interim", "expanded_national_2021_2024", "quarantined_observations.csv");
+  const path = join(REPO_ROOT, "data", "interim", "rebuilt_national_2021_2024_v3", "quarantined_observations.csv");
   if (!existsSync(path)) {
     res.status(404).json({ status: "error", code: "not_found", message: "Quarantined observations not found" });
     return;

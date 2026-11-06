@@ -12,7 +12,7 @@ router = APIRouter()
 
 @router.get("/regions")
 def regional_comparison(
-    year: int = Query(2020, description="Year to compare"),
+    year: int = Query(2024, description="Year to compare"),
     category: str | None = Query(None, description="Optional category filter"),
 ):
     return get_regional_comparison(year, category)
@@ -28,7 +28,7 @@ def trends(
 
 @router.get("/categories/top")
 def top_categories(
-    year: int = Query(2020, description="Year"),
+    year: int = Query(2024, description="Year"),
     top_n: int = Query(10, description="Number of top categories"),
 ):
     return get_top_categories(year, top_n)
@@ -36,7 +36,7 @@ def top_categories(
 
 @router.get("/correlations")
 def correlations(
-    year: int = Query(2020, description="Year"),
+    year: int = Query(2024, description="Year"),
     top_n: int = Query(10, description="Number of top pairs"),
 ):
     return get_correlation_pairs(year, top_n)

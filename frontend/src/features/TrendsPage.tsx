@@ -42,7 +42,7 @@ export default function TrendsPage() {
       candidateUnits: units.length,
       cases: value,
       framework: year <= 2023 ? 'IPC' : 'BNS',
-      coverageNote: year === 2020 ? 'Andhra Pradesh only' : 'National 36 States/UTs'
+      coverageNote: 'National 36 States/UTs'
     });
   }
 
@@ -330,7 +330,7 @@ export default function TrendsPage() {
       )}
 
       <Notice>
-        <strong>Comparability boundaries:</strong> 2020 covers Andhra Pradesh only; 2021–2022 includes district reorganization in Andhra Pradesh; 2022–2023 has 749 matched administrative districts under IPC; 2023–2024 transitions to the Bharatiya Nyaya Sanhita (BNS) framework.
+        <strong>Comparability boundaries:</strong> 2021–2022 includes district reorganization in Andhra Pradesh; 2022–2023 has 749 matched administrative districts under IPC; 2023–2024 transitions to the Bharatiya Nyaya Sanhita (BNS) framework. The 2020 source table covered only part of Andhra Pradesh and is excluded from the active analytical scope.
       </Notice>
     </>
   );

@@ -24,7 +24,7 @@ app.get("/health", (_req, res) => res.json({ status: "ok", service: "crimescope-
 app.get("/ready", (_req, res) => res.json({ status: "ready" }));
 app.get("/api/v1/dashboard", async (req, res) => {
   const query = z.object({
-    year: z.coerce.number().int().min(2020).max(2024).default(2024),
+    year: z.coerce.number().int().min(2021).max(2024).default(2024),
     state: z.string().default("all"), unitType: z.string().default("administrative_district"),
     category: z.string().default("all"),
     view: z.enum(["overview", "compare", "trends", "quality", "pca", "clusters", "anomalies", "rules", "methodology"]).default("overview"),

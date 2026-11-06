@@ -295,22 +295,7 @@ export default function DataQualityPage() {
             />
           </Panel>
 
-          {trailingGaps.length > 0 && (
-            <Panel
-              title="Andhra Pradesh 2020 Trailing Source Field Gaps Investigation"
-              subtitle="38 trailing column cells were absent in specific district rows of the original 2020 source table. They are preserved as missing (null) and not zero-filled."
-            >
-              <DataTable
-                rows={trailingGaps}
-                columns={[
-                  { key: 'source_line', label: 'Source Line' },
-                  { key: 'region_name', label: 'District' },
-                  { key: 'omitted_trailing_field_count', label: 'Absent Trailing Columns' },
-                  { key: 'handling', label: 'Treatment', render: () => <Badge tone="amber">Preserved as Null</Badge> }
-                ]}
-              />
-            </Panel>
-          )}
+
         </>
       )}
 

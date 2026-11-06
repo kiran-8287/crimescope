@@ -108,7 +108,7 @@ export function loadCurrentAnalysis(expectedDatasetHash?: string): AnalysisBundl
 }
 
 export function getAssociationPage(input: { year: number; minSupport: number; minConfidence: number; minLift: number; limit: number; offset: number }) {
-  const release = readJson(resolve(root, "data/interim/expanded_national_2021_2024/staging_release_manifest.json"));
+  const release = readJson(resolve(root, "data/interim/rebuilt_national_2021_2024_v3/staging_release_manifest.json"));
   const { runId, manifest, methods } = loadCurrentAnalysis(release.source_dataset.sha256);
   const method = methods.association;
   if (method.status !== "available" || !manifest) return { status: method.status, reason: method.reason, rules: [], total: 0, runId };
