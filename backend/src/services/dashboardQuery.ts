@@ -22,7 +22,7 @@ export async function getDashboardView(query: { year: number; state: string; uni
   const taxonomy = readJson("config/category_hierarchy.json");
   const categoryDefs = new Map(taxonomy.categories.map((item: any) => [item.id, item]));
   const regionRows = rows("SELECT geography_id AS id, year, state_name AS state, region_name AS name, region_type AS regionType FROM crime_observations WHERE comparison_status='eligible' AND region_type!='aggregate' GROUP BY geography_id,year,state_name,region_name,region_type ORDER BY year,state_name,region_name");
-  const regions = regionRows.map(r => ({ ...r, year: Number(r.year), id: String(r.id), state: String(r.state), name: String(r.name), regionType: String(r.regionType), coverage: "Complete" as const }));
+  const regions = regionRows.map(r => ({ ...r, year: Number(r.year), id: String(r.id), state: String(r.state), name: String(r.name), regionType: String(r.regionType), coverage: "Complete" as const, cohortId: undefined as string | undefined }));
   const categories = taxonomy.categories.map((item: any) => ({ id: item.id, label: item.label, years: item.years, rolesByYear: item.rolesByYear, sourceHeaders: item.sourceHeaders }));
   const selectedState = query.state !== "all" ? ` AND state_name=${sqlText(query.state)}` : "";
   const selectedType = query.unitType !== "all" ? ` AND region_type=${sqlText(query.unitType)}` : " AND region_type='administrative_district'";
@@ -79,9 +79,8 @@ export async function getDashboardView(query: { year: number; state: string; uni
   const scopedRegions = view === "trends" ? regions.filter(r => yearsInView.includes(r.year) && (query.state === "all" || r.state === query.state) && (query.unitType === "all" || r.regionType === query.unitType)) : regions;
   const qualityReport = readJson("data/interim/expanded_national_2021_2024/quality_report.json");
   const issues = [{ id: "aggregate-exclusion", region: "Dataset", type: "Aggregate rows", status: "Excluded from district sums", detail: `${release.validation.aggregate_rows} aggregate observations are retained for reconciliation and excluded from reporting-unit views.` }, ...(qualityReport.source_cell_completeness_investigation?.cases ?? []).map((g: any, i: number) => ({ id: `source-gap-${i}`, region: g.region_name, type: "Trailing source fields absent", status: "Unresolved", detail: `${g.omitted_trailing_field_count} trailing fields absent in source line ${g.source_line}; not treated as zero.` }))];
-  const methodView = ["pca", "clusters", "anomalies", "rules"].includes(view);
-  const saved = methodView ? loadCurrentAnalysis(release.source_dataset.sha256) : null;
-  const defaultAnalysis = { runId: "", year: query.year, featureMode: "", variance: [], loadings: [], points: [], profiles: [], silhouette: null, stability: null };
+  const saved = loadCurrentAnalysis(release.source_dataset.sha256);
+  const defaultAnalysis = { runId: saved.runId ?? "", year: query.year, featureMode: saved.manifest?.preprocessing?.feature_mode ?? "", variance: saved.methods.pca?.result?.explained_variance_ratio ?? [], loadings: [], points: [], profiles: [], silhouette: null, stability: null };
 
   return {
     meta: {
