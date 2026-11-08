@@ -1,0 +1,158 @@
+{
+  "per_source": {
+    "cii_2020_1_districtwise-ipc-crimes_t1": {
+      "source_rows": 22,
+      "canonical_observations": 2802,
+      "valid": 2782,
+      "warnings": 0,
+      "quarantined": 20,
+      "eligible_for_comparison": 2802,
+      "aggregate_rows": 0,
+      "regions": 20,
+      "categories": 141
+    },
+    "cii_2021_1_districtwise-ipc-crimes_t1": {
+      "source_rows": 22,
+      "canonical_observations": 2840,
+      "valid": 2820,
+      "warnings": 0,
+      "quarantined": 20,
+      "eligible_for_comparison": 2840,
+      "aggregate_rows": 0,
+      "regions": 20,
+      "categories": 141
+    },
+    "cii_2022_1_districtwise-ipc-crimes_t1": {
+      "source_rows": 30,
+      "canonical_observations": 3976,
+      "valid": 3948,
+      "warnings": 0,
+      "quarantined": 28,
+      "eligible_for_comparison": 3976,
+      "aggregate_rows": 0,
+      "regions": 28,
+      "categories": 141
+    },
+    "cii_2023_1_districtwise-ipc-crimes_t1": {
+      "source_rows": 30,
+      "canonical_observations": 3976,
+      "valid": 3948,
+      "warnings": 0,
+      "quarantined": 28,
+      "eligible_for_comparison": 3976,
+      "aggregate_rows": 0,
+      "regions": 28,
+      "categories": 141
+    },
+    "cii_2024_1_districtwise-ipc-crimes_t1": {
+      "source_rows": 29,
+      "canonical_observations": 4312,
+      "valid": 4312,
+      "warnings": 0,
+      "quarantined": 0,
+      "eligible_for_comparison": 4312,
+      "aggregate_rows": 0,
+      "regions": 28,
+      "categories": 154
+    }
+  },
+  "summary": {
+    "total_sources": 5,
+    "total_source_rows": 133,
+    "total_canonical_observations": 17906,
+    "total_quarantined": 96,
+    "total_duplicates": 96,
+    "total_totals_mismatch": 0,
+    "eligible_for_comparison": 17906
+  },
+  "source_cell_completeness_investigation": {
+    "investigation_id": "phase_c_2020_trailing_fields_2026-11-05",
+    "source_id": "cii_2020_1_districtwise-ipc-crimes_t1",
+    "source_file": "data/raw/2020/1_districtwise-ipc-crimes-2020_t1.csv",
+    "header_field_count": 145,
+    "findings": {
+      "affected_source_rows": 3,
+      "omitted_trailing_cells": 38,
+      "blank_fields_are_explicit": false,
+      "source_cell_semantics": "Cannot distinguish intentionally blank trailing cells from export truncation based on the serialized CSV alone.",
+      "not_zero": true
+    },
+    "cases": [
+      {
+        "source_line": 5,
+        "source_row_reference": "row_5",
+        "region_name": "Cuddapah",
+        "actual_csv_fields": 144,
+        "expected_csv_fields": 145,
+        "omitted_trailing_field_count": 1,
+        "omitted_headers": [
+          "Total Cognizable IPC crimes"
+        ],
+        "classification": "source_serialization_omitted_trailing_fields",
+        "resolution": "Not represented as observations and must remain unavailable; absent trailing fields may be intentionally blank or truncated by source CSV serialization. Source semantics unresolved; never impute zero."
+      },
+      {
+        "source_line": 7,
+        "source_row_reference": "row_7",
+        "region_name": "Guntakal Railway",
+        "actual_csv_fields": 109,
+        "expected_csv_fields": 145,
+        "omitted_trailing_field_count": 36,
+        "omitted_headers": [
+          "Offences Relating to Documents & Property Marks | Counterfeiting | Counterfeit Coin (Sec.231-235,237,238-240 & 242-254 IPC)",
+          "Offences Relating to Documents & Property Marks | Counterfeiting | Counterfeiting Government Stamp (Sec.255 to 260 IPC)",
+          "Offences Relating to Documents & Property Marks | Counterfeiting | Counterfeiting of Seal or Mark (Sec.472/473 IPC)",
+          "Offences Relating to Documents & Property Marks | Counterfeiting | Counterfeit Currency & Bank notes (Sec.489-A to 489-E IPC)",
+          "Offences Relating to Documents & Property Marks | Forgery, Cheating & Fraud | Forgery, Cheating & Fraud (Total) (Col.114+Col.119+Col.120)",
+          "Offences Relating to Documents & Property Marks | Forgery, Cheating & Fraud | Fraud | Fraud (Sec.420 r/w Sec.465,468-471 IPC/IT Act) (Col.115 to 118)",
+          "Offences Relating to Documents & Property Marks | Forgery, Cheating & Fraud | Fraud | a) Bank",
+          "Offences Relating to Documents & Property Marks | Forgery, Cheating & Fraud | Fraud | b) ATMs",
+          "Offences Relating to Documents & Property Marks | Forgery, Cheating & Fraud | Fraud | c) Credit Card/ Debit Card",
+          "Offences Relating to Documents & Property Marks | Forgery, Cheating & Fraud | Fraud | d) Other Frauds",
+          "Offences Relating to Documents & Property Marks | Forgery, Cheating & Fraud | Cheating (Sec.420 IPC)",
+          "Offences Relating to Documents & Property Marks | Forgery, Cheating & Fraud | Forgery",
+          "Offences Relating to Documents & Property Marks | Offences Relating to Documents & Property Marks (Total)",
+          "Miscellaneous IPC Crimes | Offences relating to Elections (Sec.171-E to 171-I r/w IPC/SLL)",
+          "Miscellaneous IPC Crimes | Disobedience to order duly promulgated by Public Servant (Sec.188)",
+          "Miscellaneous IPC Crimes | Harbouring an Offender (Sec.212/216/216A IPC)",
+          "Miscellaneous IPC Crimes | Offences relating to Adulteration or Sale of Food/Drugs (Sec.272/273/274/275/276 IPC)",
+          "Miscellaneous IPC Crimes | Rash Driving on Public way (Sec.279/279 r/w 336/337/338/Other IPC) | Rash Driving on Public way (Total) (Col127+ Col.128)",
+          "Miscellaneous IPC Crimes | Rash Driving on Public way (Sec.279/279 r/w 336/337/338/Other IPC) | Rash Driving on Public Way (Sec.279 or Sec.279 r/w 336/Other IPC)",
+          "Miscellaneous IPC Crimes | Rash Driving on Public way (Sec.279/279 r/w 336/337/338/Other IPC) | Causing Hurt by Rash/Negligent Driving on Public Way (Sec.279 r/w 337 IPC)",
+          "Miscellaneous IPC Crimes | Rash Driving on Public way | Causing Grievous Hurt by Rash/Negligent Driving on Public (Sec.279 r/w 338 IPC)",
+          "Miscellaneous IPC Crimes | Obstruction on Public way (Sec.283 IPC)",
+          "Miscellaneous IPC Crimes | Sale of obscene Books/Objects (Sec.292 & 293)",
+          "Miscellaneous IPC Crimes | Obscene Acts and Songs at Public Places (Sec.294)",
+          "Miscellaneous IPC Crimes | Offences relating to Religion (Sec.295 to 297)",
+          "Miscellaneous IPC Crimes | Cheating by Impersonation (Sec.419 IPC)",
+          "Miscellaneous IPC Crimes | Offences related to Mischief (Sec.428 to 433)",
+          "Miscellaneous IPC Crimes | Arson (Sec.435, 436 & 438 IPC)",
+          "Miscellaneous IPC Crimes | Criminal Trespass (Sec.447 to 452 IPC)",
+          "Miscellaneous IPC Crimes | Cruelty by Husband or his Relatives (Sec.498-A IPC)",
+          "Miscellaneous IPC Crimes | Circulate False/Fake News/Rumours (Sec.505 IPC/Sec.505 r/w IT Act)",
+          "Miscellaneous IPC Crimes | Criminal Intimidation (Sec.506 r/w Other IPC Crimes)",
+          "Miscellaneous IPC Crimes | Insult to the Modesty of Women (Sec.509 IPC)",
+          "Miscellaneous IPC Crimes | Miscellaneous IPC Crimes(Total)",
+          "Other IPC Crimes",
+          "Total Cognizable IPC crimes"
+        ],
+        "classification": "source_serialization_omitted_trailing_fields",
+        "resolution": "Not represented as observations and must remain unavailable; absent trailing fields may be intentionally blank or truncated by source CSV serialization. Source semantics unresolved; never impute zero."
+      },
+      {
+        "source_line": 15,
+        "source_row_reference": "row_15",
+        "region_name": "Srikakulam",
+        "actual_csv_fields": 144,
+        "expected_csv_fields": 145,
+        "omitted_trailing_field_count": 1,
+        "omitted_headers": [
+          "Total Cognizable IPC crimes"
+        ],
+        "classification": "source_serialization_omitted_trailing_fields",
+        "resolution": "Not represented as observations and must remain unavailable; absent trailing fields may be intentionally blank or truncated by source CSV serialization. Source semantics unresolved; never impute zero."
+      }
+    ],
+    "unresolved": "Obtain the original workbook or source-table specification to determine whether each omitted trailing cell means not reported, blank, or export truncation."
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "source_rows": 21,
+  "canonical_observations": 1448,
+  "valid": 1448,
+  "warnings": 0,
+  "eligible_for_comparison": 1379,
+  "aggregate_rows": 69,
+  "regions": 21,
+  "categories": 57
+}
