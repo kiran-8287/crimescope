@@ -6,10 +6,12 @@ import {categoryLabel,roleFor} from '../utils/categories';
 import {getObservationIndex,observationAt} from '../utils/observationIndex';
 
 export function useAnalytics(){
- const {data}=useData();const {filters}=useFilters();
+ const {data,isCurrent}=useData();const {filters}=useFilters();
  const observationIndex=useMemo(()=>getObservationIndex(data.observations),[data.observations]);
  const getObservations=(regionId:string,year:number,category:string)=>{const observation=observationAt(observationIndex,regionId,year,category);return observation?[observation]:[]};
- const eligible=data.regions.filter(r=>r.year===filters.year&&(filters.state==='all'||r.state===filters.state)&&(filters.unitType==='all'||r.regionType===filters.unitType));
+ // Memoised so the array identity is stable across renders; consumers (e.g. the comparison
+ // page) use `eligible` as an effect dependency and must not re-run on every render.
+ const eligible=useMemo(()=>data.regions.filter(r=>r.year===filters.year&&(filters.state==='all'||r.state===filters.state)&&(filters.unitType==='all'||r.regionType===filters.unitType)),[data.regions,filters.year,filters.state,filters.unitType]);
  const ids=new Set(eligible.map(r=>r.id));
  const scoped=data.observations.filter(o=>ids.has(o.regionId)&&(filters.category==='all'||o.category===filters.category));
  const annual=scoped.filter(o=>o.year===filters.year);
@@ -29,5 +31,5 @@ export function useAnalytics(){
    const cases=completeTotal(current);const base=previousPair?completeTotal(previous??[]):null;
    return {id:r.id,region:r.name,state:r.state,regionType:r.regionType,cases,share:null,change:previousPair?percentChange(cases,base):null,coverage:current.length&&current.every(o=>o.cases!==null)?'Complete':'Partial'};
  });
- return {data,filters,eligible,scoped,annual,total,denominator:null,rows,categories:filters.category==='all'?data.meta.categories?.filter(c=>c.years.includes(filters.year))??[]:data.meta.categories?.filter(c=>c.id===filters.category)??[],knownUnits,categoryLabel:(id:string)=>categoryLabel(data,id),officialTotalId:currentCategory};
+ return {data,filters,eligible,isCurrent,scoped,annual,total,denominator:null,rows,categories:filters.category==='all'?data.meta.categories?.filter(c=>c.years.includes(filters.year))??[]:data.meta.categories?.filter(c=>c.id===filters.category)??[],knownUnits,categoryLabel:(id:string)=>categoryLabel(data,id),officialTotalId:currentCategory};
 }

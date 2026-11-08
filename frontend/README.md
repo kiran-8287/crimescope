@@ -1,6 +1,14 @@
-# CrimeScope frontend package
+# CrimeScope frontend
 
-A standalone React + TypeScript frontend. Backend and real-data connection are intentionally left to you.
+The React + TypeScript frontend **workspace** of this repository. It runs against the
+local Express + SQLite backend and the active NCRB release
+(`ncrb-districtwise-2021-2024-ecec48b772bc`); a synthetic **demo mode**
+(`src/data/demo.ts`) is a self-contained fallback when no API is reachable. Tested here
+with **Node.js v24.15.0 / npm 11.6.1** (declared engine: Node ≥ 18, npm ≥ 9).
+
+> Sections below that describe this as a "standalone package" to be merged from a ZIP are
+> historical: in the current workspace the frontend is wired to the backend through
+> `src/api/client.ts` and is not merged as an external patch.
 
 ## Start
 
@@ -31,7 +39,7 @@ The UI uses CSS directly; Tailwind is not required. If your root package uses np
 
 ## Included pages
 
-- Overview: scope filters, category composition, trends, regional table and export.
+- Overview: scope filters, category profile, trends, regional table and export.
 - Regional comparison: choose up to three reporting units and compare counts/shares.
 - Yearly trends: end-year filter and optional complete-panel filter, chart and exact-value table.
 - Data quality: supplied-record completeness, coverage and issue register.

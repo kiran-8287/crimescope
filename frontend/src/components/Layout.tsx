@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import {NavLink,Outlet,useLocation,Link} from 'react-router-dom';
-import {ScanLine,LayoutDashboard,GitCompareArrows,ChartNoAxesCombined,ShieldCheck,ScatterChart,Network,TriangleAlert,Workflow,BookOpen,Menu,X,Database,ArrowUpRight} from 'lucide-react';
+import {ScanLine,LayoutDashboard,GitCompareArrows,ChartNoAxesCombined,ShieldCheck,ScatterChart,Network,TriangleAlert,Workflow,BookOpen,Menu,X,Database,Info,ArrowUpRight} from 'lucide-react';
 import {useData} from '../context/DataContext';
 import {useFilters} from '../context/useFilters';
 
@@ -18,7 +18,7 @@ export const navigation = [
 
 export function Layout(){
   const [open,setOpen]=useState(false);
-  const {data,isDemo}=useData();
+  const {data,isDemo,yearAdjustedFrom}=useData();
   const {filters}=useFilters();
   const location=useLocation();
   const units=data.regions.filter(r=>r.year===filters.year&&(filters.unitType==='all'||r.regionType===filters.unitType)&&(filters.state==='all'||r.state===filters.state));
@@ -69,6 +69,10 @@ export function Layout(){
           <div className="demo-strip"><span>DESIGN PREVIEW</span> Fictional regions and sample results. No real crime or safety findings.</div>
         ) : (
           <div className="notice"><Database size={16}/><span><strong>Coverage: 2021–2024 · 36 states/UTs.</strong> Reported records reflect police recording practices and population sizes.</span></div>
+        )}
+
+        {yearAdjustedFrom!==null&&(
+          <div className="notice amber" role="status"><Info size={16}/><span><strong>Year {yearAdjustedFrom} is outside the active 2021–2024 scope.</strong> Showing {filters.year} instead; the archived 2020 Andhra Pradesh-only slice is not part of this release.</span></div>
         )}
 
         <main id="main" tabIndex={-1}><Outlet/></main>

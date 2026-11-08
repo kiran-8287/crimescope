@@ -1,10 +1,21 @@
 import { Router, Request, Response } from "express";
 import { get_anomalies, get_association_rules } from "../services/anomalies.js";
+import { DEFAULT_YEAR, isSupportedYear, unsupportedYearMessage } from "../config/scope.js";
 
 const anomaliesRouter = Router();
 
-anomaliesRouter.get("/anomalies", async (_req: Request, res: Response) => {
-  const year = parseInt(_req.query.year as string) || 2020;
+function resolveYear(req: Request, res: Response): number | null {
+  const year = parseInt(req.query.year as string) || DEFAULT_YEAR;
+  if (!isSupportedYear(year)) {
+    res.status(400).json({ status: "error", code: "unsupported_year", message: unsupportedYearMessage(year) });
+    return null;
+  }
+  return year;
+}
+
+anomaliesRouter.get("/anomalies", async (req: Request, res: Response) => {
+  const year = resolveYear(req, res);
+  if (year === null) return;
   try {
     res.json(get_anomalies(year));
   } catch (err) {
@@ -16,8 +27,9 @@ anomaliesRouter.get("/anomalies", async (_req: Request, res: Response) => {
   }
 });
 
-anomaliesRouter.get("/association-rules", async (_req: Request, res: Response) => {
-  const year = parseInt(_req.query.year as string) || 2020;
+anomaliesRouter.get("/association-rules", async (req: Request, res: Response) => {
+  const year = resolveYear(req, res);
+  if (year === null) return;
   try {
     res.json(get_association_rules(year));
   } catch (err) {

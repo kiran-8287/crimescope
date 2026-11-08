@@ -1,0 +1,89 @@
+{
+  "startedAt": "2026-11-07T19:00:38.536Z",
+  "base": "http://localhost:5173",
+  "phase": "after_fix_final2_20261108",
+  "release": {
+    "releaseId": "ncrb-districtwise-2021-2024-ecec48b772bc",
+    "years": [
+      2021,
+      2022,
+      2023,
+      2024
+    ],
+    "runId": "ncrb-national-2024-admin-log1p-zscore-20261107-v4"
+  },
+  "interactions": {
+    "loadNoSelection": {
+      "chipCount": 0,
+      "depthWarnings": 0
+    },
+    "selectOne": {
+      "chosen": "Nicobar",
+      "chipCount": 1,
+      "depthWarnings": 0
+    },
+    "selectTwo": {
+      "chosen": "Patna",
+      "chipCount": 2,
+      "depthWarnings": 0
+    },
+    "selectThree": {
+      "chosen": "Chennai",
+      "chips": [
+        "Nicobar",
+        "Patna",
+        "Chennai"
+      ],
+      "chipCount": 3,
+      "depthWarnings": 0
+    },
+    "displayedValues": {
+      "chips": [
+        "Nicobar",
+        "Patna",
+        "Chennai"
+      ],
+      "rows": [
+        {
+          "region": "Nicobar",
+          "state": "A&N Islands",
+          "category": "Total Cognizable IPC/ crimes",
+          "cases": "17"
+        },
+        {
+          "region": "Patna",
+          "state": "Bihar",
+          "category": "Total Cognizable IPC/ crimes",
+          "cases": "32,536"
+        },
+        {
+          "region": "Chennai",
+          "state": "Tamil Nadu",
+          "category": "Total Cognizable IPC/ crimes",
+          "cases": "15,765"
+        }
+      ],
+      "factualSummary": "Comparative finding: In 2024, Patna (Bihar) recorded 32,536 cases of Total Cognizable IPC/ crimes, which is 16,771 more cases than Chennai (Tamil Nadu, 15,765 cases) (2.1× as many)."
+    },
+    "changeState": {
+      "chipCount": 0,
+      "chips": [],
+      "depthWarnings": 0
+    }
+  },
+  "checks": {
+    "threeUnitsSelected": true,
+    "selectionRenders": true,
+    "valuesNumeric": true,
+    "summaryMatchesTable": true
+  },
+  "console": {},
+  "pageErrors": [],
+  "dashRequests": {},
+  "notes": [],
+  "status": {
+    "completed": false,
+    "interrupted": true
+  },
+  "fatal": "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('input[type=search]').first()\u001b[22m\n\n    at pickRegion (A:\\Projects\\crimescope\\data\\verification\\compare_loop_20261108\\repro_compare.js:59:56)\n    at A:\\Projects\\crimescope\\data\\verification\\compare_loop_20261108\\repro_compare.js:137:20"
+}

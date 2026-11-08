@@ -1,0 +1,24 @@
+{
+  "startedAt": "2026-11-07T18:27:00.677Z",
+  "qualityStats": [
+    "Retained observations\n5,46,198\nActive serving database records (region × year × category)",
+    "Explicit reported zeros\n3,23,296\nEntered as 0 in source; strictly distinguished from missing",
+    "Missing / null values\n0\nRetained as null; never filled with synthetic zeros",
+    "Source completeness\n100.0%\nNon-null values among supplied expected table cells"
+  ],
+  "qualityReady": {
+    "hasIndianGrouped546198": true,
+    "hasWesternGrouped546198": false,
+    "selectedYearLabel": null
+  },
+  "comparePage": {
+    "maximumUpdateDepthWarnings": 12,
+    "stillRendered": true
+  },
+  "recoveryNotice": "Year 2020 is outside the active 2021–2024 scope. Showing 2024 instead; the archived 2020 Andhra Pradesh-only slice is not part of this release.",
+  "recoveryFinalYear": "2024",
+  "otherConsoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "endedAt": "2026-11-07T18:27:50.486Z"
+}

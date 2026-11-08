@@ -34,3 +34,26 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Browser-verification Chrome profiles (regenerable caches, not evidence)
+data/verification/**/chrome-profile*/
+
+# Test-run debug logs (regenerable)
+*_output.txt
+vitest_*.txt
+
+# Ad-hoc debugging dumps and one-off scratch scripts (repository root)
+/browser_verify.js
+/test_api.js
+/check_chrome.ps1
+/check_chrome.py
+/compare_datasets.py
+/dash2024.json
+/qual2024.json
+/qualreport.json
+/rules.json
+/rules_default.json
+/export_canonical.csv
+
+# Stray nested lockfile (root package-lock.json is authoritative for the workspace)
+/backend/package-lock.json

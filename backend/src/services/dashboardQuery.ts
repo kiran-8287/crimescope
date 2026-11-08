@@ -209,7 +209,7 @@ export async function getDashboardView(query: { year: number; state: string; uni
       missing: Number(summary.missing ?? 0),
       explicitZeros: Number(summary.explicitZeros ?? 0),
       positiveValues: Number(summary.positiveValues ?? 0),
-      aggregateRows: Number(release.validation.aggregate_rows ?? 21022),
+      aggregateRows: Number(release.validation.aggregate_rows ?? 0),
       byStateYear,
       coverage,
       reconciliation: qualityReport.official_total_reconciliation ?? [],

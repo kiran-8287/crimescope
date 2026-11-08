@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { X, Search, BarChart3, AlertCircle } from 'lucide-react';
 import { useAnalytics } from '../context/useAnalytics';
@@ -7,41 +7,41 @@ import { Filters, Panel, Notice, ExportButton, Badge, UnitTypeBadge } from '../c
 import { Bars, colors } from '../components/Charts';
 import { DataTable } from '../components/DataTable';
 import { number } from '../utils/format';
-import { categoryLabel, cleanCategoryName } from '../utils/categories';
+import { categoryLabel, categoryContextLabel, rawCategoryLabel, categoryContextStatus } from '../utils/categories';
 import { getObservationIndex, observationAt } from '../utils/observationIndex';
 
 export default function RegionalComparisonPage() {
   const [params, setParams] = useSearchParams();
-  const { data, filters, eligible, officialTotalId } = useAnalytics();
+  const { data, filters, eligible, isCurrent, officialTotalId } = useAnalytics();
   const [selection, setSelection] = useState<string[]>([]);
   const [search, setSearch] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   const observationIndex = getObservationIndex(data.observations);
 
-  // Check if a region was passed in the query parameter (e.g. from Overview)
+  // Add a region passed via the query parameter (e.g. a deep link from Overview).
+  // Returns the previous array when the region is already selected, so React bails
+  // out instead of re-rendering and re-running this effect.
   useEffect(() => {
     const paramRegion = params.get('region');
-    if (paramRegion) {
-      const match = eligible.find(r => r.name.toLowerCase() === paramRegion.toLowerCase());
-      if (match && !selection.includes(match.id)) {
-        setSelection(prev => [...prev.filter(id => id !== match.id), match.id].slice(0, 3));
-      }
-    }
+    if (!paramRegion) return;
+    const match = eligible.find(r => r.name.toLowerCase() === paramRegion.toLowerCase());
+    if (!match) return;
+    setSelection(prev => (prev.includes(match.id) ? prev : [...prev, match.id].slice(0, 3)));
   }, [params, eligible]);
 
-  // Clean selections if eligible units change, and clear explicitly when state or unitType filter changes
-  const prevFilterStateRef = useRef({ state: filters.state, unitType: filters.unitType });
+  // Drop selections that are no longer eligible after a scope change (state, year,
+  // reporting-unit type); keep valid ones. Only produces a new array — and therefore
+  // a re-render — when an id is actually removed. Skipped while the held dataset is
+  // stale (refetch in flight) so a scope change is reconciled against the *new* scope,
+  // not the previous one (which would wrongly drop units that survive the change).
   useEffect(() => {
-    if (prevFilterStateRef.current.state !== filters.state || prevFilterStateRef.current.unitType !== filters.unitType) {
-      setSelection([]);
-      prevFilterStateRef.current = { state: filters.state, unitType: filters.unitType };
-    }
-  }, [filters.state, filters.unitType]);
-
-  useEffect(() => {
-    setSelection(prev => prev.filter(id => eligible.some(r => r.id === id)));
-  }, [eligible]);
+    if (!isCurrent) return;
+    setSelection(prev => {
+      const next = prev.filter(id => eligible.some(r => r.id === id));
+      return next.length === prev.length ? prev : next;
+    });
+  }, [eligible, isCurrent]);
 
   const selectedUnits = eligible.filter(r => selection.includes(r.id));
   const categoryId = filters.category === 'all' ? officialTotalId : filters.category;
@@ -64,6 +64,23 @@ export default function RegionalComparisonPage() {
   // Check if different reporting unit types are being compared
   const unitTypesInSelection = new Set(selectedUnits.map(u => u.regionType));
   const hasMixedUnitTypes = unitTypesInSelection.size > 1;
+
+  // Export rows include the contextual metadata shown on screen: stable category
+  // id, original source label, contextual display label, year, unit identity/type
+  // and the active release reference.
+  const comparisonExportRows = primaryComparisonRows.map(r => ({
+    category_id: r.categoryId ?? '',
+    category_source_label: r.categoryId ? rawCategoryLabel(data, r.categoryId) : '',
+    category_display_label: r.category,
+    category_context_status: r.categoryId ? categoryContextStatus(data, r.categoryId, filters.year) : '',
+    year: filters.year,
+    reporting_unit_id: r.id,
+    reporting_unit: r.region,
+    state_ut: r.state,
+    unit_type: r.regionType,
+    reported_cases: r.cases,
+    release: data.meta.releaseId,
+  }));
 
   // Search filtering
   const searchMatches = search.trim()
@@ -98,7 +115,7 @@ export default function RegionalComparisonPage() {
         eyebrow="SIDE BY SIDE"
         title="Regional comparison"
         description="Select and evaluate reported crime volumes across compatible reporting units."
-        action={<ExportButton rows={primaryComparisonRows} name={`comparison_${filters.year}`} />}
+        action={<ExportButton rows={comparisonExportRows} name={`comparison_${filters.year}`} />}
       />
 
       <Filters />
@@ -306,7 +323,7 @@ export default function RegionalComparisonPage() {
                     {comparisonCategories.map(cat => {
                       return (
                         <tr key={cat.id} style={{ borderBottom: '1px solid var(--color-border, #f3f4f6)' }}>
-                          <td style={{ padding: '0.5rem', fontWeight: 500 }}>{cat.cleanLabel}</td>
+                          <td style={{ padding: '0.5rem', fontWeight: 500 }}>{categoryContextLabel(data, cat.id, cat.label, filters.year)}</td>
                           <td style={{ padding: '0.5rem', color: '#6b7280' }}>{cat.parentGroup}</td>
                           {selectedUnits.map(u => {
                             const obs = observationAt(observationIndex, u.id, filters.year, cat.id);

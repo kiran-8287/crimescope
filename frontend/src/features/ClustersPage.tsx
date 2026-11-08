@@ -1,12 +1,35 @@
 import { useState } from 'react';
-import { Network, Search, Layers, X, Info, ExternalLink } from 'lucide-react';
+import { X, Info } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import { PageTitle } from '../components/Layout';
 import { Panel, Notice, Badge, UnitTypeBadge, ExportButton, Filters, RegionDetailDrawer, Stat } from '../components/UI';
 import { Bars, colors } from '../components/Charts';
 import { DataTable } from '../components/DataTable';
-import { cleanCategoryName } from '../utils/categories';
-import { number } from '../utils/format';
+import { categoryContextLabelByRaw } from '../utils/categories';
+
+// The saved k-means artifact stores each cluster's centroid as a map of feature
+// label → mean standardized value (log1p + per-feature z-score space). These are
+// transformed deviations, not raw case counts.
+type Centroid = Record<string, number>;
+
+function deriveProfile(centroid: Centroid) {
+  const entries = Object.entries(centroid ?? {});
+  const sorted = [...entries].sort((a, b) => b[1] - a[1]);
+  const mean = entries.length ? entries.reduce((sum, [, v]) => sum + v, 0) / entries.length : 0;
+  return {
+    count: entries.length,
+    mean,
+    positive: sorted.slice(0, 3),
+    negative: sorted.slice(-3).reverse(),
+  };
+}
+
+// The artifact's assignment records carry a "State · District" display string.
+function splitRegion(region: unknown): { name: string; state: string } {
+  const value = String(region ?? '');
+  const parts = value.split(' · ');
+  return parts.length >= 2 ? { state: parts[0], name: parts.slice(1).join(' · ') } : { name: value, state: '—' };
+}
 
 export default function ClustersPage() {
   const { data } = useData();
@@ -39,55 +62,21 @@ export default function ClustersPage() {
     );
   }
 
-  // Pre-calculated distinguishing characteristics of K=3 clusters based on centroid analysis
-  const clusterDistinctions: Record<number, { name: string; tag: string; description: string; topFeatures: Array<{ name: string; direction: string; z: number }> }> = {
-    0: {
-      name: 'Rare Offenses Outlier Cohort',
-      tag: 'Extreme Rare-Category Flag',
-      description: 'Group of 4 units that uniquely recorded positive counts in rare categories where over 99% of national districts reported zero.',
-      topFeatures: [
-        { name: 'ElectriState/UT/Power Supply Disputes', direction: '+10.95σ', z: 10.95 },
-        { name: 'Deaths due to Negligence of Civic Bodies', direction: '+6.48σ', z: 6.48 },
-        { name: 'Foeticide & Infanticide', direction: '+3.30σ', z: 3.30 },
-      ]
-    },
-    1: {
-      name: 'Low to Moderate Volume Baseline',
-      tag: 'Broad Cohort Baseline',
-      description: 'The largest cluster (520 units), characterized by low-to-moderate total counts and near-zero or negative deviations across major property crimes.',
-      topFeatures: [
-        { name: 'Vehicle Theft', direction: '-0.38σ (Below average)', z: -0.38 },
-        { name: 'Housebreak / Burglary', direction: '-0.35σ (Below average)', z: -0.35 },
-        { name: 'Assault & Grievous Hurt', direction: '-0.29σ (Moderate)', z: -0.29 },
-      ]
-    },
-    2: {
-      name: 'High Recorded Volume & Urban Centers',
-      tag: 'Elevated Volume & Urban Offenses',
-      description: 'Comprises 361 high-population districts, metropolitan commissionerates, and major economic centers with elevated reporting across violent, property, and vehicular offenses.',
-      topFeatures: [
-        { name: 'Theft & Vehicle Theft', direction: '+0.58σ (Elevated)', z: 0.58 },
-        { name: 'Hurt & Grievous Hurt', direction: '+0.47σ (Elevated)', z: 0.47 },
-        { name: 'Rash Driving on Public Way', direction: '+0.44σ (Elevated)', z: 0.44 },
-      ]
-    }
-  };
-
   const clusters: any[] = result.clusters ?? [];
   const assignments: any[] = result.assignment_records ?? [];
+  const cohortSize: number = result.n_regions ?? assignments.length;
 
-  // Group members with distance to centroid
+  // Members grouped by cluster, using real unit names parsed from the artifact.
   const membersByCluster = new Map<number, any[]>();
   for (const a of assignments) {
     const cId = Number(a.cluster_id);
+    const { name, state } = splitRegion(a.region);
     if (!membersByCluster.has(cId)) membersByCluster.set(cId, []);
-    membersByCluster.get(cId)!.push(a);
+    membersByCluster.get(cId)!.push({ ...a, region_name: a.region_name ?? name, state_name: a.state_name ?? state });
   }
 
-  // Sort each cluster's members by distance to centroid (ascending) to find representative units
-  for (const [cId, list] of membersByCluster.entries()) {
-    list.sort((a, b) => Number(a.distance_to_centroid ?? 0) - Number(b.distance_to_centroid ?? 0));
-  }
+  // Smallest cluster drives the standardization caveat note below.
+  const smallest = clusters.reduce((min: any, c: any) => (min == null || c.size < min.size ? c : min), null);
 
   // Active cluster members for the inspection table
   const activeClusterMembers = selectedClusterId !== null
@@ -115,7 +104,7 @@ export default function ClustersPage() {
         eyebrow="SIMILARITY, NOT RANKING"
         title="Cluster profiles & similarity"
         description={`K-means groupings of 2024 regional profiles across ${result.n_regions} reporting units in standardized feature space.`}
-        action={<ExportButton rows={assignments} name={`kmeans_clusters_k${k}_2024`} />}
+        action={<ExportButton rows={assignments.map((a: any) => ({ reporting_unit_id: a.region_id, reporting_unit: a.region, cluster_id: a.cluster_id, cluster_number: Number(a.cluster_id) + 1, k, year: 2024, release: data.meta.releaseId }))} name={`kmeans_clusters_k${k}_2024`} />}
       />
 
       <Filters fixedYear={2024} hideCategory />
@@ -138,9 +127,9 @@ export default function ClustersPage() {
           detail="Log1p + per-feature z-score standardisation"
         />
         <Stat
-          label="Random Seed / Stability"
+          label="Initialization Seed"
           value={`Seed ${result.seed ?? 42}`}
-          detail="Deterministic reproducible initialization"
+          detail="Fixed seed for reproducible initialization (reproducibility metadata, not a stability measure)"
         />
       </div>
 
@@ -191,7 +180,9 @@ export default function ClustersPage() {
               </div>
             ))}
             <p className="panel-note" style={{ margin: 0 }}>
-              Higher k decreases inertia by subdividing larger groups. k=3 offers the clearest separation between baseline units and high-volume urban centers.
+              Inertia (sum of squared distances to centroids) always falls as k rises, because more clusters subdivide the same
+              data; it is not a goodness-of-fit score. The saved run provides k=3, 4, and 5. k=3 is shown here as the selected
+              configuration rather than a proven optimum.
             </p>
           </div>
         </Panel>
@@ -200,17 +191,18 @@ export default function ClustersPage() {
       {/* Cluster Summary Cards */}
       <div style={{ marginTop: '1rem' }}>
         <h3 style={{ fontSize: '1.2rem', marginBottom: '0.75rem' }}>Cluster Profiles & Distinguishing Characteristics</h3>
+        <p className="muted" style={{ fontSize: '0.85rem', marginBottom: '0.75rem' }}>
+          Cluster numbers are assigned by the algorithm and do not imply an ordering, size ranking, or severity. Sizes and
+          distinguishing features below are read from the saved {`k=${k}`} artifact.
+        </p>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1rem' }}>
           {clusters.map((c: any) => {
-            const distinction = clusterDistinctions[c.cluster_id] ?? {
-              name: `Cluster ${c.cluster_id + 1}`,
-              tag: 'Sub-cohort',
-              description: `Subdivision of ${c.size} reporting units with shared crime volume profiles.`,
-              topFeatures: []
-            };
-
+            const profile = deriveProfile(c.centroid as Centroid);
             const members = membersByCluster.get(c.cluster_id) ?? [];
             const representativeUnits = members.slice(0, 4);
+            const pct = cohortSize ? ((c.size / cohortSize) * 100).toFixed(1) : '0.0';
+            const posNames = profile.positive.map(([label]) => categoryContextLabelByRaw(data, label, 2024));
+            const negNames = profile.negative.map(([label]) => categoryContextLabelByRaw(data, label, 2024));
 
             return (
               <div
@@ -229,32 +221,45 @@ export default function ClustersPage() {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                   <div>
                     <span className="eyebrow" style={{ color: colors[c.cluster_id % colors.length], fontWeight: 700 }}>
-                      Cluster {c.cluster_id + 1} · {((c.size / result.n_regions) * 100).toFixed(1)}% of national cohort
+                      Cluster {c.cluster_id + 1} · {pct}% of cohort
                     </span>
-                    <h4 style={{ margin: '0.2rem 0', fontSize: '1.15rem' }}>{distinction.name}</h4>
+                    <h4 style={{ margin: '0.2rem 0', fontSize: '1.15rem' }}>
+                      {c.size} units{posNames[0] ? ` · elevated on ${posNames[0]}` : ''}
+                    </h4>
                   </div>
                   <Badge tone={c.size <= 10 ? 'amber' : 'green'}>{c.size} units</Badge>
                 </div>
 
                 <p style={{ fontSize: '0.85rem', color: '#4b5563', margin: 0, lineHeight: 1.4 }}>
-                  {distinction.description}
+                  This cluster holds {c.size} of the {cohortSize} reporting units ({pct}%). Aggregated over the {profile.count} standardized
+                  features, its members sit {profile.mean >= 0 ? 'above' : 'below'} the national average (mean standardized deviation{' '}
+                  {profile.mean >= 0 ? '+' : ''}{profile.mean.toFixed(2)}σ). It is most distinguished by high standardized values in{' '}
+                  {posNames.slice(0, 2).join(' and ') || 'no features'} and relatively low values in{' '}
+                  {negNames.slice(0, 2).join(' and ') || 'no features'}.
                 </p>
 
-                {distinction.topFeatures.length > 0 && (
-                  <div style={{ background: '#f9fafb', padding: '0.6rem', borderRadius: '4px', fontSize: '0.8rem' }}>
-                    <div style={{ fontWeight: 600, color: '#374151', marginBottom: '0.3rem' }}>Distinguishing feature deviations:</div>
-                    {distinction.topFeatures.map((f, fi) => (
-                      <div key={fi} style={{ display: 'flex', justifyContent: 'space-between', margin: '2px 0' }}>
-                        <span>{f.name}:</span>
-                        <strong style={{ color: f.z > 0 ? '#0f766e' : '#b45309' }}>{f.direction}</strong>
-                      </div>
-                    ))}
+                <div style={{ background: '#f9fafb', padding: '0.6rem', borderRadius: '4px', fontSize: '0.8rem' }}>
+                  <div style={{ fontWeight: 600, color: '#374151', marginBottom: '0.3rem' }}>Distinguishing feature deviations:</div>
+                  {profile.positive.map(([label, value], fi) => (
+                    <div key={`p${fi}`} style={{ display: 'flex', justifyContent: 'space-between', gap: '0.5rem', margin: '2px 0' }} title={label}>
+                      <span style={{ overflowWrap: 'anywhere' }}>{categoryContextLabelByRaw(data, label, 2024)}</span>
+                      <strong style={{ color: '#0f766e', whiteSpace: 'nowrap' }}>{value >= 0 ? '+' : ''}{value.toFixed(2)}σ</strong>
+                    </div>
+                  ))}
+                  {profile.negative.map(([label, value], fi) => (
+                    <div key={`n${fi}`} style={{ display: 'flex', justifyContent: 'space-between', gap: '0.5rem', margin: '2px 0' }} title={label}>
+                      <span style={{ overflowWrap: 'anywhere' }}>{categoryContextLabelByRaw(data, label, 2024)}</span>
+                      <strong style={{ color: '#b45309', whiteSpace: 'nowrap' }}>{value >= 0 ? '+' : ''}{value.toFixed(2)}σ</strong>
+                    </div>
+                  ))}
+                  <div style={{ color: '#6b7280', marginTop: '0.4rem', fontSize: '0.72rem' }}>
+                    Values are standardized mean deviations (log1p + z-score) from the saved centroid, not raw case counts.
                   </div>
-                )}
+                </div>
 
                 <div>
                   <div style={{ fontSize: '0.75rem', fontWeight: 600, color: '#6b7280', marginBottom: '0.3rem', textTransform: 'uppercase' }}>
-                    Representative Units (Closest to Centroid):
+                    Example member units (saved cohort order):
                   </div>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.3rem' }}>
                     {representativeUnits.map((u: any) => (
@@ -269,6 +274,9 @@ export default function ClustersPage() {
                         {u.region_name} ({u.state_name})
                       </button>
                     ))}
+                  </div>
+                  <div style={{ fontSize: '0.7rem', color: '#8b958d', marginTop: '0.3rem' }}>
+                    Listed in the order stored in the clustering artifact; the artifact does not include per-unit centroid distances.
                   </div>
                 </div>
 
@@ -291,22 +299,34 @@ export default function ClustersPage() {
         </div>
       </div>
 
-      {/* Deep-dive investigation for the 4-member cluster */}
-      <div style={{ marginTop: '1.25rem', padding: '1rem', background: '#eff6ff', borderLeft: '4px solid #3b82f6', borderRadius: '6px' }}>
-        <h4 style={{ margin: '0 0 0.3rem 0', color: '#1e40af', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-          <Info size={18} /> Analytical Investigation: Why Cluster 1 Contains Exactly 4 Districts
-        </h4>
-        <p style={{ margin: 0, fontSize: '0.875rem', color: '#1e3a8a', lineHeight: 1.5 }}>
-          The 4 units in Cluster 1 (<strong>Karnataka · Bidar</strong>, <strong>Chhattisgarh · Bilaspur</strong>, <strong>Madhya Pradesh · Gwalior</strong>, and <strong>Chhattisgarh · Balodbazar</strong>) are grouped together because each recorded positive counts (2 to 4 cases) in offenses that are virtually absent across the rest of the country (specifically <em>Power Supply Disputes</em> and <em>Deaths due to Negligence of Civic Bodies</em>). In a per-feature $z$-score standardization, near-zero national variance causes small counts to yield massive standardized values ($+10.95\sigma$), resulting in large Euclidean distances that pull these four units into an isolated cluster. Their records are verified non-null source entries, but their clustering is driven by rare-category standardization rather than high overall crime.
-        </p>
-      </div>
+      {/* Data-driven note about the smallest cluster and standardization effects */}
+      {smallest && (
+        <div style={{ marginTop: '1.25rem', padding: '1rem', background: '#eff6ff', borderLeft: '4px solid #3b82f6', borderRadius: '6px' }}>
+          <h4 style={{ margin: '0 0 0.3rem 0', color: '#1e40af', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+            <Info size={18} /> Smallest cluster in this configuration: {smallest.size} unit{smallest.size === 1 ? '' : 's'}
+          </h4>
+          <p style={{ margin: 0, fontSize: '0.875rem', color: '#1e3a8a', lineHeight: 1.5 }}>
+            With k={k}, the smallest cluster (Cluster {smallest.cluster_id + 1}, n={smallest.size}) is separated in the
+            standardized space by its highest values in{' '}
+            {deriveProfile(smallest.centroid as Centroid).positive.map(([label]) => categoryContextLabelByRaw(data, label, 2024)).join(', ') || 'no features'}{' '}
+            and its lowest values in{' '}
+            {deriveProfile(smallest.centroid as Centroid).negative.map(([label]) => categoryContextLabelByRaw(data, label, 2024)).join(', ') || 'no features'}.
+            The smallest cluster is not necessarily the most elevated one: at k=3 the smallest group (C2, n=168) is
+            distinguished by low values on the largest volume offences rather than high ones. Because each feature is
+            standardized on its own national distribution, categories with near-zero national variance can produce large
+            standardized values from very small recorded counts. Such separations therefore reflect a position in the
+            transformed feature space rather than overall crime level, and do not by themselves indicate a distinct policy or
+            demographic profile.
+          </p>
+        </div>
+      )}
 
       {/* Expandable Member Table */}
       {selectedClusterId !== null && (
         <div style={{ marginTop: '1.25rem' }}>
           <Panel
             title={`Cluster ${selectedClusterId + 1} Members (${activeClusterMembers.length} units)`}
-            subtitle="Searchable member register ordered by proximity to the cluster centroid."
+            subtitle="Searchable member register in saved cohort order."
             action={
               <button className="text-button" onClick={() => setSelectedClusterId(null)}>
                 <X size={16} /> Close
@@ -347,11 +367,6 @@ export default function ClustersPage() {
                   render: (r: any) => (
                     <UnitTypeBadge regionType={r.region_type as string} verificationStatus={r.verificationStatus as string} />
                   )
-                },
-                {
-                  key: 'distance_to_centroid',
-                  label: 'Distance to Centroid',
-                  render: r => Number(r.distance_to_centroid ?? 0).toFixed(3)
                 }
               ]}
             />
@@ -407,11 +422,12 @@ export default function ClustersPage() {
       </div>
 
       <Notice>
-        <strong>Similarity vs Safety:</strong> Clusters represent mathematical proximity in transformed 2024 category profiles. They group units with similar proportions of offenses, not safe or unsafe jurisdictions.
+        <strong>Similarity vs Safety:</strong> Clusters represent mathematical proximity in transformed 2024 category profiles. They group units with similar profiles, not safe or unsafe jurisdictions. Cluster numbers and sizes carry no ordinal or severity meaning.
       </Notice>
 
       <RegionDetailDrawer
         regionName={drawerRegion}
+        kmeansK={k}
         onClose={() => setDrawerRegion(null)}
       />
     </>

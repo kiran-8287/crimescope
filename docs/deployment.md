@@ -4,14 +4,19 @@
 
 - **Frontend:** React 18 + TypeScript + Vite, static build served by any HTTP server
 - **Backend:** Node.js + Express + TypeScript, reads SQLite release (read-only)
-- **Analysis:** Python 3.14 + pandas + scikit-learn, runs offline to generate outputs
+- **Analysis:** Python + numpy/pandas/scikit-learn/mlxtend, runs offline to generate outputs (tested on Python 3.14; declared ≥ 3.10)
 - **Data:** NCRB Crime in India district-wise tables, versioned SQLite releases
 
 ## Prerequisites
 
+Declared requirements (contracts in `package.json` / `pyproject.toml`):
+
 - Node.js >= 18, npm >= 9
-- Python >= 3.10 with pandas, numpy, scikit-learn, mlxtend
-- Git
+- Python >= 3.10 with the pinned analysis dependencies (`analysis/requirements.lock.txt`)
+
+**Verified environment (tested, Windows, 2026-11-07/08):** Node.js v24.15.0,
+npm 11.6.1, Python 3.14.5. Other versions are untested — the declared minimums
+above are not observations. Do not treat the tested versions as a required pin.
 
 ## Production Build
 
@@ -72,4 +77,4 @@ python scripts/run_methods_08_09.py
 
 ## Reproducibility
 
-All methods are deterministic (fixed random seeds for K-means). Outputs are versioned JSON/CSV files with manifests. Source data is preserved unchanged in `data/raw/`. Provenance (source_id, source_row_reference) retained on every canonical observation.
+K-means uses a fixed seed (`seed = 42`) for this run, so its clustering output is **reproducible** given the same inputs. Reproducibility is **not** a robustness or stability claim. Outputs are versioned JSON/CSV files with manifests. Source data is preserved unchanged in `data/raw/`. Provenance (source_id, source_row_reference) retained on every canonical observation.

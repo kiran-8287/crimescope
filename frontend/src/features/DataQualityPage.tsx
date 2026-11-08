@@ -11,11 +11,11 @@ export default function DataQualityPage() {
   const [stateFilter, setStateFilter] = useState<string>('all');
 
   const summary = data.qualitySummary ?? {
-    observations: 549000,
+    observations: 0,
     missing: 0,
-    explicitZeros: 324466,
-    positiveValues: 224534,
-    aggregateRows: 21022,
+    explicitZeros: 0,
+    positiveValues: 0,
+    aggregateRows: 0,
     byStateYear: [],
     coverage: [],
     reconciliation: [],
@@ -76,7 +76,7 @@ export default function DataQualityPage() {
         />
         <Stat
           label="Explicit reported zeros"
-          value={number(summary.explicitZeros ?? 324466)}
+          value={number(summary.explicitZeros ?? 0)}
           detail="Entered as 0 in source; strictly distinguished from missing"
         />
         <Stat
@@ -94,13 +94,13 @@ export default function DataQualityPage() {
       <div className="stats" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', marginTop: '0.75rem' }}>
         <Stat
           label="Aggregate rows segregated"
-          value={number(summary.aggregateRows ?? 21022)}
+          value={number(summary.aggregateRows ?? 0)}
           detail="State totals & 'Total Districts' kept for reconciliation"
         />
         <Stat
           label="Documented source gaps"
           value={`${trailingGaps.length} lines`}
-          detail="AP 2020 trailing fields absent in source CSV; not zero-filled"
+          detail="Trailing source fields absent in originating CSV; not zero-filled"
         />
       </div>
 
@@ -215,11 +215,7 @@ export default function DataQualityPage() {
                 render: (r: Record<string, unknown>) => {
                   const val = r[String(y)];
                   if (!val) {
-                    return y === 2020 ? (
-                      <Badge tone="neutral">No 2020 source</Badge>
-                    ) : (
-                      <Badge tone="amber">Not reported</Badge>
-                    );
+                    return <Badge tone="amber">Not reported</Badge>;
                   }
                   return <Badge tone="green">{String(val)}</Badge>;
                 }

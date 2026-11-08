@@ -9,6 +9,7 @@
     "start": "node dist/server.js",
     "lint": "eslint src --ext .ts",
     "test": "vitest run",
+    "test:live": "node --test src/tests/*.test.mjs",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

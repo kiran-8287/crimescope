@@ -1,0 +1,138 @@
+{
+  "new_csv": "data\\interim\\rebuilt_national_2021_2024_v3\\crime_observations_multi_year.csv",
+  "old_csv": "data\\interim\\expanded_national_2021_2024\\crime_observations_multi_year.csv",
+  "hashes": {
+    "new_csv_sha256": "ecec48b772bc1725f743d1fd913ce699d19dde7079c9deb953e022f85361313a",
+    "old_csv_sha256": "fd2d8578be5618f7ebf8f77da77fd2e913d22df187d6c5293a90fd29a31ac0a2",
+    "new_sqlite_sha256": "a030e5e01f51be5667381437e745443d72094c7396dbec07cd9df6c9c988f192",
+    "old_sqlite_sha256": "2cdd5dc964c6ee2958a9a98b4d8cb29ad00d5f07c5c3bb93aa94cdf29bf518f6"
+  },
+  "new_year_counts": {
+    "2021": 134048,
+    "2022": 137740,
+    "2023": 141290,
+    "2024": 154000
+  },
+  "old_year_counts": {
+    "2020": 2944,
+    "2021": 134048,
+    "2022": 137740,
+    "2023": 141290,
+    "2024": 154000
+  },
+  "new_has_2020": false,
+  "old_2020_rows": 2944,
+  "new_key_unique": true,
+  "old_retained_key_unique": true,
+  "new_duplicate_keys": 0,
+  "old_retained_duplicate_keys": 0,
+  "counts": {
+    "new_rows_total": 567078,
+    "old_rows_total_all_years": 570022,
+    "old_rows_retained_2021_2024": 567078,
+    "new_unique_keys": 567078,
+    "old_retained_unique_keys": 567078,
+    "matched": 567078,
+    "added_in_new": 0,
+    "removed_from_old": 0
+  },
+  "value_comparison": {
+    "matched_value_changes": 0,
+    "null_to_zero": 0,
+    "zero_to_null": 0,
+    "changed_value_examples": [],
+    "field_change_counts": {},
+    "non_value_field_examples": {}
+  },
+  "classification": {
+    "new_region_types": {
+      "administrative_district": 438128,
+      "aggregate": 20880,
+      "city_police": 32776,
+      "other_police_unit": 50934,
+      "railway": 24360
+    },
+    "old_retained_region_types": {
+      "administrative_district": 438128,
+      "aggregate": 20880,
+      "city_police": 32776,
+      "other_police_unit": 50934,
+      "railway": 24360
+    },
+    "new_comparison_status": {
+      "aggregate_only": 20880,
+      "eligible": 546198
+    },
+    "old_retained_comparison_status": {
+      "aggregate_only": 20880,
+      "eligible": 546198
+    },
+    "new_quality_status": {
+      "valid": 567078
+    },
+    "old_retained_quality_status": {
+      "valid": 567078
+    }
+  },
+  "quality_scopes": {
+    "new": {
+      "all_rows": 567078,
+      "all_zeros": 329343,
+      "all_nulls": 0,
+      "eligible_rows": 546198,
+      "eligible_zeros": 323296,
+      "eligible_nulls": 0,
+      "eligible_non_aggregate_rows": 546198,
+      "eligible_non_aggregate_zeros": 323296,
+      "eligible_non_aggregate_nulls": 0,
+      "aggregate_rows": 20880,
+      "aggregate_zeros": 6047,
+      "aggregate_nulls": 0,
+      "quarantined_rows": 0
+    },
+    "old_retained_2021_2024": {
+      "all_rows": 567078,
+      "all_zeros": 329343,
+      "all_nulls": 0,
+      "eligible_rows": 546198,
+      "eligible_zeros": 323296,
+      "eligible_nulls": 0,
+      "eligible_non_aggregate_rows": 546198,
+      "eligible_non_aggregate_zeros": 323296,
+      "eligible_non_aggregate_nulls": 0,
+      "aggregate_rows": 20880,
+      "aggregate_zeros": 6047,
+      "aggregate_nulls": 0,
+      "quarantined_rows": 0
+    },
+    "old_all_years": {
+      "all_rows": 570022,
+      "all_zeros": 330527,
+      "all_nulls": 0,
+      "eligible_rows": 549000,
+      "eligible_zeros": 324466,
+      "eligible_nulls": 0,
+      "eligible_non_aggregate_rows": 549000,
+      "eligible_non_aggregate_zeros": 324466,
+      "eligible_non_aggregate_nulls": 0,
+      "aggregate_rows": 21022,
+      "aggregate_zeros": 6061,
+      "aggregate_nulls": 0,
+      "quarantined_rows": 1
+    }
+  },
+  "source_checks": {
+    "anjaw_arunachal_rape_2024": {
+      "reported_value": "0",
+      "category": "Rape",
+      "quality_status": "valid",
+      "comparison_status": "eligible"
+    },
+    "anantapuramu_ap_murder_2024": {
+      "reported_value": "62",
+      "category": "Murder BNS /Section 302 IPC)",
+      "quality_status": "valid",
+      "comparison_status": "eligible"
+    }
+  }
+}

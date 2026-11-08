@@ -5,7 +5,7 @@ import { Lines, Bars, colors } from '../components/Charts';
 import { DataTable } from '../components/DataTable';
 import { useAnalytics } from '../context/useAnalytics';
 import { number } from '../utils/format';
-import { categoryLabel, roleFor, cleanCategoryName } from '../utils/categories';
+import { categoryLabel, roleFor, cleanCategoryName, rawCategoryLabel } from '../utils/categories';
 import { getObservationIndex, observationAt } from '../utils/observationIndex';
 
 type TrendMode = 'annual_totals' | 'comparable_cohorts' | 'single_region';
@@ -37,12 +37,15 @@ export default function TrendsPage() {
       id: `annual-${year}`,
       period: `Annual · ${year}`,
       year,
+      category_id: category ?? '',
+      category_source_label: category ? rawCategoryLabel(data, category) : '',
       category: category ? categoryLabel(data, category) : 'Unavailable',
       units: units.length,
       candidateUnits: units.length,
       cases: value,
       framework: year <= 2023 ? 'IPC' : 'BNS',
-      coverageNote: 'National 36 States/UTs'
+      coverageNote: 'National 36 States/UTs',
+      release: data.meta.releaseId
     });
   }
 
@@ -84,11 +87,14 @@ export default function TrendsPage() {
         id: `${pair.id}-${year}`,
         period: `${pair.fromYear}–${pair.toYear}`,
         year,
+        category_id: cat,
+        category_source_label: rawCategoryLabel(data, cat),
         category: categoryLabel(data, cat),
         units: usable.length,
         candidateUnits: candidates.length,
         cases: v,
-        framework: 'IPC (Standardised)'
+        framework: 'IPC (Standardised)',
+        release: data.meta.releaseId
       });
     }
     const pctChange = fromSum !== null && toSum !== null && fromSum > 0
@@ -126,10 +132,13 @@ export default function TrendsPage() {
         year,
         region: targetRegion.name,
         state: targetRegion.state,
+        category_id: cat ?? '',
+        category_source_label: cat ? rawCategoryLabel(data, cat) : '',
         category: cat ? categoryLabel(data, cat) : 'Unavailable',
         cases: obs?.cases ?? null,
         status: obs?.cases !== null && obs?.cases !== undefined ? 'Reported' : 'Not reported in source table',
-        framework: year <= 2023 ? 'IPC' : 'BNS'
+        framework: year <= 2023 ? 'IPC' : 'BNS',
+        release: data.meta.releaseId
       });
     }
   }
@@ -187,7 +196,7 @@ export default function TrendsPage() {
               unit="cases"
             />
             <p className="panel-note">
-              Annual totals represent the sum of all reporting units available in each source publication. 2020 covers Andhra Pradesh only; 2021–2024 cover 36 states/UTs.
+              Annual totals represent the sum of all reporting units available in each source publication. 2021–2024 cover 36 states/UTs.
             </p>
           </Panel>
 
@@ -225,7 +234,7 @@ export default function TrendsPage() {
             >
               <Lines labels={labels} series={pairSeries} unit="cases" />
               <p className="panel-note">
-                Connected lines show strictly matched units that existed in both years with unchanged administrative boundaries and identical category definitions.
+                Connected lines show the same named reporting units present in both years. This is an operational name match: it controls membership in the comparison set but does not establish unchanged administrative boundaries.
               </p>
             </Panel>
           ) : (
@@ -233,7 +242,7 @@ export default function TrendsPage() {
               <h2>No pairwise cohort available for this selection</h2>
               <p>
                 {filters.state === 'all'
-                  ? 'At national scope, 2020–2021 is unavailable because 2020 covers Andhra Pradesh only. Select Andhra Pradesh to view the verified 2020–2021 cohort.'
+                  ? 'No verified comparable cohort is available for this national selection. Only the 2022–2023 period has a verified matched-geography cohort.'
                   : 'No verified stable cohort was found for this specific state/category combination.'}
               </p>
             </div>
@@ -330,7 +339,7 @@ export default function TrendsPage() {
       )}
 
       <Notice>
-        <strong>Comparability boundaries:</strong> 2021–2022 includes district reorganization in Andhra Pradesh; 2022–2023 has 749 matched administrative districts under IPC; 2023–2024 transitions to the Bharatiya Nyaya Sanhita (BNS) framework. The 2020 source table covered only part of Andhra Pradesh and is excluded from the active analytical scope.
+        <strong>Comparability boundaries:</strong> 2021–2022 includes district reorganization in Andhra Pradesh; 2022–2023 has 749 matched administrative districts under IPC; 2023–2024 transitions to the Bharatiya Nyaya Sanhita (BNS) framework. A partial 2020 Andhra Pradesh-only source table is preserved in the archive but excluded from the active 2021–2024 scope.
       </Notice>
     </>
   );

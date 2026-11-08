@@ -31,7 +31,7 @@
 1. **Data processing & cleaning** — canonical observations from raw NCRB tables with quarantine reporting
 2. **Descriptive statistics** — frequency distributions, central tendency, dispersion by category/region/year
 3. **Dimensionality reduction (PCA)** — principal components, explained variance, loadings, region scores
-4. **Clustering (K-means + Hierarchical)** — district clusters, centroids, merge history, stability
+4. **Clustering (K-means + Hierarchical)** — district clusters, centroids, merge history (silhouette/stability not computed)
 5. **Outlier/anomaly analysis** — cross-sectional and year-on-year anomaly detection
 
 Association rules (method 09) implemented where observations support a meaningful transaction design.
@@ -40,7 +40,7 @@ Association rules (method 09) implemented where observations support a meaningfu
 
 The frontend's current saved methods use run `ncrb-national-2024-admin-log1p-zscore-20261107-v4`, recorded in `analysis/output/runs/current.json`. The manifest pins the processed dataset hash, feature-input hash, ordered feature IDs/labels, year and geography IDs, parameters, dependencies, output hashes, and validations. Dashboard methods are validated independently at load time. Feature inputs are identical to the previous v3 run; numerical artifacts are preserved.
 
-PCA and both clustering methods use the 2024 national administrative-district cohort (774 units). Features include source leaf and component categories, excluding official and parent totals. Each reported count is transformed as `log1p(count)`; each feature is then centered and population-standardized across the cohort. Zero-variance features remain zero. Inputs are counts, not rates or category shares. PCA uses SVD and divides retained component variance by the total variance across all features. PC1 explains 15.91%, PC2 4.53%, together 20.44%. The 131-dimensional feature space is reduced to two display axes; this is descriptive profile similarity, not risk ranking.
+PCA and both clustering methods use the 2024 national administrative-district cohort (774 units). Features include source leaf and component categories, excluding official and parent totals. Each reported count is transformed as `log1p(count)`; each feature is then centered and population-standardized across the cohort. Zero-variance features remain zero. Inputs are counts, not rates or category shares. PCA uses SVD and divides retained component variance by the total variance across all features. PC1 explains 15.91%, PC2 4.57%, together 20.48%. The 131-dimensional feature space is reduced to two display axes; this is descriptive profile similarity, not risk ranking. PC1 tracks reporting volume (`corr(PC1, log1p 2024 official total) = −0.88`), and PCA signs are arbitrary.
 
 K-means assignments for k=3,4,5 and Ward hierarchical memberships use that same recorded feature input and do not depend on PCA output. Saved diagnostics are limited to inertia/cluster sizes and merge history; silhouette and stability are explicitly unavailable. Anomaly flags are cross-sectional in the 2024 national cohort. Association items indicate district profile presence at a count threshold; they do not represent event co-occurrence. Composition shares remain disabled because the category hierarchy includes overlapping totals and no complete mutually exclusive denominator has been established.
 

@@ -4,7 +4,7 @@ import { useAnalytics } from '../context/useAnalytics';
 import { PageTitle } from '../components/Layout';
 import { Notice, Filters, Panel, Badge, ExportButton, RegionDetailDrawer, Stat } from '../components/UI';
 import { DataTable } from '../components/DataTable';
-import { cleanCategoryName, rawCategoryLabel } from '../utils/categories';
+import { categoryContextLabelByRaw, categoryContextStatus } from '../utils/categories';
 import { number } from '../utils/format';
 
 type AnomalyFilterType = 'all' | 'rare_category' | 'high_volume' | 'moderate';
@@ -20,6 +20,14 @@ export default function AnomaliesPage() {
 
   const labels = new Map(data.meta.categories?.map(c => [c.id, c.label]));
 
+  // 2024 administrative-district cohort the z-scores are computed against. Derived
+  // from the loaded data (not hardcoded) so it cannot drift from the saved run.
+  const cohortSize = data.regions.filter(r => r.year === 2024 && r.regionType === 'administrative_district').length;
+  // Matches the saved z-score convention: anomaly.py standardises with the SAMPLE
+  // standard deviation (n-1 denominator). For one positive case among N-1 zeros
+  // that evaluates to (N-1)/√N, not the population form √(N-1).
+  const rareZScores = cohortSize > 1 ? (cohortSize - 1) / Math.sqrt(cohortSize) : 0;
+
   // Process rows with distribution context
   const enrichedRows = useMemo(() => {
     return rows.map((r: any, idx: number) => {
@@ -32,18 +40,18 @@ export default function AnomaliesPage() {
       return {
         ...r,
         id: `${r.region_id}-${r.category_id || r.category}-${idx}`,
-        cleanCategory: cleanCategoryName(r.category),
+        cleanCategory: categoryContextLabelByRaw(data, r.category, 2024),
         cases: val,
         zScore: z,
         flagType: isRare ? 'Rare Category Report' : isHighVolume ? 'High Recorded Volume' : 'Moderate Volume Outlier',
         isRare,
         isHighVolume,
         isModerate,
-        cohortSize: 774,
+        cohortSize,
         zeroPctEstimate: isRare ? '> 99.5%' : val > 100 ? '< 50%' : '~ 85%'
       };
     });
-  }, [rows]);
+  }, [rows, data, cohortSize]);
 
   // Apply frontend filters
   const filteredRows = enrichedRows.filter((r: any) => {
@@ -55,13 +63,37 @@ export default function AnomaliesPage() {
     return true;
   });
 
+  // Export carries the same contextual metadata the table shows: stable category
+  // id (resolved from the verified taxonomy by exact source label), original source
+  // label, contextual display label, year, reporting-unit identity, the z-score
+  // inputs, and the active release reference.
+  const exportRows = filteredRows.map((r: any) => {
+    const categoryId = data.meta.categories?.find(c => c.label === r.category)?.id ?? '';
+    return {
+      category_id: categoryId,
+      category_source_label: r.category,
+      category_display_label: r.cleanCategory,
+      category_context_status: categoryId ? categoryContextStatus(data, categoryId, r.year ?? 2024) : 'unavailable',
+      year: r.year ?? 2024,
+      reporting_unit_id: r.region_id,
+      reporting_unit: r.region,
+      state_ut: r.state_name,
+      reported_cases: r.cases,
+      cohort_mean: r.category_mean,
+      cohort_std: r.category_std,
+      z_score: r.zScore,
+      flag_type: r.flagType,
+      release: data.meta.releaseId,
+    };
+  });
+
   return (
     <>
       <PageTitle
         eyebrow="STATISTICAL SCREENING"
         title="Unusual observations (2024 Cross-Sectional)"
         description="Statistically elevated observations (|z| ≥ 2.5) across the 2024 national district cohort."
-        action={<ExportButton rows={filteredRows} name="unusual_observations_2024" />}
+        action={<ExportButton rows={exportRows} name="unusual_observations_2024" />}
       />
 
       <Filters fixedYear={2024} />
@@ -85,17 +117,17 @@ export default function AnomaliesPage() {
         <Stat
           label="Methodology & Threshold"
           value="|z| ≥ 2.5"
-          detail="Sample mean and standard deviation across 774 administrative districts"
+          detail={`Sample mean and standard deviation across ${number(cohortSize)} administrative districts`}
         />
       </div>
 
-      {/* Mathematical Callout Explaining z = 27.96 */}
+      {/* Mathematical callout explaining how a single case can yield a large z-score */}
       <div style={{ margin: '1.25rem 0 1rem 0', padding: '1rem', background: '#fefce8', borderLeft: '4px solid #eab308', borderRadius: '6px' }}>
         <h4 style={{ margin: '0 0 0.3rem 0', color: '#854d0e', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-          <Info size={18} /> Mathematical Note: Why 1 Case Can Produce a Z-Score of ~28
+          <Info size={18} /> Mathematical Note: Why 1 Case Can Produce a Z-Score of ~{rareZScores.toFixed(2)}
         </h4>
         <p style={{ margin: 0, fontSize: '0.875rem', color: '#713f12', lineHeight: 1.5 }}>
-          In a national cohort of N = 774 administrative districts, if 773 districts report <strong>0</strong> cases and exactly <strong>1</strong> district reports <strong>1</strong> case, the cohort mean is μ = 1/774 ≈ 0.00129 and the standard deviation is σ = √(1/774) ≈ 0.0359. The resulting z-score is z = (1 - μ) / σ = √(774 - 1) = √773 ≈ 27.80. Thus, extreme z-scores with small positive counts are <em>mathematically expected for sparse categories</em> and reflect category rarity rather than high crime volume.
+          In a national cohort of N = {number(cohortSize)} administrative districts, if {number(cohortSize - 1)} districts report <strong>0</strong> cases and exactly <strong>1</strong> district reports <strong>1</strong> case, the cohort mean is μ = 1/N ≈ {(1 / (cohortSize || 1)).toFixed(5)} and the standard deviation (sample, n−1 denominator) is σ = √(1/N) ≈ {(cohortSize > 0 ? 1 / Math.sqrt(cohortSize) : 0).toFixed(4)}. The resulting z-score is z = (1 − μ) / σ = (N − 1)/√N ≈ {rareZScores.toFixed(2)}. Thus, extreme z-scores with small positive counts are <em>mathematically expected for sparse categories</em> and reflect category rarity rather than high crime volume.
         </p>
       </div>
 
@@ -269,7 +301,7 @@ export default function AnomaliesPage() {
             <h4 style={{ margin: '0.5rem 0 0.3rem 0', fontSize: '0.9rem' }}>Reference Distribution Context</h4>
             {selectedAnomaly.isRare ? (
               <p>
-                This category is virtually unrecorded across the nation: over 99% of the 774 administrative districts reported exactly <strong>0</strong> cases in 2024. Because national variance is extremely small, {selectedAnomaly.region}’s record of {selectedAnomaly.cases} case{selectedAnomaly.cases > 1 ? 's' : ''} creates a $z$-score of +{selectedAnomaly.zScore.toFixed(2)}σ. This reflects category rarity rather than high recorded volume.
+                This category is virtually unrecorded across the nation: over 99% of the {number(cohortSize)} administrative districts reported exactly <strong>0</strong> cases in 2024. Because national variance is extremely small, {selectedAnomaly.region}’s record of {selectedAnomaly.cases} case{selectedAnomaly.cases > 1 ? 's' : ''} creates a $z$-score of +{selectedAnomaly.zScore.toFixed(2)}σ. This reflects category rarity rather than high recorded volume.
               </p>
             ) : (
               <p>

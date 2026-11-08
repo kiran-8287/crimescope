@@ -1,0 +1,83 @@
+{
+  "startedAt": "2026-11-07T22:40:37.364Z",
+  "testedUrl": "http://localhost:5173",
+  "apiUrl": "http://localhost:4000/api/v1",
+  "serverBuildIdentity": "vite dev (frontend :5173) + tsx watch backend (:4000)",
+  "activeRelease": "ncrb-districtwise-2021-2024-ecec48b772bc",
+  "activeRun": "ncrb-national-2024-admin-log1p-zscore-20261107-v4",
+  "checks": {
+    "rules_single_pagination_owner": {
+      "pass": true,
+      "detail": ".pagination controls = 1"
+    },
+    "rules_single_visible_range": {
+      "pass": true,
+      "detail": "visible range labels = 1"
+    },
+    "rules_page1_range": {
+      "pass": true,
+      "detail": "Showing 1–20 of 697 rules · Page 1 of 35"
+    },
+    "rules_page2_range": {
+      "pass": true,
+      "detail": "Showing 21–40 of 697 rules · Page 2 of 35"
+    },
+    "rules_metrics_visible": {
+      "pass": true,
+      "detail": "Support/Confidence/Lift headers"
+    },
+    "rules_search_disabled_server_mode": {
+      "pass": true,
+      "detail": "no client search box in server mode"
+    },
+    "rules_last_page_range": {
+      "pass": true,
+      "detail": "Showing 681–697 of 697 rules · Page 35 of 35"
+    },
+    "rules_interpret_drawer": {
+      "pass": true,
+      "detail": "interpretation drawer opens with plain-language text"
+    },
+    "pca_pc1_card": {
+      "pass": true,
+      "detail": "PC1 Explained Variance\n15.9%\nPrimary reporting-volume axis (r = −0.88 with log-volume)"
+    },
+    "pca_pc2_card": {
+      "pass": true,
+      "detail": "PC2 Explained Variance\n4.6%\nSecondary axis; separates bodily/dowry offences from public-order offences"
+    },
+    "pca_cumulative_card": {
+      "pass": true,
+      "detail": "Cumulative Variance (2 PCs)\n20.5%\n20.5% of total feature variance retained in this 2-component projection"
+    },
+    "pca_caption_agrees": {
+      "pass": true,
+      "detail": "panel subtitle retains 20.5%"
+    },
+    "pca_no_stale_227": {
+      "pass": true,
+      "detail": "stale 22.7% absent"
+    },
+    "pca_score_plot_label": {
+      "pass": true,
+      "detail": "labelled score plot"
+    }
+  },
+  "consoleWarnings": [],
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "pageErrors": [],
+  "httpErrors": [],
+  "screenshots": [
+    "data\\verification\\phase4_1794091237362\\01_rules_page2.png",
+    "data\\verification\\phase4_1794091237362\\02_rules_last_page.png",
+    "data\\verification\\phase4_1794091237362\\03_rules_interpret_drawer.png",
+    "data\\verification\\phase4_1794091237362\\04_pca_captions.png"
+  ],
+  "narrowViewportOverflow": {},
+  "expectedDrawerMembership": {},
+  "status": "interrupted",
+  "finishedAt": "2026-11-07T22:41:18.462Z",
+  "fatal": "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('svg[aria-label=\"PCA scatter plot of regional crime profiles\"] circle').first()\u001b[22m\n\u001b[2m    - locator resolved to <circle r=\"3.5\" fill=\"#0d9488\" opacity=\"0.65\" cx=\"459.2223225320448\" cy=\"246.37434127844145\">…</circle>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - <circle r=\"3.5\" fill=\"#0d9488\" opacity=\"0.65\" cx=\"457.33118421035647\" cy=\"247.41614501437573\">…</circle> from <g>…</g> subtree intercepts pointer events\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is visible, enabled and stable\u001b[22m\n\u001b[2m      - scrolling into view if needed\u001b[22m\n\u001b[2m      - done scrolling\u001b[22m\n\u001b[2m      - <circle r=\"3.5\" fill=\"#0d9488\" opacity=\"0.65\" cx=\"457.33118421035647\" cy=\"247.41614501437573\">…</circle> from <g>…</g> subtree intercepts pointer events\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    58 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is visible, enabled and stable\u001b[22m\n\u001b[2m       - scrolling into view if needed\u001b[22m\n\u001b[2m       - done scrolling\u001b[22m\n\u001b[2m       - <circle r=\"3.5\" fill=\"#0d9488\" opacity=\"0.65\" cx=\"457.33118421035647\" cy=\"247.41614501437573\">…</circle> from <g>…</g> subtree intercepts pointer events\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n\n    at main (A:\\Projects\\crimescope\\verify_dashboard_phase4.js:114:102)"
+}

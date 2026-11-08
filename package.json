@@ -16,7 +16,8 @@
     "test:e2e": "npm --workspace frontend run test:e2e"
   },
   "devDependencies": {
-    "typescript": "^5.4.0"
+    "typescript": "^5.4.0",
+    "vitest": "^2.0.0"
   },
   "engines": {
     "node": ">=18.0.0",

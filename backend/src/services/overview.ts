@@ -1,4 +1,16 @@
+import { readFileSync, existsSync } from "node:fs";
+import { resolve } from "node:path";
 import { getDatabaseAsync } from "../db/connection.js";
+
+function currentReleaseId(): string {
+  const root = existsSync(resolve(process.cwd(), "config", "project.yaml")) ? process.cwd() : resolve(process.cwd(), "..");
+  try {
+    const pointer = JSON.parse(readFileSync(resolve(root, "data", "serving", "current.json"), "utf8"));
+    return String(pointer.release_id ?? "unavailable");
+  } catch {
+    return "unavailable";
+  }
+}
 
 export interface OverviewMetrics {
   totalRegions: number;
@@ -16,7 +28,7 @@ export async function getOverviewMetrics(): Promise<OverviewMetrics> {
   const yearResult = db.exec(
     "SELECT DISTINCT year FROM crime_observations LIMIT 1"
   );
-  const year = yearResult.length > 0 ? (yearResult[0].values[0][0] as number) : 2020;
+  const year = yearResult.length > 0 ? (yearResult[0].values[0][0] as number) : 2024;
 
   const regionsResult = db.exec(
     "SELECT COUNT(DISTINCT region_name) FROM crime_observations WHERE comparison_status = 'eligible'"
@@ -58,7 +70,7 @@ export async function getOverviewMetrics(): Promise<OverviewMetrics> {
     totalCategories,
     totalCases,
     year,
-    releaseId: "2020_cci_district_children",
+    releaseId: currentReleaseId(),
     topRegions,
     topCategories,
   };

@@ -1,0 +1,157 @@
+Skip to content
+CrimeScope
+REGIONAL INTELLIGENCE
+EXPLORE
+Overview
+Regional comparison
+Yearly trends
+Data quality
+ANALYSE
+PCA explorer
+Cluster profiles
+Unusual observations
+Association rules
+REFERENCE
+Methodology & sources
+Coverage: 2021–2024 · 36 states/UTs
+2024 · 774 districts
+Workspace / PCA explorer
+Coverage: 2021–2024 · 36 states/UTs
+Methodology & Provenance
+Coverage: 2021–2024 · 36 states/UTs. Reported records reflect police recording practices and population sizes.
+DIMENSIONALITY REDUCTION
+Principal Component Analysis (PCA)
+
+Explore the 2024 national crime structure across 774 reporting units and 131 crime features.
+
+Export CSV
+Analysis Run
+2024 National Run
+State / UT
+All states / UTs (National)
+A&N Islands
+Andhra Pradesh
+Arunachal Pradesh
+Assam
+Bihar
+Chandigarh
+Chhattisgarh
+D&N Haveli and Daman & Diu
+Delhi
+Goa
+Gujarat
+Haryana
+Himachal Pradesh
+Jammu & Kashmir
+Jharkhand
+Karnataka
+Kerala
+Ladakh
+Lakshadweep
+Madhya Pradesh
+Maharashtra
+Manipur
+Meghalaya
+Mizoram
+Nagaland
+Odisha
+Puducherry
+Punjab
+Rajasthan
+Sikkim
+Tamil Nadu
+Telangana
+Tripura
+Uttar Pradesh
+Uttarakhand
+West Bengal
+Reporting Units
+All reporting units
+Administrative districts (inferred)
+Reset
+PC1 Explained Variance
+15.9%
+Primary reporting-volume axis (r = −0.88 with log-volume)
+PC2 Explained Variance
+4.6%
+Secondary axis; separates bodily/dowry offences from public-order offences
+Cumulative Variance (2 PCs)
+20.5%
+20.5% of total feature variance retained in this 2-component projection
+Feature Input Space
+774 × 131
+Log1p + per-feature z-score standardisation
+PCA Score Plot (PC1 vs PC2)
+
+Unit scores in the standardized feature space. Nearby points have similar scores; this 2-component projection retains 20.5% of total variance and does not preserve all high-dimensional similarities.
+
+-17.4
+-13.2
+-9
+-4.8
+-0.6
+3.6
+7.8
+12.1
+-7.8
+-4.8
+-1.8
+1.2
+4.3
+7.3
+10.3
+Principal Component 1 (15.9% of variance)
+Principal Component 2 (4.6% of variance)
+
+Click any point to inspect its regional profile. Units at the negative PC1 extreme record substantially higher overall crime volumes across most categories; positive-PC1 units record lower volumes.
+
+Point Details & Inspection
+
+Select a point on the scatter plot
+
+Click any point on the score plot or search for a region above to inspect its coordinates and profile.
+
+Variance Decomposition
+
+Scree distribution across retained components
+
+PC1 (Eigenvalue: 20.87)
+15.9%
+PC2 (Eigenvalue: 6.00)
+4.6%
+Remaining 129 components
+79.5%
+Scaled Component Loadings by Feature
+
+Select component to inspect feature contributions (values are scaled component loadings: lij = vij × √λi).
+
+PC1 (131 features)
+PC2 (131 features)
+Mathematical Definition: The loading values reported here represent scaled component loadings (l_ij = v_ij × √λ_i, where v_ij is the eigenvector component and λ_i is the eigenvalue). Under standardized features, scaled component loadings approximate feature-component associations; however, depending on variance divisor conventions (N vs N-1), they are formally scaled component loadings rather than exact sample Pearson correlations. They quantify the magnitude and direction of association, distinct from normalized eigenvector weights whose sum of squares equals 1.
+Largest Positive Associations (PC1)
+Category	Scaled Loading (v_ij √λ_i)
+Offences affecting Human Body › Terrorist act	+0.042
+Offences against State › Other offences against State	+0.026
+Murder › Murder by life Convict	+0.018
+Offences against State › Offences against State (a+b)	+0.003
+Counterfeiting › Counterfeiting Government Stamp	+0.003
+Importation of Girl or Boy from Foreign Country › Importation of Girls Below 21 yrs	+-0.007
+Offences against Women and Child › Disclosure of Identity of Victim	+-0.010
+Causing Death by Negligence › Deaths due to Negligence relating to Rail Accidents	+-0.012
+Rioting, 189(5), 191(2),191(3)/Section 147-151 IPC) › Ethnic or Community Group Clash or Agitations	+-0.013
+Offences against Women and Child › Hiring, employing or engaging a child to commit an offence	+-0.032
+Largest Negative Associations (PC1)
+Category	Scaled Loading (v_ij √λ_i)
+Theft › Vehicle Theft	-0.854
+Theft › Other Thefts/305/307/IPC)	-0.837
+Offences against Women and Child › Cruelty by Husband or Relatives	-0.810
+Murder	-0.804
+Offences against Property › Robbery, 309(6), 311	-0.795
+Burglary,332-334 r/w Section 303 or 331 r/w 305/Section 454-460 r/w 380 IPC) › Night Burglary	-0.777
+Offences against Women and Child › Rape	-0.761
+Offences affecting Human Body › Attempt to commit Murder	-0.757
+Forgery, Cheating & Fraud › Cheating (Cases not included under 49A)	-0.741
+Miscellaneous IPC/ Crimes › Rash Driving on Public way(b)/Section 279 or 279 r/w 336-338 IPC)	-0.732
+Analytical cohort & volume effects: The PCA model is fitted on 774 administrative districts using log1p-transformed and standardized counts ($\log(1+x)$) across 131 leaf and component crime categories. Because population denominators are not available, PC1 primarily reflects overall reporting volume ($r = -0.88$ with log-volume, $r = -0.71$ with raw volume). Position in PCA space represents profile structure, not a measure of community safety.
+CrimeScope · Reported crime analytics
+Release ncrb-districtwise-2021-2024-ecec48b772bc · Reported records do not measure all crime.

@@ -7,7 +7,7 @@ import { Lines, Bars, colors } from '../components/Charts';
 import { DataTable } from '../components/DataTable';
 import { useAnalytics } from '../context/useAnalytics';
 import { number } from '../utils/format';
-import { categoryLabel, roleFor, cleanCategoryName } from '../utils/categories';
+import { categoryLabel, roleFor, categoryContextLabel, rawCategoryLabel, categoryContextStatus } from '../utils/categories';
 import { getObservationIndex, observationAt } from '../utils/observationIndex';
 
 export default function OverviewPage() {
@@ -91,7 +91,7 @@ export default function OverviewPage() {
   // Top category counts for the category breakdown
   const topCategories = data.topCategories?.filter(c => c.role !== 'official_total').slice(0, 8) ?? [];
   const topCatBars = topCategories.map((c, i) => ({
-    label: c.cleanLabel,
+    label: categoryContextLabel(data, c.id, c.label, filters.year),
     value: c.cases,
     color: colors[i % colors.length]
   }));
@@ -109,13 +109,32 @@ export default function OverviewPage() {
       ? 'reporting units'
       : filters.unitType.replace('_', ' ');
 
+  // Export rows carry the contextual metadata that the on-screen table shows:
+  // stable category id, the original source label, the contextual display label,
+  // year, reporting-unit identifiers, and the active release reference.
+  const exportCategoryId = filters.category === 'all' ? (officialTotalId ?? '') : filters.category;
+  const exportRows = sortedRows.map(r => ({
+    category_id: exportCategoryId,
+    category_source_label: exportCategoryId ? rawCategoryLabel(data, exportCategoryId) : '',
+    category_display_label: selectedLabel,
+    category_context_status: exportCategoryId ? categoryContextStatus(data, exportCategoryId, filters.year) : '',
+    year: filters.year,
+    reporting_unit_id: r.id,
+    reporting_unit: r.region,
+    state_ut: r.state,
+    unit_type: r.regionType,
+    recorded_cases: r.cases,
+    source_status: r.coverage,
+    release: data.meta.releaseId,
+  }));
+
   return (
     <>
       <PageTitle
         eyebrow="NATIONAL & REGIONAL PERSPECTIVE"
         title="Reported crime overview"
         description="Inspect source-reported recorded crimes, dominant offense categories, and regional reporting profiles."
-        action={<ExportButton rows={sortedRows} name={`overview_${filters.year}_${filters.unitType}`} />}
+        action={<ExportButton rows={exportRows} name={`overview_${filters.year}_${filters.unitType}`} />}
       />
 
       <Filters />
@@ -145,7 +164,7 @@ export default function OverviewPage() {
         <Stat
           label="Dataset temporal scope"
           value={`${Math.min(...data.meta.years)}–${Math.max(...data.meta.years)}`}
-          detail={filters.year === 2020 ? '2020 is AP-only' : '2021–2024 national coverage'}
+          detail={'2021–2024 national coverage'}
         />
       </div>
 

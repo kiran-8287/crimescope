@@ -1,0 +1,104 @@
+{
+  "startedAt": "2026-11-07T18:41:31.557Z",
+  "base": "http://localhost:5173",
+  "phase": "before",
+  "release": {
+    "releaseId": "ncrb-districtwise-2021-2024-ecec48b772bc",
+    "years": [
+      2021,
+      2022,
+      2023,
+      2024
+    ],
+    "runId": "ncrb-national-2024-admin-log1p-zscore-20261107-v4"
+  },
+  "interactions": {
+    "loadNoSelection": {
+      "chipCount": 0,
+      "depthWarnings": 8
+    },
+    "selectOne": {
+      "chosen": "Nicobar",
+      "chipCount": 1,
+      "depthWarnings": 11
+    },
+    "selectTwo": {
+      "chosen": null,
+      "chipCount": 1,
+      "depthWarnings": 13
+    },
+    "selectThree": {
+      "chips": [
+        "Nicobar",
+        "Patna"
+      ],
+      "chipCount": 2,
+      "depthWarnings": 15
+    },
+    "changeState": {
+      "chipCount": 2,
+      "chips": [
+        "Nicobar",
+        "Patna"
+      ],
+      "depthWarnings": 17
+    },
+    "reselectAfterState": {
+      "chosen": null,
+      "chipCount": 2
+    },
+    "changeYear": {
+      "chipCount": 2,
+      "url": "http://localhost:5173/compare?year=2023"
+    },
+    "changeCategory": {
+      "selectedCat": "Other IPC/ crimes",
+      "chipCount": 2,
+      "depthWarnings": 30
+    },
+    "changeUnitType": {
+      "chipCount": 2
+    },
+    "clearAll": {
+      "chipCount": 0
+    },
+    "reselectAfterClear": {
+      "chosen": "Nicobar",
+      "chipCount": 1
+    },
+    "deepLink": {
+      "chips": [
+        "Nicobar"
+      ],
+      "chipCount": 1,
+      "depthWarnings": 123
+    },
+    "navigateAwayBack": {
+      "chipCount": 0,
+      "depthWarnings": 129
+    },
+    "refetchTransition": {
+      "finalYear": "2024",
+      "responsive": true,
+      "depthWarnings": 137
+    }
+  },
+  "console": {
+    "errorCount": 138,
+    "warningCount": 0,
+    "depthWarningsTotal": 137,
+    "depthSamples": [
+      "Warning: Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.%s \n    at RegionalComparisonPage (http://localhost:5173/src/features/RegionalComparisonPage.tsx:31:31)\n    at RenderedRoute (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=19e5c188:4110:5)\n    at Outlet (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=19e5c188:4516:26)\n    at main\n    at div\n    at div\n    at Layout (http://localhost:5173/src/components/Layout.tsx:36:27)\n    at RenderedRoute (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=19e5c188:4110:5)\n    at Routes (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=19e5c188:4580:5)\n    at Suspense\n    at DataProvider (http://localhost:5173/src/context/DataContext.tsx:24:32)\n    at Router (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=19e5c188:4523:15)\n    at BrowserRouter (http://localhost:5173/node_modules/.vite/deps/react-router-dom.js?v=19e5c188:5261:5)\n    at App"
+    ],
+    "errorSamples": [
+      "Failed to load resource: the server responded with a status of 404 (Not Found)"
+    ],
+    "warningSamples": []
+  },
+  "pageErrors": [],
+  "dashRequests": {
+    "duringIdle3s": 0
+  },
+  "notes": [],
+  "endedAt": "2026-11-07T18:42:44.319Z"
+}

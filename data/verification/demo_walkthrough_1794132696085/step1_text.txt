@@ -1,0 +1,173 @@
+Skip to content
+CrimeScope
+REGIONAL INTELLIGENCE
+EXPLORE
+Overview
+Regional comparison
+Yearly trends
+Data quality
+ANALYSE
+PCA explorer
+Cluster profiles
+Unusual observations
+Association rules
+REFERENCE
+Methodology & sources
+Coverage: 2021–2024 · 36 states/UTs
+2024 · 774 districts
+Workspace / Overview
+Coverage: 2021–2024 · 36 states/UTs
+Methodology & Provenance
+Coverage: 2021–2024 · 36 states/UTs. Reported records reflect police recording practices and population sizes.
+NATIONAL & REGIONAL PERSPECTIVE
+Reported crime overview
+
+Inspect source-reported recorded crimes, dominant offense categories, and regional reporting profiles.
+
+Export CSV
+Reporting Year
+2021
+2022
+2023
+2024
+State / UT
+All states / UTs (National)
+A&N Islands
+Andhra Pradesh
+Arunachal Pradesh
+Assam
+Bihar
+Chandigarh
+Chhattisgarh
+D&N Haveli and Daman & Diu
+Delhi
+Goa
+Gujarat
+Haryana
+Himachal Pradesh
+Jammu & Kashmir
+Jharkhand
+Karnataka
+Kerala
+Ladakh
+Lakshadweep
+Madhya Pradesh
+Maharashtra
+Manipur
+Meghalaya
+Mizoram
+Nagaland
+Odisha
+Puducherry
+Punjab
+Rajasthan
+Sikkim
+Tamil Nadu
+Telangana
+Tripura
+Uttar Pradesh
+Uttarakhand
+West Bengal
+Reporting Units
+All reporting units
+Administrative districts (inferred)
+Crime Category
+Official Reported Total
+Select a crime category...
+Reset
+Jurisdiction classification note: Reporting units in this view are classified as administrative districts via naming heuristics and exclusion rules from source tables. They have not been validated against official state revenue gazetteers or Survey of India / Census district boundary definitions.
+Reported cases in selected reporting units
+27,40,258
+774 of 774 administrative districts with reported data
+Selected reporting units
+774
+2024 · 36 states/UTs
+Source categories available
+154
+2024 distinct crime categories in dataset
+Dataset temporal scope
+2021–2024
+2021–2024 national coverage
+Recorded crimes over time
+
+Official reported total across reporting periods. 2022–2023 connected where units are matched.
+
+Full trends view
+0
+8,23,329
+16,46,658
+24,69,986
+32,93,315
+2021
+2022
+2023
+2024
+National annual totals (2021–2024) · Official reported total
+Verified 2022–2023 cohort (749 units)
+View chart values table
+Top categories in 2024
+
+Actual recorded cases for largest non-aggregate crime categories.
+
+Offences affecting Human Body › Offences Affecting the Human Body (Total)
+7,38,926cases
+Offences against Property › Offences against Property (Total)
+6,11,115cases
+Other IPC/ crimes
+5,09,128cases
+Miscellaneous IPC/ Crimes › Miscellaneous IPC/ Crimes (Total)
+4,97,602cases
+Theft › Theft (Total a to g)
+4,60,353cases
+Hurt or Grievous Hurt › Hurt or Grievous Hurt (Total a to i)
+3,74,539cases
+Miscellaneous IPC/ Crimes › Rash Driving on Public way(b)/Section 279 or 279 r/w 336-338 IPC)
+2,89,863cases
+Theft › Other Thefts/305/307/IPC)
+2,46,827cases
+Note: Category counts overlap and are not mutually exclusive; shares of grand total are not computed.
+Regional reporting snapshot
+
+Showing 774 administrative districts sorted by reported cases in 2024.
+
+Click Inspect to open region profile or Compare to view side by side
+774 records
+Reporting unit
+	
+State / UT
+	
+Unit type
+	
+Reported cases
+	
+Source status
+	
+Actions
+
+Patna	Bihar	district (inferred)	32,536	Reported	
+Inspect
+Compare
+
+North-West	Delhi	district (inferred)	24,329	Reported	
+Inspect
+Compare
+
+North	Delhi	district (inferred)	24,275	Reported	
+Inspect
+Compare
+
+North-East	Delhi	district (inferred)	22,786	Reported	
+Inspect
+Compare
+
+South-East	Delhi	district (inferred)	22,363	Reported	
+Inspect
+Compare
+
+Outer	Delhi	district (inferred)	21,699	Reported	
+Inspect
+Compare
+Page 1 of 129
+Coverage: 2021–2024 · 36 states/UTs. Source coverage varies by year; not every year contains an identical set of districts. Aggregate rows are retained for reconciliation and excluded from unit sums. Crime figures reflect recorded offenses and are heavily shaped by population and policing intensity.
+CrimeScope · Reported crime analytics
+Release ncrb-districtwise-2021-2024-ecec48b772bc · Reported records do not measure all crime.

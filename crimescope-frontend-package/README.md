@@ -31,7 +31,7 @@ The UI uses CSS directly; Tailwind is not required. If your root package uses np
 
 ## Included pages
 
-- Overview: scope filters, category composition, trends, regional table and export.
+- Overview: scope filters, category profile, trends, regional table and export.
 - Regional comparison: choose up to three reporting units and compare counts/shares.
 - Yearly trends: end-year filter and optional complete-panel filter, chart and exact-value table.
 - Data quality: supplied-record completeness, coverage and issue register.

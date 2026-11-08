@@ -9,6 +9,12 @@ export default function MethodologyPage() {
   const { data, isDemo } = useData();
   const [openProvenance, setOpenProvenance] = useState(false);
 
+  // Derive PCA variance figures from the current artifact so methodology text
+  // cannot drift from the served results.
+  const pcaVariance: number[] = data.methods?.pca?.result?.explained_variance_ratio ?? [];
+  const pc1Pct = pcaVariance[0] != null ? (pcaVariance[0] * 100).toFixed(1) : 'n/a';
+  const pc2Pct = pcaVariance[1] != null ? (pcaVariance[1] * 100).toFixed(1) : 'n/a';
+
   const researchQuestions = [
     {
       num: 1,
@@ -51,12 +57,12 @@ export default function MethodologyPage() {
     {
       name: 'Principal Component Analysis (PCA)',
       code: '05_pca',
-      desc: 'Decomposes log1p and standardized feature matrices across 774 administrative districts. PC1 captures 15.9% variance (overall recording volume); PC2 captures 4.6% variance (property vs bodily offense balance). Reported loadings are scaled component loadings (v_ij × √λ_i), not exact Pearson correlations.'
+      desc: `Decomposes log1p and standardized feature matrices across 774 administrative districts. PC1 captures ${pc1Pct}% variance (a reporting-volume axis); PC2 captures ${pc2Pct}% variance (a secondary contrast between bodily/dowry offences and public-order offences). Reported loadings are scaled component loadings (v_ij × √λ_i), not exact Pearson correlations.`
     },
     {
       name: 'K-Means Clustering',
       code: '06_kmeans',
-      desc: 'Groups units into k=3, 4, 5 clusters based on Euclidean distance in standardized profile space. Distinguishes baseline low/moderate volume, urban elevated centers, and rare-event outlier clusters.'
+      desc: 'Groups units into k=3, 4, and 5 clusters based on Euclidean distance in standardized profile space. The run presents k=3 as its selected configuration; each cluster is described from its saved centroid and member sizes rather than a fixed narrative.'
     },
     {
       name: 'State-Scoped Hierarchical Clustering (Ward)',
@@ -137,9 +143,9 @@ export default function MethodologyPage() {
                     <dt>SQLite SHA256</dt>
                     <dd><code style={{ fontSize: '0.75rem' }}>{data.meta.servingDatabase?.sqliteSha256}</code></dd>
                     <dt>Total Records</dt>
-                    <dd>{number(data.meta.servingDatabase?.rowCount ?? 570022)} rows</dd>
+                    <dd>{number(data.meta.servingDatabase?.rowCount ?? 0)} rows</dd>
                     <dt>Valid Retained</dt>
-                    <dd>{number(data.meta.validRows ?? 549000)} observations</dd>
+                    <dd>{number(data.meta.validRows ?? 0)} observations</dd>
                   </dl>
                 </div>
 
@@ -147,7 +153,7 @@ export default function MethodologyPage() {
                   <h4 style={{ margin: '0 0 0.3rem 0', color: '#374151' }}>Analytical Model Artifacts</h4>
                   <dl className="metadata">
                     <dt>Current Run</dt>
-                    <dd><code>{data.analysis?.runId || 'ncrb-national-2024-admin-log1p-zscore-20261105-v2'}</code></dd>
+                    <dd><code>{data.analysis?.runId || '—'}</code></dd>
                     <dt>Feature Mode</dt>
                     <dd><code>log1p_zscore</code> (Log1p + per-feature z-scores)</dd>
                     <dt>Cohort Size</dt>

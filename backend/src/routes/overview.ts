@@ -18,9 +18,9 @@ overviewRouter.get("/overview", async (_req, res) => {
         topCategories: metrics.topCategories,
       },
       metadata: {
-        datasetVersion: "ncrb-2020",
+        datasetVersion: metrics.releaseId,
         geographyLevel: "district",
-        categoryScope: "crimes_against_children",
+        categoryScope: "all_categories",
         coverage: "eligible_only",
         denominator: null,
         warnings: [],

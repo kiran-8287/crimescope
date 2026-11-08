@@ -1,12 +1,23 @@
 import { useEffect, useState } from 'react';
-import { Workflow, Info, X, ChevronRight, HelpCircle } from 'lucide-react';
+import { X, Download } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import { fetchAssociationRules } from '../api/client';
 import { PageTitle } from '../components/Layout';
-import { Panel, Notice, Badge, ExportButton, Filters, Stat } from '../components/UI';
+import { Panel, Notice, Badge, Filters, Stat } from '../components/UI';
 import { DataTable } from '../components/DataTable';
-import { cleanCategoryName } from '../utils/categories';
-import { number } from '../utils/format';
+import { categoryContextLabel, categoryContextStatus } from '../utils/categories';
+import { number, downloadCsv } from '../utils/format';
+
+const PAGE_SIZE = 20;
+
+// Association rules store category labels joined by " + ". Re-attach verified
+// hierarchy context to each part using its stable category id where available.
+function composeRuleLabel(data: ReturnType<typeof useData>['data'], joinedLabel: string, ids?: Array<string | undefined>): string {
+  const labels = String(joinedLabel ?? '').split(' + ');
+  return labels
+    .map((label, index) => categoryContextLabel(data, ids?.[index], label, 2024))
+    .join(' + ');
+}
 
 export default function AssociationRulesPage() {
   const { data } = useData();
@@ -22,7 +33,7 @@ export default function AssociationRulesPage() {
     const ctrl = new AbortController();
     setError('');
     fetchAssociationRules(
-      { year: 2024, minSupport: support, minConfidence: confidence, minLift: lift, limit: 20, offset },
+      { year: 2024, minSupport: support, minConfidence: confidence, minLift: lift, limit: PAGE_SIZE, offset },
       ctrl.signal
     )
       .then(setPayload)
@@ -32,16 +43,65 @@ export default function AssociationRulesPage() {
     return () => ctrl.abort();
   }, [support, confidence, lift, offset]);
 
+  // Clamp the offset when a filter change shrinks the result set below the current page.
+  useEffect(() => {
+    const total = Number(payload?.total ?? 0);
+    if (total > 0 && offset >= total) {
+      const lastPageOffset = (Math.ceil(total / PAGE_SIZE) - 1) * PAGE_SIZE;
+      setOffset(Math.max(0, lastPageOffset));
+    }
+  }, [payload, offset]);
+
   const params = data.methods?.association?.parameters;
 
   const enrichedRules = (payload?.rules ?? []).map((r: any) => ({
     ...r,
-    cleanAntecedent: cleanCategoryName(r.antecedent),
-    cleanConsequent: cleanCategoryName(r.consequent),
+    cleanAntecedent: composeRuleLabel(data, r.antecedent, r.antecedentIds),
+    cleanConsequent: composeRuleLabel(data, r.consequent, r.consequentIds),
     supportPct: (Number(r.support) * 100).toFixed(1) + '%',
     confidencePct: (Number(r.confidence) * 100).toFixed(1) + '%',
     liftFormatted: Number(r.lift).toFixed(2),
   }));
+
+  // Export EVERY rule matching the current thresholds — not just the page that is
+  // visible. The endpoint applies the filters server-side and is bounded, so we
+  // request the full matching set in a single call rather than loading any raw
+  // dataset into the browser. If that call fails we fall back to the current page
+  // so the button never silently exports a partial set.
+  const [exporting, setExporting] = useState(false);
+  async function exportAllMatching() {
+    const total = Number(payload?.total ?? 0);
+    if (!total) return;
+    setExporting(true);
+    try {
+      const full = await fetchAssociationRules({
+        year: 2024, minSupport: support, minConfidence: confidence, minLift: lift, limit: total, offset: 0
+      });
+      const source = (full.rules ?? []).length ? full.rules : (payload?.rules ?? []);
+      const rows = source.map((r: any) => ({
+        rule_id: r.id,
+        antecedent_source_labels: r.antecedent,
+        antecedent_display_labels: composeRuleLabel(data, r.antecedent, r.antecedentIds),
+        antecedent_category_ids: (r.antecedentIds ?? []).join(' | '),
+        antecedent_context_status: (r.antecedentIds ?? []).map((id: string | undefined) => id ? categoryContextStatus(data, id, 2024) : 'unavailable').join(' | '),
+        consequent_source_labels: r.consequent,
+        consequent_display_labels: composeRuleLabel(data, r.consequent, r.consequentIds),
+        consequent_category_ids: (r.consequentIds ?? []).join(' | '),
+        consequent_context_status: (r.consequentIds ?? []).map((id: string | undefined) => id ? categoryContextStatus(data, id, 2024) : 'unavailable').join(' | '),
+        support: r.support,
+        support_count: r.supportCount,
+        confidence: r.confidence,
+        lift: r.lift,
+        year: 2024,
+        release: data.meta.releaseId,
+      }));
+      downloadCsv(rows, 'association_rules_2024.csv');
+    } catch (e: any) {
+      setError(e?.message ?? 'Export failed.');
+    } finally {
+      setExporting(false);
+    }
+  }
 
   return (
     <>
@@ -49,7 +109,16 @@ export default function AssociationRulesPage() {
         eyebrow="CO-OCCURRENCE PATTERNS"
         title="Association rules & crime co-occurrence"
         description="Discover frequent offense co-occurrence patterns across 2024 reporting unit profiles."
-        action={<ExportButton rows={enrichedRules} name="association_rules_2024" />}
+        action={
+          <button
+            className="button"
+            disabled={!Number(payload?.total ?? 0) || exporting}
+            onClick={exportAllMatching}
+            title="Exports every rule matching the current thresholds, not just this page."
+          >
+            <Download size={15} /> {exporting ? 'Exporting…' : 'Export all matching'}
+          </button>
+        }
       />
 
       <Filters fixedYear={2024} hideCategory />
@@ -135,15 +204,23 @@ export default function AssociationRulesPage() {
             <DataTable
               searchable={false}
               rows={enrichedRules}
+              server={{
+                page: Math.floor(offset / PAGE_SIZE),
+                pageSize: PAGE_SIZE,
+                total: Number(payload.total ?? 0),
+                unitLabel: 'rules',
+                onPageChange: (page: number) => setOffset(page * PAGE_SIZE),
+              }}
               columns={[
                 {
                   key: 'cleanAntecedent',
                   label: 'If profile records (Antecedent)',
+                  wrap: true,
                   render: (r: any) => (
                     <button
                       type="button"
                       className="text-button"
-                      style={{ fontWeight: 600, color: 'var(--color-primary, #0f766e)', textAlign: 'left' }}
+                      style={{ fontWeight: 600, color: 'var(--color-primary, #0f766e)', textAlign: 'left', whiteSpace: 'normal' }}
                       onClick={() => setSelectedRule(r)}
                       title={`Original source label: ${r.antecedent}`}
                     >
@@ -154,6 +231,7 @@ export default function AssociationRulesPage() {
                 {
                   key: 'cleanConsequent',
                   label: 'Then it also records (Consequent)',
+                  wrap: true,
                   render: (r: any) => (
                     <span title={String(r.consequent)}>
                       {String(r.cleanConsequent)}
@@ -196,30 +274,6 @@ export default function AssociationRulesPage() {
                 }
               ]}
             />
-
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem', borderTop: '1px solid #e5e7eb', paddingTop: '0.75rem' }}>
-              <span style={{ fontSize: '0.85rem', color: '#6b7280' }}>
-                Showing {payload.total ? offset + 1 : 0}–{Math.min(offset + 20, payload.total)} of {payload.total} rules
-              </span>
-              <div style={{ display: 'flex', gap: '0.5rem' }}>
-                <button
-                  type="button"
-                  className="button"
-                  disabled={offset === 0}
-                  onClick={() => setOffset(Math.max(0, offset - 20))}
-                >
-                  Previous Page
-                </button>
-                <button
-                  type="button"
-                  className="button"
-                  disabled={offset + 20 >= payload.total}
-                  onClick={() => setOffset(offset + 20)}
-                >
-                  Next Page
-                </button>
-              </div>
-            </div>
           </>
         )}
       </Panel>

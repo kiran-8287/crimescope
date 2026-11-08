@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import { env } from "./config/env.js";
+import { MIN_SUPPORTED_YEAR, MAX_SUPPORTED_YEAR, DEFAULT_YEAR } from "./config/scope.js";
 import { overviewRouter } from "./routes/overview.js";
 import { analyticsRouter } from "./routes/analytics.js";
 import { dimensionalityRouter } from "./routes/dimensionality.js";
@@ -24,7 +25,7 @@ app.get("/health", (_req, res) => res.json({ status: "ok", service: "crimescope-
 app.get("/ready", (_req, res) => res.json({ status: "ready" }));
 app.get("/api/v1/dashboard", async (req, res) => {
   const query = z.object({
-    year: z.coerce.number().int().min(2021).max(2024).default(2024),
+    year: z.coerce.number().int().min(MIN_SUPPORTED_YEAR).max(MAX_SUPPORTED_YEAR).default(DEFAULT_YEAR),
     state: z.string().default("all"), unitType: z.string().default("administrative_district"),
     category: z.string().default("all"),
     view: z.enum(["overview", "compare", "trends", "quality", "pca", "clusters", "anomalies", "rules", "methodology"]).default("overview"),
@@ -39,7 +40,7 @@ app.get("/api/v1/dashboard", async (req, res) => {
   catch (error) { res.status(500).json({ status: "error", code: "dashboard_load_failed", message: error instanceof Error ? error.message : String(error) }); }
 });
 app.get("/api/v1/analysis/association-rules", (req, res) => {
-  const query = z.object({ year: z.coerce.number().int().min(2000).max(2100).default(2024), minSupport: z.coerce.number().min(0).max(1).default(0.15), minConfidence: z.coerce.number().min(0).max(1).default(0.6), minLift: z.coerce.number().min(0).default(1.05), limit: z.coerce.number().int().min(1).max(100).default(20), offset: z.coerce.number().int().min(0).default(0) }).safeParse(req.query);
+  const query = z.object({ year: z.coerce.number().int().min(MIN_SUPPORTED_YEAR).max(MAX_SUPPORTED_YEAR).default(DEFAULT_YEAR), minSupport: z.coerce.number().min(0).max(1).default(0.15), minConfidence: z.coerce.number().min(0).max(1).default(0.6), minLift: z.coerce.number().min(0).default(1.05), limit: z.coerce.number().int().min(1).max(100).default(20), offset: z.coerce.number().int().min(0).default(0) }).safeParse(req.query);
   if (!query.success) { res.status(400).json({ status: "error", code: "invalid_query", message: query.error.message }); return; }
   try { res.json(getAssociationPage(query.data)); }
   catch (error) { res.status(400).json({ status: "error", code: "association_query_failed", message: error instanceof Error ? error.message : String(error) }); }

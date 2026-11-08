@@ -1,0 +1,253 @@
+Skip to content
+CrimeScope
+REGIONAL INTELLIGENCE
+EXPLORE
+Overview
+Regional comparison
+Yearly trends
+Data quality
+ANALYSE
+PCA explorer
+Cluster profiles
+Unusual observations
+Association rules
+REFERENCE
+Methodology & sources
+Coverage: 2021–2024 · 36 states/UTs
+2024 · 774 districts
+Workspace / Cluster profiles
+Coverage: 2021–2024 · 36 states/UTs
+Methodology & Provenance
+Coverage: 2021–2024 · 36 states/UTs. Reported records reflect police recording practices and population sizes.
+SIMILARITY, NOT RANKING
+Cluster profiles & similarity
+
+K-means groupings of 2024 regional profiles across 774 reporting units in standardized feature space.
+
+Export CSV
+Analysis Run
+2024 National Run
+State / UT
+All states / UTs (National)
+A&N Islands
+Andhra Pradesh
+Arunachal Pradesh
+Assam
+Bihar
+Chandigarh
+Chhattisgarh
+D&N Haveli and Daman & Diu
+Delhi
+Goa
+Gujarat
+Haryana
+Himachal Pradesh
+Jammu & Kashmir
+Jharkhand
+Karnataka
+Kerala
+Ladakh
+Lakshadweep
+Madhya Pradesh
+Maharashtra
+Manipur
+Meghalaya
+Mizoram
+Nagaland
+Odisha
+Puducherry
+Punjab
+Rajasthan
+Sikkim
+Tamil Nadu
+Telangana
+Tripura
+Uttar Pradesh
+Uttarakhand
+West Bengal
+Reporting Units
+All reporting units
+Administrative districts (inferred)
+Reset
+Selected Model
+K = 3 Clusters
+K-means algorithm · Inertia: 86824.9
+Input Cohort
+774 Units
+2024 national reporting units with valid leaf records
+Feature Dimensions
+131 Categories
+Log1p + per-feature z-score standardisation
+Initialization Seed
+Seed 42
+Fixed seed for reproducible initialization (reproducibility metadata, not a stability measure)
+Cluster Membership Sizes
+
+Distribution of reporting units across the selected clusters.
+
+Number of Clusters (k):
+k = 3
+k = 4
+k = 5
+Cluster 1 (190 units)
+190units
+Cluster 2 (168 units)
+168units
+Cluster 3 (416 units)
+416units
+Elbow Diagnostics (Inertia)
+
+Sum of squared distances to cluster centroids.
+
+k = 3 clusters ★ (Active)
+86824.9
+k = 4 clusters
+85964.0
+k = 5 clusters
+83473.8
+
+Inertia (sum of squared distances to centroids) always falls as k rises, because more clusters subdivide the same data; it is not a goodness-of-fit score. The saved run provides k=3, 4, and 5. k=3 is shown here as the selected configuration rather than a proven optimum.
+
+Cluster Profiles & Distinguishing Characteristics
+
+Cluster numbers are assigned by the algorithm and do not imply an ordering, size ranking, or severity. Sizes and distinguishing features below are read from the saved k=3 artifact.
+
+Cluster 1 · 24.5% of cohort
+190 units · elevated on Offences against Women and Child › Stalking
+190 units
+
+This cluster holds 190 of the 774 reporting units (24.5%). Aggregated over the 131 standardized features, its members sit above the national average (mean standardized deviation +0.40σ). It is most distinguished by high standardized values in Offences against Women and Child › Stalking and Burglary,332-334 r/w Section 303 or 331 r/w 305/Section 454-460 r/w 380 IPC) › Day Burglary and relatively low values in Offences affecting Human Body › Terrorist act and Murder › Murder by life Convict.
+
+Distinguishing feature deviations:
+Offences against Women and Child › Stalking
++1.04σ
+Burglary,332-334 r/w Section 303 or 331 r/w 305/Section 454-460 r/w 380 IPC) › Day Burglary
++1.04σ
+Offences against Women and Child › Insult modesty of women
++0.98σ
+Offences affecting Human Body › Terrorist act
+-0.06σ
+Murder › Murder by life Convict
+-0.06σ
+Importation of Girl or Boy from Foreign Country › Importation of Girls Below 21 yrs
+-0.05σ
+Values are standardized mean deviations (log1p + z-score) from the saved centroid, not raw case counts.
+EXAMPLE MEMBER UNITS (SAVED COHORT ORDER):
+Sirsa (Haryana)
+Dharashiv (Maharashtra)
+YSR (Andhra Pradesh)
+Ujjain (Madhya Pradesh)
+Listed in the order stored in the clustering artifact; the artifact does not include per-unit centroid distances.
+View All 190 Members
+Cluster 2 · 21.7% of cohort
+168 units · elevated on Offences against State › Other offences against State
+168 units
+
+This cluster holds 168 of the 774 reporting units (21.7%). Aggregated over the 131 standardized features, its members sit below the national average (mean standardized deviation -0.45σ). It is most distinguished by high standardized values in Offences against State › Other offences against State and Offences affecting Human Body › Terrorist act and relatively low values in Murder and Theft › Vehicle Theft.
+
+Distinguishing feature deviations:
+Offences against State › Other offences against State
++0.11σ
+Offences affecting Human Body › Terrorist act
++0.10σ
+Offences against State › Offences against State (a+b)
++0.09σ
+Murder
+-1.46σ
+Theft › Vehicle Theft
+-1.41σ
+Offences against Women and Child › Cruelty by Husband or Relatives
+-1.36σ
+Values are standardized mean deviations (log1p + z-score) from the saved centroid, not raw case counts.
+EXAMPLE MEMBER UNITS (SAVED COHORT ORDER):
+Subansiri Upper (Arunachal Pradesh)
+Rudra Prayag (Uttarakhand)
+Diu (D&N Haveli and Daman & Diu)
+Kargil (Ladakh)
+Listed in the order stored in the clustering artifact; the artifact does not include per-unit centroid distances.
+View All 168 Members
+Cluster 3 · 53.7% of cohort
+416 units · elevated on Hurt or Grievous Hurt › Voluntarily Causing Grievous Hurt
+416 units
+
+This cluster holds 416 of the 774 reporting units (53.7%). Aggregated over the 131 standardized features, its members sit below the national average (mean standardized deviation -0.00σ). It is most distinguished by high standardized values in Hurt or Grievous Hurt › Voluntarily Causing Grievous Hurt and Murder and relatively low values in Offences against Public Tranquillity › Affray and Burglary,332-334 r/w Section 303 or 331 r/w 305/Section 454-460 r/w 380 IPC) › Day Burglary.
+
+Distinguishing feature deviations:
+Hurt or Grievous Hurt › Voluntarily Causing Grievous Hurt
++0.34σ
+Murder
++0.33σ
+Other IPC/ crimes
++0.30σ
+Offences against Public Tranquillity › Affray
+-0.24σ
+Burglary,332-334 r/w Section 303 or 331 r/w 305/Section 454-460 r/w 380 IPC) › Day Burglary
+-0.23σ
+Offences against Women and Child › Insult modesty of women
+-0.19σ
+Values are standardized mean deviations (log1p + z-score) from the saved centroid, not raw case counts.
+EXAMPLE MEMBER UNITS (SAVED COHORT ORDER):
+Datia (Madhya Pradesh)
+Damoh (Madhya Pradesh)
+Srinagar (Jammu & Kashmir)
+Siliguri PC (West Bengal)
+Listed in the order stored in the clustering artifact; the artifact does not include per-unit centroid distances.
+View All 416 Members
+Smallest cluster in this configuration: 168 units
+
+With k=3, the smallest cluster (Cluster 2, n=168) is separated in the standardized space by its highest values in Offences against State › Other offences against State, Offences affecting Human Body › Terrorist act, Offences against State › Offences against State (a+b) and its lowest values in Murder, Theft › Vehicle Theft, Offences against Women and Child › Cruelty by Husband or Relatives. The smallest cluster is not necessarily the most elevated one: at k=3 the smallest group (C2, n=168) is distinguished by low values on the largest volume offences rather than high ones. Because each feature is standardized on its own national distribution, categories with near-zero national variance can produce large standardized values from very small recorded counts. Such separations therefore reflect a position in the transformed feature space rather than overall crime level, and do not by themselves indicate a distinct policy or demographic profile.
+
+State-Scoped Hierarchical Clustering (Ward's Method)
+
+Agglomerative Ward clustering computed strictly within individual state cohorts to preserve constitutional and geographic boundaries.
+
+Select State / UT:
+A&N Islands
+Andhra Pradesh
+Arunachal Pradesh
+Assam
+Bihar
+Chhattisgarh
+D&N Haveli and Daman & Diu
+Delhi
+Goa
+Gujarat
+Haryana
+Himachal Pradesh
+Jammu & Kashmir
+Jharkhand
+Karnataka
+Kerala
+Ladakh
+Madhya Pradesh
+Maharashtra
+Manipur
+Meghalaya
+Mizoram
+Nagaland
+Odisha
+Puducherry
+Punjab
+Rajasthan
+Sikkim
+Tamil Nadu
+Telangana
+Tripura
+Uttar Pradesh
+Uttarakhand
+West Bengal
+
+Ward clustering for Andhra Pradesh (26 reporting units, max 3 clusters). Ward's method minimizes within-cluster variance.
+
+Sub-cohort 1
+6 units
+Andhra Pradesh · West Godavari, Andhra Pradesh · Guntur, Andhra Pradesh · Krishna, Andhra Pradesh · Eluru, Andhra Pradesh · Dr BR Ambedkar Konaseema, Andhra Pradesh · Kakinada
+Sub-cohort 2
+8 units
+Andhra Pradesh · Kurnool, Andhra Pradesh · East Godavari, Andhra Pradesh · Palnadu, Andhra Pradesh · Anantapuramu, Andhra Pradesh · NTR, Andhra Pradesh · Visakhapatnam, Andhra Pradesh · Tirupati, Andhra Pradesh · Chittoor
+Sub-cohort 3
+12 units
+Andhra Pradesh · Alluri Sitharama Raju, Andhra Pradesh · Parvathipuram Manyam, Andhra Pradesh · YSR, Andhra Pradesh · Annamayya, Andhra Pradesh · Vizianagaram, Andhra Pradesh · Anakapalli, Andhra Pradesh · Bapatla, Andhra Pradesh · Sri Sathya Sai, Andhra Pradesh · Sri Potti Sriramulu Nellore, Andhra Pradesh · Prakasam, Andhra Pradesh · Srikakulam, Andhra Pradesh · Nandyal
+Similarity vs Safety: Clusters represent mathematical proximity in transformed 2024 category profiles. They group units with similar profiles, not safe or unsafe jurisdictions. Cluster numbers and sizes carry no ordinal or severity meaning.
+CrimeScope · Reported crime analytics
+Release ncrb-districtwise-2021-2024-ecec48b772bc · Reported records do not measure all crime.

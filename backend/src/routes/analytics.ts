@@ -1,4 +1,5 @@
 import { Router, Request, Response } from "express";
+import { DEFAULT_YEAR, isSupportedYear, unsupportedYearMessage } from "../config/scope.js";
 import {
   get_regional_comparison,
   get_trends,
@@ -10,9 +11,9 @@ import {
 const analyticsRouter = Router();
 
 analyticsRouter.get("/regions", async (_req: Request, res: Response) => {
-  const year = parseInt(_req.query.year as string) || 2024;
-  if (year < 2021 || year > 2024) {
-    res.status(400).json({ status: "error", code: "unsupported_year", message: `Year ${year} is not supported. Active scope is 2021–2024.` });
+  const year = parseInt(_req.query.year as string) || DEFAULT_YEAR;
+  if (!isSupportedYear(year)) {
+    res.status(400).json({ status: "error", code: "unsupported_year", message: unsupportedYearMessage(year) });
     return;
   }
   const category = (_req.query.category as string) || undefined;
@@ -50,9 +51,9 @@ analyticsRouter.get("/trends", async (_req: Request, res: Response) => {
 });
 
 analyticsRouter.get("/categories/top", async (_req: Request, res: Response) => {
-  const year = parseInt(_req.query.year as string) || 2024;
-  if (year < 2021 || year > 2024) {
-    res.status(400).json({ status: "error", code: "unsupported_year", message: `Year ${year} is not supported. Active scope is 2021–2024.` });
+  const year = parseInt(_req.query.year as string) || DEFAULT_YEAR;
+  if (!isSupportedYear(year)) {
+    res.status(400).json({ status: "error", code: "unsupported_year", message: unsupportedYearMessage(year) });
     return;
   }
   const top_n = parseInt(_req.query.top_n as string) || 10;
@@ -68,9 +69,9 @@ analyticsRouter.get("/categories/top", async (_req: Request, res: Response) => {
 });
 
 analyticsRouter.get("/correlations", async (_req: Request, res: Response) => {
-  const year = parseInt(_req.query.year as string) || 2024;
-  if (year < 2021 || year > 2024) {
-    res.status(400).json({ status: "error", code: "unsupported_year", message: `Year ${year} is not supported. Active scope is 2021–2024.` });
+  const year = parseInt(_req.query.year as string) || DEFAULT_YEAR;
+  if (!isSupportedYear(year)) {
+    res.status(400).json({ status: "error", code: "unsupported_year", message: unsupportedYearMessage(year) });
     return;
   }
   const top_n = parseInt(_req.query.top_n as string) || 10;

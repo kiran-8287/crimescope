@@ -4,7 +4,7 @@ import { useData } from '../context/DataContext';
 import { PageTitle } from '../components/Layout';
 import { Panel, Notice, Badge, ExportButton, Filters, RegionDetailDrawer, Stat } from '../components/UI';
 import { Bars, colors } from '../components/Charts';
-import { cleanCategoryName } from '../utils/categories';
+import { categoryContextLabel } from '../utils/categories';
 import { number } from '../utils/format';
 
 export default function PcaPage() {
@@ -39,6 +39,12 @@ export default function PcaPage() {
   const cumulative: number[] = result.cumulative_variance_ratio ?? [];
   const components: any[] = result.components ?? [];
   const loadings: any[] = result.loadings ?? [];
+
+  // All displayed variance figures are derived from the current artifact so
+  // headlines and captions can never drift apart.
+  const pc1Pct = (Number(variance[0] ?? 0) * 100).toFixed(1);
+  const pc2Pct = (Number(variance[1] ?? 0) * 100).toFixed(1);
+  const cumulativePct = (Number(cumulative[1] ?? (Number(variance[0] ?? 0) + Number(variance[1] ?? 0))) * 100).toFixed(1);
 
   const getScore = (row: any, pc: string): number => {
     return Number(row.scores?.find((s: any) => s.component === pc)?.score ?? 0);
@@ -114,7 +120,7 @@ export default function PcaPage() {
         eyebrow="DIMENSIONALITY REDUCTION"
         title="Principal Component Analysis (PCA)"
         description={`Explore the 2024 national crime structure across ${result.n_regions} reporting units and ${result.n_categories} crime features.`}
-        action={<ExportButton rows={plotPoints.map(p => ({ region: p.region, pc1: p.x, pc2: p.y }))} name="pca_scores_2024" />}
+        action={<ExportButton rows={plotPoints.map(p => ({ reporting_unit_id: p.region_id, region: p.region, pc1: p.x, pc2: p.y, year: 2024, release: data.meta.releaseId }))} name="pca_scores_2024" />}
       />
 
       <Filters fixedYear={2024} hideCategory />
@@ -123,18 +129,18 @@ export default function PcaPage() {
       <div className="stats">
         <Stat
           label="PC1 Explained Variance"
-          value={`${(variance[0] * 100).toFixed(1)}%`}
-          detail="Primary axis; predominantly captures overall reporting volume"
+          value={`${pc1Pct}%`}
+          detail="Primary reporting-volume axis (r = −0.88 with log-volume)"
         />
         <Stat
           label="PC2 Explained Variance"
-          value={`${(variance[1] * 100).toFixed(1)}%`}
-          detail="Secondary axis; distinguishes violent offenses from property crimes"
+          value={`${pc2Pct}%`}
+          detail="Secondary axis; separates bodily/dowry offences from public-order offences"
         />
         <Stat
           label="Cumulative Variance (2 PCs)"
-          value={`${((cumulative[1] || (variance[0] + variance[1])) * 100).toFixed(1)}%`}
-          detail="22.7% of total feature variance retained in 2D projection"
+          value={`${cumulativePct}%`}
+          detail={`${cumulativePct}% of total feature variance retained in this 2-component projection`}
         />
         <Stat
           label="Feature Input Space"
@@ -146,8 +152,8 @@ export default function PcaPage() {
       <div className="grid two-one" style={{ marginTop: '1rem' }}>
         {/* Scatter Plot Panel */}
         <Panel
-          title="PCA Biplot Projection (PC1 vs PC2)"
-          subtitle="Nearby points indicate similar relative crime profiles in the standardized space."
+          title="PCA Score Plot (PC1 vs PC2)"
+          subtitle={`Unit scores in the standardized feature space. Nearby points have similar scores; this 2-component projection retains ${cumulativePct}% of total variance and does not preserve all high-dimensional similarities.`}
         >
           {/* Search bar inside panel */}
           <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.75rem', alignItems: 'center' }}>
@@ -246,7 +252,7 @@ export default function PcaPage() {
 
               {/* Axis Labels */}
               <text x={mLeft + plotW / 2} y={440 - 10} textAnchor="middle" fontSize="12" fontWeight="600" fill="#374151">
-                Principal Component 1 ({(variance[0] * 100).toFixed(1)}% of variance)
+                Principal Component 1 ({pc1Pct}% of variance)
               </text>
               <text
                 x={-220}
@@ -257,13 +263,13 @@ export default function PcaPage() {
                 fontWeight="600"
                 fill="#374151"
               >
-                Principal Component 2 ({(variance[1] * 100).toFixed(1)}% of variance)
+                Principal Component 2 ({pc2Pct}% of variance)
               </text>
             </svg>
           </div>
 
           <p className="panel-note" style={{ marginTop: '0.5rem' }}>
-            Click any point to inspect its regional profile. Outliers along PC1 record substantially higher overall crime volumes across almost all categories.
+            Click any point to inspect its regional profile. Units at the negative PC1 extreme record substantially higher overall crime volumes across most categories; positive-PC1 units record lower volumes.
           </p>
         </Panel>
 
@@ -286,10 +292,13 @@ export default function PcaPage() {
                 <div style={{ fontSize: '0.85rem', lineHeight: '1.4' }}>
                   <p>
                     <strong>PC1 Interpretation:</strong> Score of {activeSelected.x.toFixed(2)} places this unit in the{' '}
-                    {activeSelected.x > 0 ? 'higher volume' : 'lower volume'} half of the national distribution.
+                    {activeSelected.x < 0 ? 'higher volume' : 'lower volume'} half of the national distribution, because PC1 is
+                    negatively associated with recorded volume (r = −0.88 with log-volume).
                   </p>
                   <p>
-                    <strong>PC2 Interpretation:</strong> Score of {activeSelected.y.toFixed(2)} reflects its relative balance between specific property offenses and bodily offenses.
+                    <strong>PC2 Interpretation:</strong> Score of {activeSelected.y.toFixed(2)} reflects a secondary contrast:
+                    positive scores load on bodily and dowry-related offences (e.g. Dowry Death, grievous hurt), while negative
+                    scores load on public-order and property-nuisance offences (e.g. Affray, day burglary, mischief).
                   </p>
                 </div>
 
@@ -307,7 +316,7 @@ export default function PcaPage() {
             ) : (
               <div className="muted" style={{ padding: '2rem 0', textAlign: 'center' }}>
                 <Info size={32} style={{ margin: '0 auto 0.5rem auto', color: '#9ca3af' }} />
-                <p>Click any point on the biplot or search for a region above to inspect its coordinates and profile.</p>
+                <p>Click any point on the score plot or search for a region above to inspect its coordinates and profile.</p>
               </div>
             )}
           </Panel>
@@ -318,26 +327,26 @@ export default function PcaPage() {
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2px' }}>
                   <span>PC1 (Eigenvalue: {result.eigenvalues?.[0]?.toFixed(2)})</span>
-                  <strong>{(variance[0] * 100).toFixed(1)}%</strong>
+                  <strong>{pc1Pct}%</strong>
                 </div>
                 <div style={{ width: '100%', height: '8px', background: '#e5e7eb', borderRadius: '4px', overflow: 'hidden' }}>
-                  <div style={{ width: `${(variance[0] * 100).toFixed(1)}%`, height: '100%', background: '#0d9488' }} />
+                  <div style={{ width: `${pc1Pct}%`, height: '100%', background: '#0d9488' }} />
                 </div>
               </div>
 
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2px' }}>
                   <span>PC2 (Eigenvalue: {result.eigenvalues?.[1]?.toFixed(2)})</span>
-                  <strong>{(variance[1] * 100).toFixed(1)}%</strong>
+                  <strong>{pc2Pct}%</strong>
                 </div>
                 <div style={{ width: '100%', height: '8px', background: '#e5e7eb', borderRadius: '4px', overflow: 'hidden' }}>
-                  <div style={{ width: `${(variance[1] * 100).toFixed(1)}%`, height: '100%', background: '#14b8a6' }} />
+                  <div style={{ width: `${pc2Pct}%`, height: '100%', background: '#14b8a6' }} />
                 </div>
               </div>
 
               <div style={{ borderTop: '1px solid #e5e7eb', paddingTop: '0.5rem', display: 'flex', justifyContent: 'space-between' }}>
                 <span>Remaining {result.n_categories - 2} components</span>
-                <span style={{ color: '#6b7280' }}>{(100 - (variance[0] + variance[1]) * 100).toFixed(1)}%</span>
+                <span style={{ color: '#6b7280' }}>{(100 - Number(cumulative[1] ?? (Number(variance[0] ?? 0) + Number(variance[1] ?? 0))) * 100).toFixed(1)}%</span>
               </div>
             </div>
           </Panel>
@@ -346,7 +355,7 @@ export default function PcaPage() {
 
       {/* Feature Loadings Definition and Table */}
       <Panel
-        title="Feature Loadings & Scaled Components"
+        title="Scaled Component Loadings by Feature"
         subtitle={`Select component to inspect feature contributions (values are scaled component loadings: lij = vij × √λi).`}
         action={
           <div style={{ display: 'flex', gap: '0.3rem' }}>
@@ -386,7 +395,9 @@ export default function PcaPage() {
               <tbody>
                 {topPositiveFeatures.map((f: any) => (
                   <tr key={f.id} style={{ borderBottom: '1px solid #f9fafb' }}>
-                    <td style={{ padding: '0.4rem' }}>{cleanCategoryName(f.category)}</td>
+                    <td style={{ padding: '0.4rem', whiteSpace: 'normal', overflowWrap: 'anywhere', maxWidth: '240px' }} title={f.category}>
+                      {categoryContextLabel(data, f.id, f.category, 2024)}
+                    </td>
                     <td style={{ padding: '0.4rem', textAlign: 'right', fontWeight: 600, color: '#0f766e' }}>
                       +{Number(f.loading).toFixed(3)}
                     </td>
@@ -410,7 +421,9 @@ export default function PcaPage() {
               <tbody>
                 {topNegativeFeatures.map((f: any) => (
                   <tr key={f.id} style={{ borderBottom: '1px solid #f9fafb' }}>
-                    <td style={{ padding: '0.4rem' }}>{cleanCategoryName(f.category)}</td>
+                    <td style={{ padding: '0.4rem', whiteSpace: 'normal', overflowWrap: 'anywhere', maxWidth: '240px' }} title={f.category}>
+                      {categoryContextLabel(data, f.id, f.category, 2024)}
+                    </td>
                     <td style={{ padding: '0.4rem', textAlign: 'right', fontWeight: 600, color: '#b91c1c' }}>
                       {Number(f.loading).toFixed(3)}
                     </td>

@@ -1,0 +1,195 @@
+{
+  "startedAt": "2026-11-08T10:08:58.205Z",
+  "testedUrl": "http://localhost:5173",
+  "activeRelease": "ncrb-districtwise-2021-2024-ecec48b772bc",
+  "activeRun": "ncrb-national-2024-admin-log1p-zscore-20261107-v4",
+  "steps": [
+    {
+      "step": 1,
+      "name": "Overview",
+      "route": "/",
+      "checks": {
+        "has_774_units": true,
+        "has_2024_total_2740258": true,
+        "has_contextual_marker": true
+      },
+      "startedAt": "2026-11-08T10:08:58.929Z",
+      "screenshot": "step1.png",
+      "textFile": "step1_text.txt",
+      "has": {
+        "pca_pc1": false,
+        "pca_pc2": false,
+        "pca_cum": false
+      },
+      "autoDurationMs": 3762
+    },
+    {
+      "step": 2,
+      "name": "Regional Comparison",
+      "route": "/compare",
+      "checks": {
+        "compare_table_or_units": true,
+        "no_update_loop": true
+      },
+      "startedAt": "2026-11-08T10:09:02.692Z",
+      "screenshot": "step2.png",
+      "textFile": "step2_text.txt",
+      "has": {
+        "pca_pc1": false,
+        "pca_pc2": false,
+        "pca_cum": false
+      },
+      "autoDurationMs": 4437
+    },
+    {
+      "step": 3,
+      "name": "Trends",
+      "route": "/trends",
+      "checks": {
+        "annual_2023_2940460": true,
+        "annual_2022_2808408": true,
+        "matched_749": true,
+        "matched_2022_2804254": false,
+        "annual_pct_470": false,
+        "matched_pct_315": false
+      },
+      "startedAt": "2026-11-08T10:09:07.130Z",
+      "screenshot": "step3.png",
+      "textFile": "step3_text.txt",
+      "has": {
+        "pca_pc1": false,
+        "pca_pc2": false,
+        "pca_cum": false
+      },
+      "autoDurationMs": 3143
+    },
+    {
+      "step": 4,
+      "name": "Data Quality",
+      "route": "/quality",
+      "checks": {
+        "retained_546198": true,
+        "canonical_567078": false,
+        "aggregate_20880": true
+      },
+      "startedAt": "2026-11-08T10:09:10.274Z",
+      "screenshot": "step4.png",
+      "textFile": "step4_text.txt",
+      "has": {
+        "pca_pc1": false,
+        "pca_pc2": false,
+        "pca_cum": false
+      },
+      "autoDurationMs": 4661
+    },
+    {
+      "step": 5,
+      "name": "PCA",
+      "route": "/pca",
+      "checks": {
+        "pc1_159": true,
+        "pc2_46": true,
+        "cum_205": true,
+        "score_plot_label": true,
+        "no_stale_227": true
+      },
+      "startedAt": "2026-11-08T10:09:14.936Z",
+      "screenshot": "step5.png",
+      "textFile": "step5_text.txt",
+      "has": {
+        "pca_pc1": true,
+        "pca_pc2": true,
+        "pca_cum": true
+      },
+      "autoDurationMs": 3229
+    },
+    {
+      "step": 6,
+      "name": "Clusters",
+      "route": "/clusters",
+      "checks": {
+        "size_190": true,
+        "size_168": true,
+        "size_416": true
+      },
+      "startedAt": "2026-11-08T10:09:18.166Z",
+      "screenshot": "step6.png",
+      "textFile": "step6_text.txt",
+      "has": {
+        "pca_pc1": false,
+        "pca_pc2": false,
+        "pca_cum": false
+      },
+      "autoDurationMs": 3528
+    },
+    {
+      "step": 7,
+      "name": "Anomalies",
+      "route": "/anomalies",
+      "checks": {
+        "rare_z_2778": true,
+        "high_z_1089": false
+      },
+      "startedAt": "2026-11-08T10:09:21.695Z",
+      "screenshot": "step7.png",
+      "textFile": "step7_text.txt",
+      "has": {
+        "pca_pc1": false,
+        "pca_pc2": false,
+        "pca_cum": false
+      },
+      "autoDurationMs": 2919
+    },
+    {
+      "step": 8,
+      "name": "Association Rules",
+      "route": "/rules",
+      "checks": {
+        "pagination_owner": true,
+        "page2": true,
+        "last_page": true,
+        "rules_697": true,
+        "rules_739_transactions": true
+      },
+      "startedAt": "2026-11-08T10:09:24.615Z",
+      "screenshot": "step8.png",
+      "textFile": "step8_text.txt",
+      "has": {
+        "pca_pc1": false,
+        "pca_pc2": false,
+        "pca_cum": false
+      },
+      "autoDurationMs": 2985
+    },
+    {
+      "step": 9,
+      "name": "Methodology",
+      "route": "/methodology",
+      "checks": {
+        "live_release": true,
+        "live_run": false
+      },
+      "startedAt": "2026-11-08T10:09:27.601Z",
+      "screenshot": "step9.png",
+      "textFile": "step9_text.txt",
+      "has": {
+        "pca_pc1": true,
+        "pca_pc2": true,
+        "pca_cum": false
+      },
+      "autoDurationMs": 2847
+    }
+  ],
+  "consoleErrors": [
+    "Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "pageErrors": [],
+  "status": "interrupted",
+  "finishedAt": "2026-11-08T10:09:30.671Z",
+  "automatedWalkthroughMs": 31511,
+  "checkTotals": {
+    "pass": 25,
+    "total": 31
+  },
+  "note": "autoDurationMs is machine wall-clock only; it excludes human speaking time in the 8-10 min demo."
+}
