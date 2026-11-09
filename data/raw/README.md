@@ -1,0 +1,126 @@
+# data/raw — Archived Source Inputs
+
+This directory stores the archived source data tables used by CrimeScope. The raw
+CSV files are inputs only — they are never modified by the pipeline. The canonical
+dataset and analytical outputs are produced downstream by the preprocessing
+pipeline under `data/processed/` and `data/serving/`.
+
+## Source
+
+NCRB (National Crime Records Bureau) published the underlying crime statistics.
+The Reclaim Chennai NCRB archive supplied the CSV files used by CrimeScope,
+retrieved from the archive's public GitHub repository.
+
+## File Naming
+
+Filenames such as `1_16730065601districtwiseipccrimes2021_t1.csv` retain the
+archive's original naming convention. The leading number, timestamp-like string,
+and table descriptor are all part of the archive's identifier. The `_tN` suffix
+(where N is 1–36) identifies a fragment of a state/UT table.
+
+Do not infer the state or year from the filename suffix alone. Use
+[source_index.csv](source_index.csv) to look up the actual state/UT, year, and
+file path for any source CSV.
+
+## Folder Layout
+
+```
+data/raw/
+├── source_index.csv          # Human-readable index of all active source CSVs
+├── README.md                 # This file
+├── download_manifest_2021_2024.json   # Download manifest (checksums, statuses)
+├── .gitkeep                  # Placeholder for empty directories
+├── 2020/                     # Historical inputs (outside active scope)
+│   ├── 1_districtwise-crime-against-children-2020_t1.csv
+│   └── 1_districtwise-ipc-crimes-2020_t1.csv
+├── 2021/                     # Active year scope
+│   ├── 1_16730065601districtwiseipccrimes2021_t1.csv   # standalone (earlier layout)
+│   └── districtwise_ipc_bns_fragments/                  # active fragment inputs
+│       ├── 1_16730065601districtwiseipccrimes2021_t1.csv
+│       ├── ..._t2.csv ... _t36.csv
+│       └── ...
+├── 2022/
+│   ├── standalone files (earlier layout)
+│   └── districtwise_ipc_bns_fragments/   # active fragment inputs
+├── 2023/
+│   ├── standalone files (earlier layout)
+│   └── districtwise_ipc_bns_fragments/   # active fragment inputs
+└── 2024/
+    ├── standalone files (earlier layout)
+    └── districtwise_ipc_bns_fragments/   # active fragment inputs
+```
+
+### Active Input Set
+
+The nested `districtwise_ipc_bns_fragments/` folders hold the complete active
+input set: 36 fragments per year for 2021–2024 (144 fragments total). The active
+input selector is `scripts/source_inputs.py`, which reads
+`download_manifest_2021_2024.json` and selects only fragments from these
+fragment folders. The standalone `_t1.csv` files directly under each year
+folder come from the earlier one-file-per-year layout and are **not** active
+inputs unless explicitly confirmed by `source_inputs.py`. Matching filenames
+alone do not prove identical file contents between a standalone file and a
+fragment.
+
+### Reporting Framework
+
+- **2021–2023:** IPC (Indian Penal Code) sections
+- **2024:** IPC/BNS transition (Bharatiya Nyaya Sanhita replaces IPC)
+
+See `source_index.csv` for the per-file reporting framework.
+
+### 2020 Directory (Historical)
+
+The `2020/` directory contains historical inputs, including a separate
+crime-against-children table:
+
+- `1_districtwise-ipc-crimes-2020_t1.csv`
+- `1_districtwise-crime-against-children-2020_t1.csv`
+
+These are partial, historical inputs from the earlier one-file-per-year layout.
+The active scope is **2021–2024** only, as declared in the download manifest.
+2020 is outside the active scope because its coverage is partial (one state,
+Andhra Pradesh, only) and it predates the fragment-based layout used for
+2021–2024. Use `scripts/source_inputs.py load_source_inputs(include_2020=True)`
+only for historical reproduction, not for the active dataset.
+
+### Manifest vs Source Index
+
+- `download_manifest_2021_2024.json` tracks the downloads: URLs, SHA-256
+  checksums, validation statuses, and per-fragment metadata. It is machine
+  readable and drives the pipeline's input selection.
+- `source_index.csv` makes the same information easy for a person to browse:
+  one row per source CSV with year, state/UT, fragment, reporting framework,
+  original filename, and relative path.
+
+## How to Locate a Source CSV by Year and State
+
+**Example:** Find the 2022 Odisha district-wise IPC crime fragment.
+
+1. Open `source_index.csv`.
+2. Filter rows where `year = 2022` and `state_ut = "Odisha"`.
+3. Read the matching row:
+   - `fragment = t19`
+   - `original_filename = 1_17016833111districtwiseipccrimes2022_t19.csv`
+   - `relative_path = 2022/districtwise_ipc_bns_fragments/1_17016833111districtwiseipccrimes2022_t19.csv`
+4. Open that path under `data/raw/`.
+
+## Pipeline Outputs
+
+The raw directory stores archived inputs only. The canonical dataset is produced
+downstream by the preprocessing pipeline:
+
+```
+python scripts/build_phase_c.py           # canonical dataset
+python scripts/run_methods_01_04.py       # methods 01-04
+python scripts/run_methods_05_07.py       # methods 05-07
+python scripts/run_methods_08_09.py       # methods 08-09
+```
+
+Outputs are written under `data/processed/` and `data/serving/`, not here.
+
+## Git
+
+The raw CSV files, manifest, source index, and this README are tracked in git.
+Generated outputs under `data/processed/` and `data/serving/releases/` are
+gitignored and regenerated by the pipeline scripts.
