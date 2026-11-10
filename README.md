@@ -29,6 +29,7 @@ Open <http://localhost:5173>. The checked-in source code uses local frozen runti
 - `data/raw/` — ignored 144-file source set, checksums, and selection metadata.
 - `data/serving/` and `analysis/output/runs/` — active release and analysis pointers plus frozen artifacts (ignored).
 - `docs/` — [methodology](docs/methodology.md), [findings](docs/findings.md), [handoff](docs/handoff.md), [API contract](docs/api_contract.md), and [final report](docs/final_report.md).
+- `results/notebook_figures/` — figures embedded in the four executed notebooks, one file per figure, with [figure index](results/notebook_figures/figure_index.csv) and [README](results/notebook_figures/README.md); exported with `scripts/export_notebook_figures.py`.
 - `progress/` — required project status and work logs.
 
 ## Reproduction and checks
