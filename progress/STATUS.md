@@ -1,10 +1,11 @@
 # CrimeScope — Project Status
 
 **Date:** 2026-11-10
-**Phase:** Active release and analysis run preserved; repository cleanup complete.
+**Phase:** Active release and analysis run preserved; cleanup and notebook learning path complete.
 **Current guides:** [`README.md`](../README.md), [`methodology.md`](../docs/methodology.md), [`findings.md`](../docs/findings.md), [`handoff.md`](../docs/handoff.md), [`final_report.md`](../docs/final_report.md).
 **Retained demo evidence:** `data/verification/demo_walkthrough_1794162325606/` (captured 2026-11-08; summary identifies release/run and records 44/44 checks).
 **Cleanup archive:** `A:\Projects\crimescope_archive\2026-11-10\restore_inventory.csv` (hash-verified restore inventory; secrets excluded).
+**Notebook verification:** Four ordered notebooks executed from fresh kernels; source/release/run hashes and saved findings checked. Execution is documented in [`handoff.md`](../docs/handoff.md#notebook-learning-path).
 **Final verification:** Python 20 passed; frontend 31 and backend 21 passed; builds passed; live backend 8 passed; browser closure 138/138 assertions, zero app network/page/console errors. No refit, commit, push, or release-pointer change.
 
 ---

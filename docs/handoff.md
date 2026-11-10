@@ -26,6 +26,36 @@ The dashboard needs the active release selected by `data/serving/current.json`, 
 
 The `scripts/package_handoff.ps1` package carries the active SQLite release, manifest, staged run directory, config, and one selected demo evidence set. It supports **local dashboard startup from an existing source checkout**. It does not carry source code, npm dependencies, raw CSVs, or the full inputs needed to rebuild the release or refit the analysis. For the source set, run `python scripts/download_data.py`; this downloads and verifies 144 fragments and writes the ignored download manifest. The manifest's original table IDs, URLs, local paths, and SHA-256 values identify the renamed files. `data/raw/rename_map.json` is legacy metadata and is not needed by the active selector.
 
+## Notebook learning path
+
+The notebooks connect the raw-to-canonical Python implementation with the frozen results read by the dashboard. The implementation remains in `analysis/src/crimescope_analysis/`; notebooks call it, document the active filters, and inspect hash-verified outputs. Notebook execution does not rebuild the release, refit a model, or update either pointer.
+
+1. [`01_data_preprocessing.ipynb`](../notebooks/01_data_preprocessing.ipynb) traces manifest-selected wide source rows into canonical observations and explains missing values, unit classification, aggregates, and quality accounting. Dashboard: `/quality`, `/methodology`.
+2. [`02_statistics_and_trends.ipynb`](../notebooks/02_statistics_and_trends.ipynb) summarizes reported counts, annual official totals, and the 2022–2023 name-matched set. Dashboard: `/`, `/compare`, `/trends`.
+3. [`03_pca_and_clustering.ipynb`](../notebooks/03_pca_and_clustering.ipynb) verifies the 2024 feature cohort and reads saved PCA scores/loadings, K-means assignments, and state-scoped Ward results. Dashboard: `/pca`, `/clusters`.
+4. [`04_anomalies_and_association_rules.ipynb`](../notebooks/04_anomalies_and_association_rules.ipynb) checks sample-standardized anomaly examples and derives a saved rule’s metrics from district transactions. Dashboard: `/anomalies`, `/rules`.
+
+### Notebook environment and launch
+
+Use the repository’s analysis requirements (Python 3.10 or newer) and register the current environment as a Jupyter kernel:
+
+```powershell
+python -m pip install --only-binary=:all: -r analysis/requirements.lock.txt
+python -m ipykernel install --user --name crimescope --display-name "Python (CrimeScope)"
+python -m jupyter notebook notebooks
+```
+
+Each notebook also runs from a fresh kernel with the command below. Run the four commands in order from the repository root; `nbconvert` starts a new kernel for each notebook, writes the executed outputs back into the reviewable notebook, and stops on the first cell error.
+
+```powershell
+python -m jupyter nbconvert --to notebook --execute --inplace notebooks/01_data_preprocessing.ipynb --ExecutePreprocessor.kernel_name=crimescope --ExecutePreprocessor.allow_errors=False --ExecutePreprocessor.timeout=600
+python -m jupyter nbconvert --to notebook --execute --inplace notebooks/02_statistics_and_trends.ipynb --ExecutePreprocessor.kernel_name=crimescope --ExecutePreprocessor.allow_errors=False --ExecutePreprocessor.timeout=600
+python -m jupyter nbconvert --to notebook --execute --inplace notebooks/03_pca_and_clustering.ipynb --ExecutePreprocessor.kernel_name=crimescope --ExecutePreprocessor.allow_errors=False --ExecutePreprocessor.timeout=600
+python -m jupyter nbconvert --to notebook --execute --inplace notebooks/04_anomalies_and_association_rules.ipynb --ExecutePreprocessor.kernel_name=crimescope --ExecutePreprocessor.allow_errors=False --ExecutePreprocessor.timeout=600
+```
+
+The notebooks need `data/raw/source_index.csv`, all 144 manifest-verified source fragments and `download_manifest_2021_2024.json`; `config/category_hierarchy.json`; the active canonical CSV, serving SQLite database and release manifest; and the active analysis run’s `run_manifest.json`, `feature_input.csv`, and method artifacts. The serving/run pointers select the matching versioned files. These local files are ignored by Git. Restore the source inputs with `python scripts/download_data.py`; restore the active release and run artifacts from the local data/analysis handoff described above. Missing files and hash mismatches stop notebook execution with the required path.
+
 `config/data_snapshot_manifest.json` currently also serves as the backend's repository-root marker (the backend checks for that path when launched from either the repo root or `backend/`). Its contents describe an older snapshot; do not treat its embedded paths as the active source selector. Active selectors are the serving and run pointers plus the download manifest.
 
 ## Demo sequence

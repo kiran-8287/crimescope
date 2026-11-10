@@ -32,6 +32,10 @@ The active anomaly screen uses untransformed counts and sample standard deviatio
 
 `python scripts/run_current_analysis.py --dry-run` validates and describes the active input and code provenance. To generate methods, supply `--execute --run-id <new-unique-id>`; this writes under a new run directory and does not move the active pointer. Findings and presentation commands consume saved artifacts and fail closed on hash mismatches; they do not refit models.
 
+## Notebook walkthrough
+
+The four [executed notebooks](../README.md#notebook-learning-path) follow the active source-to-dashboard flow. They call the cleaning and method modules under `analysis/src/`, verify the current release/run manifests and hashes, and read saved artifacts. They are explanatory and reproducible views of the implementation; the dashboard continues to serve the validated SQLite release and saved analysis run.
+
 ## Course method-to-code map
 
 The course workflow is a distinct multi-year reproduction path. Methods 01–04 build a separate feature input from the manifest-selected 2021–2024 rows; methods 05–09 consume `analysis/output/method_04_feature_engineering.csv`. These outputs are not the active dashboard's 2024 run.
