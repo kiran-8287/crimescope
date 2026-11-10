@@ -34,8 +34,10 @@ def classify(header: str, label: str) -> str:
 def build() -> dict:
     catalog: dict[str, dict] = {}
     source_hashes = {}
-    inputs = load_source_inputs(ROOT, include_2020=True)
-    templates = [source for source in inputs if source["table_id"].endswith("_t1") or source["year"] == 2020]
+    # Build the active taxonomy from the verified 2021–2024 source set. The
+    # partial 2020 source remains historical and is not required for this catalog.
+    inputs = load_source_inputs(ROOT)
+    templates = [source for source in inputs if source["table_id"].endswith("_t1")]
     for source in templates:
         year, path = source["year"], source["path"]
         relative = str(path.relative_to(ROOT)).replace("\\", "/")

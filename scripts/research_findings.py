@@ -785,6 +785,9 @@ def main() -> int:
 
     run_id = ctx["manifest"]["run_id"]
     out_dir = Path(args.out) if args.out else ROOT / "analysis/output/findings" / run_id
+    if not out_dir.is_absolute():
+        out_dir = ROOT / out_dir
+    out_dir = out_dir.resolve()
     (out_dir / "figures").mkdir(parents=True, exist_ok=True)
     (out_dir / "tables").mkdir(parents=True, exist_ok=True)
 
@@ -808,8 +811,12 @@ def main() -> int:
     write_tables(out_dir, findings)
     (out_dir / "findings.json").write_text(json.dumps(findings, indent=2), encoding="utf-8")
 
+    try:
+        display_out_dir = str(out_dir.relative_to(ROOT)).replace("\\", "/")
+    except ValueError:
+        display_out_dir = str(out_dir)
     print(json.dumps({
-        "out_dir": str(out_dir.relative_to(ROOT)),
+        "out_dir": display_out_dir,
         "release_id": findings["release_id"],
         "run_id": run_id,
         "inv1_corr_pc1_log1p": findings["investigation_1"]["corr_pc1_log1p_total"],

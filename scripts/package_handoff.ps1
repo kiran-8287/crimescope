@@ -72,13 +72,9 @@ $runId        = $runPointer.run_id
 $runDirRel    = Split-Path -Parent $runPointer.manifest  # e.g. analysis/output/runs/<id>
 $runDirAbs    = Join-Path $Root $runDirRel
 
-# Selected verified evidence sets (screenshots + summary.json). Chrome profiles inside
-# these folders are excluded by the filter below.
+# The retained demo evidence is a compact walkthrough of all nine routes.
 $evidenceSets = @(
-    'data/verification/final_closure_1794162164706'
-    'data/verification/phase4_1794162049903'
     'data/verification/demo_walkthrough_1794162325606'
-    'data/verification/scope_2021_2024_reverify_20261107_2354'
 )
 
 # --- Exclusion + collection helpers. ----------------------------------------------
@@ -126,6 +122,9 @@ Add-File "$releaseDirRel/release_manifest.json"
 Add-File 'analysis/output/runs/current.json'
 Add-Tree $runDirRel
 Add-Tree 'config'
+# Primary dashboard routes also read these small release metadata files.
+Add-File 'data/interim/rebuilt_national_2021_2024_v3/staging_release_manifest.json'
+Add-File 'data/interim/rebuilt_national_2021_2024_v3/quality_report.json'
 foreach ($set in $evidenceSets) { Add-Tree $set }
 
 $totalBytes = ($plan | Measure-Object -Property Bytes -Sum).Sum
@@ -209,7 +208,7 @@ Verify integrity
     Get-Content SHA256SUMS.txt
     (Get-FileHash -Algorithm SHA256 .\data\serving\releases\$releaseId\crimescope.sqlite).Hash
 
-See docs/handoff.md and docs/reproducibility.md for details.
+See docs/handoff.md for details.
 "@
 $startText | Set-Content -LiteralPath (Join-Path $DestRoot 'START_HERE.txt') -Encoding UTF8
 

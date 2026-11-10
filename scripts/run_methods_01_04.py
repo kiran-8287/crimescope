@@ -26,7 +26,7 @@ def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def run_method_01(output_dir: Path, include_2020: bool = True) -> dict:
+def run_method_01(output_dir: Path, include_2020: bool = False) -> dict:
     sources = load_source_inputs(ROOT, include_2020=include_2020)
     geo_mapping = load_geography_mapping(ROOT / "data/mappings/geography_crosswalk.csv")
     cat_mapping = load_category_mapping(ROOT / "data/mappings/category_crosswalk.csv")
@@ -54,13 +54,13 @@ def run_method_01(output_dir: Path, include_2020: bool = True) -> dict:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--output-dir", default="analysis/output/expanded_methods_01_04")
-    parser.add_argument("--without-2020", action="store_true")
+    parser.add_argument("--include-2020", action="store_true", help="Include the partial historical Andhra Pradesh 2020 input (restore it from the external archive first)")
     args = parser.parse_args(argv)
     output_dir = Path(args.output_dir)
     if not output_dir.is_absolute():
         output_dir = ROOT / output_dir
     output_dir.mkdir(parents=True, exist_ok=True)
-    m01 = run_method_01(output_dir, include_2020=not args.without_2020)
+    m01 = run_method_01(output_dir, include_2020=args.include_2020)
     canon_csv = Path(m01["output_csv"])
     m02 = {"method": "02_descriptive_statistics", **run_descriptive_statistics(canon_csv, output_dir / "method_02_descriptive")}
     m03 = {"method": "03_bivariate_analysis", **run_bivariate_analysis(canon_csv, output_dir / "method_03_bivariate")}

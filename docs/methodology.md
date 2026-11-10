@@ -1,58 +1,53 @@
-# CrimeScope — Course Method Mapping
+# Methodology and code map
 
-| Course Method | CrimeScope Implementation | Files | Status |
+CrimeScope analyzes NCRB *Crime in India* district-wise tables as reported counts. This guide records source scope, cleaning decisions, unit classification, category selection, feature transforms, and the supported code paths. Verified numerical results are in [findings](findings.md); interpretation limits are in the [final report](final_report.md).
+
+## Source coverage and canonical observations
+
+The active source set contains 144 checksum-verified CSV fragments: 36 state/UT fragments for each year from 2021 through 2024. The local names are readable state/year filenames under `data/raw/<year>/districtwise_ipc_bns_fragments/`. The ignored `data/raw/download_manifest_2021_2024.json` records each original NCRB URL, source table ID, local path, row/column validation, and SHA-256. `scripts/download_data.py` downloads and validates this set; `scripts/source_inputs.py` selects the manifest entries and checks their hashes. The index and original source identities are preserved in the manifest.
+
+The partial 2020 Andhra Pradesh sources are outside the active set. They are retained in the external cleanup archive with their original paths; the current downloader and canonical build target 2021–2024. The active serving release is `ncrb-districtwise-2021-2024-ecec48b772bc`, selected by `data/serving/current.json`. Its manifest records 567,078 canonical rows: 546,198 eligible reporting-unit rows and 20,880 aggregate rows. Aggregates are retained for reconciliation and excluded from eligible comparisons. Explicit zeros remain zero; missing values are not imputed. Null counts describe the retained source records and do not establish source completeness.
+
+The active source build is `python scripts/build_phase_c.py`. It writes canonical and quality artifacts beneath `data/processed/`; `scripts/build_expanded_sqlite_stage.py` builds a **staged candidate** under `data/interim/`. Staging does not update `data/serving/current.json`. `scripts/build_sqlite_release.py` is an archived 2020-era writer and is not part of deployment.
+
+## Reporting units and comparability
+
+Canonical rows are classified as `administrative_district`, `city_police`, `railway`, `other_police_unit`, or `aggregate`. Some classifications are inferred from source names using maintained rules; the 2024 analytical cohort is therefore an operational reporting cohort, not an independently validated gazetteer of administrative boundaries. The retained [`reporting_unit_classification_2024.csv`](reporting_unit_classification_2024.csv) gives the per-unit labels and reasons.
+
+Year-to-year name matching uses `(state_name, region_name)` and indicates a matched named reporting unit, not proof of unchanged boundaries. The verified 2022–2023 comparison uses 749 matched units and reconciles matched and excluded units to each annual total. The 2021–2022 pair is not matched, and 2023–2024 is not trended because the source framework changes from IPC to BNS. See [findings, Investigation 2](findings.md#investigation-2--annual-totals-vs-a-name-matched-cohort).
+
+## Category selection and features
+
+Stable category IDs and year-specific roles are defined in `config/category_hierarchy.json`: `official_total`, `parent_total`, `component`, and `leaf`. Parent totals overlap their children and are never added to them. Composition shares are disabled because the tables do not provide a complete mutually exclusive denominator. Category context in the UI comes from verified source headers keyed by category ID; missing context is labelled as unavailable rather than inferred from a display name.
+
+The active 2024 analysis uses 774 administrative reporting units by 131 features (67 components and 64 leaves). It excludes official and parent totals, uses reported counts rather than rates or shares, and applies `log1p(count)` followed by population z-scores (`ddof=0`) across the national cohort for PCA and K-means. Constant features remain zero. PCA uses SVD; its first two components explain 15.91% and 4.57% of total feature variance. These are descriptive profiles, not risk rankings.
+
+Ward clustering is fitted separately within each state/UT. In `scripts/run_v4_analysis.py`, the state subset is passed to `build_matrix`; `vectors_from_matrix` then computes `log1p` and population z-scores within that state subset before Ward linkage. Thus Ward does **not** use the global standardization applied to PCA and K-means. This description follows the active runner and saved v4 provenance; no model was refit for this documentation update.
+
+The active anomaly screen uses untransformed counts and sample standard deviation (`ddof=1`). Association rules use 2024 region profiles with a count threshold of 10; empty profiles are excluded, leaving 739 transactions. These rules describe profile co-presence, not event co-occurrence or causation. No optimal cluster count or stability claim is made.
+
+## Active run and artifacts
+
+`analysis/output/runs/current.json` points to `ncrb-national-2024-admin-log1p-zscore-20261107-v4`. Its run manifest records the 774 × 131 feature input, hashes, ordered IDs, parameters, and output artifacts. The active source dataset is `data/interim/rebuilt_national_2021_2024_v3/crime_observations_multi_year.csv`; the matching staged release manifest and SQLite are used by current backend data services. The frontend's nine routes read the dashboard API and saved analysis artifacts.
+
+`python scripts/run_current_analysis.py --dry-run` validates and describes the active input and code provenance. To generate methods, supply `--execute --run-id <new-unique-id>`; this writes under a new run directory and does not move the active pointer. Findings and presentation commands consume saved artifacts and fail closed on hash mismatches; they do not refit models.
+
+## Course method-to-code map
+
+The course workflow is a distinct multi-year reproduction path. Methods 01–04 build a separate feature input from the manifest-selected 2021–2024 rows; methods 05–09 consume `analysis/output/method_04_feature_engineering.csv`. These outputs are not the active dashboard's 2024 run.
+
+| Method | Implementation | Supported runner | Notes |
 |---|---|---|---|
-| 01 Data Processing | Ingestion, cleaning, canonical long-format observations, row accounting, quarantine reporting | `analysis/src/crimescope_analysis/cleaning/canonical.py`, `scripts/build_phase_c.py`, `scripts/run_methods_01_04.py` | Implemented |
-| 02 Descriptive Statistics | Category/region frequency distributions, central tendency, dispersion, distribution summaries | `analysis/src/crimescope_analysis/methods/descriptive.py`, `scripts/run_methods_01_04.py` | Implemented |
-| 03 Bivariate Analysis | Pearson correlation matrix between categories, top correlated pairs | `analysis/src/crimescope_analysis/methods/bivariate.py`, `scripts/run_methods_01_04.py` | Implemented |
-| 04 Feature Engineering | Region × category **count** matrix (`log1p` + population z-score). Category **shares are disabled** (no mutually exclusive denominator); the region-year *change* column is an offline utility, not active dashboard functionality | `analysis/src/crimescope_analysis/features/engineering.py`, `analysis/src/crimescope_analysis/features/matrix.py` | Implemented |
-| 05 PCA | **SVD-based** PCA (`np.linalg.svd`), eigenvalues, explained variance, loadings, component scores. No power-iteration code remains in the active path | `analysis/src/crimescope_analysis/methods/pca.py`, `scripts/run_v4_analysis.py` | Implemented |
-| 06 K-means Clustering | K-means++ initialization, k=3/4/5, centroids, inertia, cluster assignments | `analysis/src/crimescope_analysis/methods/kmeans.py`, `scripts/run_methods_05_07.py` | Implemented |
-| 07 Hierarchical Clustering | Ward linkage agglomerative clustering, merge history, dendrogram-ready output | `analysis/src/crimescope_analysis/methods/hierarchical.py`, `scripts/run_methods_05_07.py` | Implemented |
-| 08 Anomaly Detection | **Cross-sectional** z-score screen (active, **additional** to the five core). The module also contains a year-on-year change utility that the 2024-only run does not use; it is not active dashboard functionality | `analysis/src/crimescope_analysis/methods/anomaly.py`, `scripts/run_v4_analysis.py` | Implemented (additional) |
-| 09 Association Rules | Apriori algorithm on region-year transactions, support/confidence/lift | `analysis/src/crimescope_analysis/methods/association.py`, `scripts/run_methods_08_09.py` | Implemented |
+| 01 Data processing | [`canonical.py`](../analysis/src/crimescope_analysis/cleaning/canonical.py) | [`build_phase_c.py`](../scripts/build_phase_c.py), [`run_methods_01_04.py`](../scripts/run_methods_01_04.py) | Long-format rows, row accounting, quarantine and source provenance |
+| 02 Descriptive statistics | [`descriptive.py`](../analysis/src/crimescope_analysis/methods/descriptive.py) | [`run_methods_01_04.py`](../scripts/run_methods_01_04.py) | Frequencies and distribution summaries |
+| 03 Bivariate analysis | [`bivariate.py`](../analysis/src/crimescope_analysis/methods/bivariate.py) | [`run_methods_01_04.py`](../scripts/run_methods_01_04.py) | Category correlations |
+| 04 Feature engineering | [`engineering.py`](../analysis/src/crimescope_analysis/features/engineering.py), [`matrix.py`](../analysis/src/crimescope_analysis/features/matrix.py) | [`run_methods_01_04.py`](../scripts/run_methods_01_04.py) | Multi-year count features and year-change utility |
+| 05 PCA | [`pca.py`](../analysis/src/crimescope_analysis/methods/pca.py) | [`run_v4_analysis.py`](../scripts/run_v4_analysis.py) for active reproduction; [`run_methods_05_07.py`](../scripts/run_methods_05_07.py) for course workflow | SVD in the active run |
+| 06 K-means | [`kmeans.py`](../analysis/src/crimescope_analysis/methods/kmeans.py) | Same runners as method 05 | Active run saves k=3, 4, 5 |
+| 07 Hierarchical clustering | [`hierarchical.py`](../analysis/src/crimescope_analysis/methods/hierarchical.py) | Same runners as method 05 | Active Ward results are state-scoped |
+| 08 Anomaly detection | [`anomaly.py`](../analysis/src/crimescope_analysis/methods/anomaly.py) | [`run_v4_analysis.py`](../scripts/run_v4_analysis.py) for active cross-sectional results; [`run_methods_08_09.py`](../scripts/run_methods_08_09.py) for course workflow | The module also contains an offline year-change utility |
+| 09 Association rules | [`association.py`](../analysis/src/crimescope_analysis/methods/association.py) | [`run_methods_08_09.py`](../scripts/run_methods_08_09.py); active result generated by [`run_v4_analysis.py`](../scripts/run_v4_analysis.py) | Thresholded region-year profiles |
 
-## Method folders (each with README, config.yaml, run.py, notebook, versioned results)
+## Limitations
 
-| Method | README | config.yaml | run.py | Notebook | Results |
-|---|---|---|---|---|---|
-| 01 Data Processing | `methods/01_data_processing/README.md` | `config.yaml` | `run.py` | `data_processing.ipynb` | `analysis/output/method_01_*` |
-| 02 Descriptive Statistics | `methods/02_descriptive_statistics/README.md` | `config.yaml` | `run.py` | — | `analysis/output/method_02_descriptive/` |
-| 03 Bivariate Analysis | `methods/03_bivariate_analysis/README.md` | `config.yaml` | `run.py` | — | `analysis/output/method_03_bivariate/` |
-| 04 Feature Engineering | `methods/04_feature_engineering/README.md` | `config.yaml` | `run.py` | — | `analysis/output/method_04_*.csv` |
-| 05 PCA | `methods/05_pca/README.md` | `config.yaml` | `run.py` | — | `analysis/output/method_05_pca/` |
-| 06 K-means | `methods/06_kmeans/README.md` | `config.yaml` | `run.py` | — | `analysis/output/method_06_kmeans/` |
-| 07 Hierarchical Clustering | `methods/07_hierarchical_clustering/README.md` | `config.yaml` | `run.py` | — | `analysis/output/method_07_hierarchical/` |
-| 08 Anomaly Detection | `methods/08_anomaly_detection/README.md` | `config.yaml` | `run.py` | — | `analysis/output/method_08_anomaly/` |
-| 09 Association Rules | `methods/09_association_rules/README.md` | `config.yaml` | `run.py` | — | `analysis/output/method_09_association/` |
-
-## Five core functionalities (end-to-end)
-
-1. **Data processing & cleaning** — canonical observations from raw NCRB tables with quarantine reporting
-2. **Descriptive statistics** — frequency distributions, central tendency, dispersion by category/region/year
-3. **Dimensionality reduction (PCA)** — principal components (SVD), explained variance, loadings, region scores
-4. **Clustering (K-means + Hierarchical)** — district clusters, centroids, merge history (silhouette/stability not computed)
-5. **Association rules** — Apriori rules over district × category presence (support/confidence/lift)
-
-**Anomaly screening** (method 08, cross-sectional z-scores) is an **additional** screen, not one of the five core functionalities above. Offline utilities such as category shares and year-on-year change are implemented in the method modules but are **not** wired into the active dashboard.
-
-## Current connected analysis run
-
-The frontend's current saved methods use run `ncrb-national-2024-admin-log1p-zscore-20261107-v4`, recorded in `analysis/output/runs/current.json`. The manifest pins the processed dataset hash, feature-input hash, ordered feature IDs/labels, year and geography IDs, parameters, dependencies, output hashes, and validations. Dashboard methods are validated independently at load time.
-
-**"v3" disambiguation.** Two different things are called v3 and must not be conflated:
-
-- the **staged dataset folder** `data/interim/rebuilt_national_2021_2024_v3/` (the dataset path the manifest points to) — a *dataset*, and
-- the **earlier analytical run** `ncrb-national-2024-admin-log1p-zscore-20261106-v3` — a *run*.
-
-These are not the same. That earlier run used **783** reporting units × 131 features (feature-input sha256 `5312cbf7…`); the active run uses **774** × 131 (`236b90de…`). Their feature matrices are therefore **not** identical and must not be described as such. What *can* be stated is that removing the partial-2020 slice does not alter the 2024-only feature matrix (run-manifest `provenance_note`); the 774-unit matrix is derived from the 2024 national cohort alone.
-
-PCA and both clustering methods use the 2024 national administrative-district cohort (774 units). Features include source leaf and component categories, excluding official and parent totals. Each reported count is transformed as `log1p(count)`; each feature is then centered and population-standardized across the cohort. Zero-variance features remain zero. Inputs are counts, not rates or category shares. PCA uses SVD and divides retained component variance by the total variance across all features. PC1 explains 15.91%, PC2 4.57%, together 20.48%. The 131-dimensional feature space is reduced to two display axes; this is descriptive profile similarity, not risk ranking. PC1 tracks reporting volume (`corr(PC1, log1p 2024 official total) = −0.88`), and PCA signs are arbitrary.
-
-K-means assignments for k=3,4,5 and Ward hierarchical memberships use that same recorded feature input and do not depend on PCA output. **Ward is fitted per state/UT** (`scripts/run_v4_analysis.py` loops over each `state_name` and fits Ward on that state's units) but on the **globally standardized** vectors — `log1p(count)` then population-standard z-score computed once across the whole national 774-unit cohort — so national preprocessing must not be equated with a single national Ward fit. Saved diagnostics are limited to inertia/cluster sizes and merge history; silhouette and stability are explicitly unavailable. Anomaly flags are cross-sectional in the 2024 national cohort. Association items indicate district profile presence at a count threshold; they do not represent event co-occurrence. Composition shares remain disabled because the category hierarchy includes overlapping totals and no complete mutually exclusive denominator has been established.
-
-**Representative units.** The findings document derives each cluster's representatives as the members **nearest the cluster centroid in the fitted (standardized) space**, and reports the derived `distance_to_centroid` (computed in [`scripts/research_findings.py`](../scripts/research_findings.py) — the saved k-means artifact itself stores **no** per-unit distances). The dashboard cluster page instead lists plain **saved-cohort-order example members** and computes no distances. The two concepts are labelled distinctly on screen and in [`findings.md`](findings.md) and must not be interchanged.
-
-## Scope note
-
-The main analysis uses 2021–2024 source tables covering all 36 states/UTs. The available 2020 input covered only part of Andhra Pradesh and was excluded from the active analytical scope. Original files and historical releases are preserved for reproducibility.
+Counts measure reported crime and police recording, not prevalence or safety. No population denominators are available for rates. Unit labels and name matches are operational. IPC and BNS figures are not directly comparable across 2023–2024. Cluster membership, PCA position, and anomaly flags are descriptive and do not establish causes, risk, or data error. Hash checks establish artifact integrity, not the correctness of an interpretation.

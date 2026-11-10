@@ -10,7 +10,7 @@ an invented evaluation.
 | **Run (active pointer)** | `ncrb-national-2024-admin-log1p-zscore-20261107-v4` |
 | **Release SQLite SHA-256** | `a030e5e01f51be5667381437e745443d72094c7396dbec07cd9df6c9c988f192` |
 | **Feature input SHA-256** | `236b90de1c5e3f26b0bbda90887075c98e4cda5c23982b6ae658e62aeb92c8dd` |
-| **Figure pack** | [`analysis/output/presentation/ncrb-national-2024-admin-log1p-zscore-20261107-v4/20261108T191655Z/`](analysis/output/presentation/ncrb-national-2024-admin-log1p-zscore-20261107-v4/20261108T191655Z) |
+| **Figure pack** | [`analysis/output/presentation/ncrb-national-2024-admin-log1p-zscore-20261107-v4/20261110T121500Z/`](analysis/output/presentation/ncrb-national-2024-admin-log1p-zscore-20261107-v4/20261110T121500Z) |
 | **Exporter** | [`scripts/export_presentation_assets.py`](scripts/export_presentation_assets.py) — 18 figures (PNG 2560×1440 + SVG) + 19 CSV tables + `results.json` + `figure_manifest.json` |
 | **Generated (UTC)** | `2026-11-08T19:16:55Z` |
 
@@ -100,7 +100,8 @@ All pack-relative figure/table paths below are under the **Figure pack** directo
 - **Interpretation.** `log1p` keeps zeros as 0 while taming skew; z-scoring makes features
   comparable but removes the absolute volume level, which PCA recovers separately.
 - **Limitation.** The transform is a modelling choice; it changes distances, not the
-  underlying recorded values, and it is applied consistently across PCA/K-means/Ward only.
+  underlying recorded values. PCA and K-means use national z-scores; Ward standardizes
+  each state's cohort separately before fitting.
 - **Speaker notes.** “Counts are heavily skewed, so I take `log1p` and then z-score each
   feature with population standard deviation — the same convention saved in the run — so
   every category contributes on the same scale.”
@@ -263,10 +264,10 @@ All pack-relative figure/table paths below are under the **Figure pack** directo
   2,740,258; units 726/750/770/774) on a zero-baseline lakh scale with a labelled IPC→BNS
   break; Trends shows the annual-bar tab and the name-matched 2022–2023 tab (749 units,
   +88,343 / +3.15 %) with the reconciliation. Live demo steps 1–9 are in
-  [`docs/demo_run_sheet.md`](docs/demo_run_sheet.md). (Status: **derived-from-full-data** via
+  [`docs/handoff.md`](docs/handoff.md). (Status: **derived-from-full-data** via
   the APIs.)
-- **Figure / evidence.** Live dashboard; fallback captures in
-  `data/verification/` and the chart-width set `data/verification/presentation_charts_20261109/`.
+- **Figure / evidence.** Live dashboard; the retained nine-route screenshot index is
+  [`data/verification/demo_walkthrough_1794162325606/README.md`](data/verification/demo_walkthrough_1794162325606/README.md).
 - **Interpretation.** The deck's numbers are the dashboard's numbers, from one frozen
   release/run.
 - **Limitation.** Reproduce only from the frozen artifacts (levels 1–2); no re-fitting in the
@@ -334,7 +335,7 @@ All pack-relative figure/table paths below are under the **Figure pack** directo
   each statistic is saved or newly derived. (Status: **verified-from-artifact**.)
 - **Figures.** `results.json`, `figure_manifest.json` (pack root).
 - **Limitation.** Reproduction is from frozen artifacts (levels 1–2); re-fitting is out of
-  scope. See [`docs/reproducibility.md`](docs/reproducibility.md).
+  scope. See [`docs/handoff.md`](docs/handoff.md).
 
 ---
 
@@ -342,13 +343,13 @@ All pack-relative figure/table paths below are under the **Figure pack** directo
 
 | # | Course functionality | Where the project demonstrates it | Evidence |
 |---|---|---|---|
-| 1 | Data wrangling / cleaning | 144 fragments → canonical → eligible/aggregate split; explicit zeros vs missing; unit classification | `figures/fig01_data_accounting.png`; [`docs/data_preparation_challenges.md`](docs/data_preparation_challenges.md) rows 1–6 |
+| 1 | Data wrangling / cleaning | 144 fragments → canonical → eligible/aggregate split; explicit zeros vs missing; unit classification | `figures/fig01_data_accounting.png`; [`docs/methodology.md`](docs/methodology.md) |
 | 2 | Feature engineering / scaling | `log1p` then population z-score (`ddof=0`); leaf/component feature selection (131 cols) | `figures/fig03_transformation_example.png`; `figures/fig18_feature_inventory.png` |
 | 3 | Dimensionality reduction (PCA) | Retained variance, scores, PC1–volume relationship, loadings | `figures/fig07`–`figures/fig10`; `tables/07`–`tables/10` |
 | 4 | Clustering (K-means + hierarchical) | k=3 sizes/profiles; centroid deviations; Ward within-state forest | `figures/fig11`–`figures/fig14` |
 | 5 | Pattern/association mining (Apriori) | 739 transactions, 697 rules; baseline vs conditional prevalence, lift | `figures/fig16_association.png`; `tables/16_association_rules.csv` |
 | 6 | Anomaly detection | Cross-sectional z with sample std; rare vs high-volume cases | `figures/fig15_anomalies.png` |
-| 7 | Data visualisation / dashboard | React dashboard (Overview, Trends, PCA, Clusters, …) with accessible, non-clipped charts | `docs/demo_run_sheet.md`; `data/verification/presentation_charts_20261109/` |
+| 7 | Data visualisation / dashboard | React dashboard (Overview, Trends, PCA, Clusters, …) with accessible, non-clipped charts | [`docs/handoff.md`](docs/handoff.md); [`demo walkthrough evidence`](data/verification/demo_walkthrough_1794162325606/README.md) |
 | 8 | Reproducibility / software engineering | Hash-verified exporter, fail-closed loader, tests + builds | `scripts/export_presentation_assets.py`; §“Verification performed” below |
 
 ---
@@ -398,7 +399,7 @@ Tables `14_ward_merge_history.csv` and `14_ward_membership.csv` share figure 14;
 |---|---|---|---|---|
 | 1 | Only the first per-year fragment was originally ingested | Enrol all 144 state/UT fragments | Single-state slice would understate national totals | `release_manifest.json` (`source_files: 144`) |
 | 2 | Partial-2020 (Andhra-only) input | Exclude 2020; scope 2021–2024 | A false 2020 baseline next to full years | `release_manifest.json.archive_note`; `data/serving/current.json` |
-| 3 | Heterogeneous reporting units | Classify into 5 `region_type`s; label partly inferred | Summing police + revenue units would inflate “district” totals | `docs/CLASSIFICATION_AUDIT.md`; `region_counts_by_year_type` |
+| 3 | Heterogeneous reporting units | Classify into 5 `region_type`s; label partly inferred | Summing police + revenue units would inflate “district” totals | [`docs/methodology.md`](docs/methodology.md); `docs/reporting_unit_classification_2024.csv`; `region_counts_by_year_type` |
 | 4 | State/section aggregate rows | Tag and exclude `aggregate` (20,880) | Double counting and false totals | `release_manifest.json.aggregate_rows` |
 | 5 | Explicit zeros vs blank cells | Preserve zeros; keep `missing_reason`; never impute | Distorted means/std/z and presence thresholds | `release_manifest.json` samples; `progress/STATUS.md` §3 |
 | 6 | Overlapping parent/child categories | Stable ids + per-year roles; disable composition shares | Double counting a parent as a leaf | `config/category_hierarchy.json` (`compositionSharesAvailable:false`) |
@@ -411,8 +412,9 @@ Tables `14_ward_merge_history.csv` and `14_ward_membership.csv` share figure 14;
 
 - **Frozen inputs.** Release SQLite (SHA-256 `a030e5e0…`) and run artifacts, all hash-checked
   by the exporter before use; nothing is refitted and no pointer is changed.
-- **Conventions.** PCA/K-means/Ward: `log1p` + population z (`ddof=0`). Anomalies:
-  sample std (`ddof=1`). Association: item present at district count ≥ 10.
+- **Conventions.** PCA/K-means: `log1p` + national population z (`ddof=0`); Ward:
+  `log1p` + within-state population z (`ddof=0`). Anomalies use sample std (`ddof=1`).
+  Association: item present at district count ≥ 10.
 - **Rounding.** Percentages/metrics derived at full precision; rounded only for display and
   the underlying full-precision values are exported in `results.json` and the CSVs.
 - **Out of scope (stated, not hidden).** No new models, no classification change, no
@@ -436,7 +438,7 @@ Tables `14_ward_merge_history.csv` and `14_ward_membership.csv` share figure 14;
   `tsc` ✓.
 - **Dashboard chart check:** Overview and both Trends modes captured at 1440/1280/834/390 px;
   **0** overflowing text nodes and **0** page errors
-  (`data/verification/presentation_charts_20261109/summary.json`).
+  ([`demo walkthrough summary`](data/verification/demo_walkthrough_1794162325606/summary.json)).
 
 ### Reproduction
 
@@ -447,13 +449,11 @@ python scripts/export_presentation_assets.py
 # 2. Regenerate the five findings from the same frozen artifacts
 python scripts/research_findings.py
 
-# 3. Run the affected checks
-python -m pytest -q                      # in analysis/
-npm --workspace backend run test
-npm --workspace backend run test:live
-npm --workspace frontend run test
-npm --workspace frontend run build
+# 3. Run the supported checks from the repository root
+python -m pytest analysis/tests scripts/test_refined_classifier.py
+npm test
+npm run build
 ```
 
-Full dependency trace and reproduction levels: [`docs/reproducibility.md`](docs/reproducibility.md)
+Full dependency trace and reproduction commands: [`docs/handoff.md`](docs/handoff.md)
 §4.4 and [`docs/handoff.md`](docs/handoff.md).

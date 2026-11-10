@@ -1,15 +1,11 @@
 # CrimeScope — Project Status
 
-**Date:** 2026-11-09  
-**Phase:** 2021–2024 scope verification COMPLETE + four dashboard corrections + bounded detail fixes + five research findings + academic documentation + final submission-readiness correction pass + final closure pass (narrow-width UI fixes, fresh §9 evidence), all implemented & verified  
-**Submission readiness:** [`docs/FINAL_SUBMISSION_READINESS.md`](../docs/FINAL_SUBMISSION_READINESS.md)  
-**Full report (scope):** [`docs/SCOPE_2021_2024_VERIFICATION.md`](../docs/SCOPE_2021_2024_VERIFICATION.md)  
-**Corrections evidence:** `data/verification/dashboard_corrections_1794082295978/` (`summary.json` + 5 screenshots)  
-**Final closure evidence (§9):** `data/verification/final_closure_1794162164706/` (`summary.json` + `assertions.json` + `api_requests.json` + `errors.json` + `captures/` + `evidence_index.json`; **135/135**, 0 console/page errors)  
-**Phase-4 evidence:** `data/verification/phase4_1794162049903/` (`summary.json` + screenshots; **34/34**)  
-**Demo rehearsal:** `data/verification/demo_walkthrough_1794162325606/` (`summary.json` + 9 screenshots; **44/44**, automated 34.2 s)  
-**Research outputs:** `analysis/output/findings/<run_id>/` (`findings.json`, `tables/`, `figures/`)  
-**Academic docs:** [`docs/findings.md`](../docs/findings.md), [`docs/final_report.md`](../docs/final_report.md), [`docs/data_preparation_challenges.md`](../docs/data_preparation_challenges.md), [`docs/demo_run_sheet.md`](../docs/demo_run_sheet.md), [`docs/reproducibility.md`](../docs/reproducibility.md)
+**Date:** 2026-11-10
+**Phase:** Active release and analysis run preserved; repository cleanup complete.
+**Current guides:** [`README.md`](../README.md), [`methodology.md`](../docs/methodology.md), [`findings.md`](../docs/findings.md), [`handoff.md`](../docs/handoff.md), [`final_report.md`](../docs/final_report.md).
+**Retained demo evidence:** `data/verification/demo_walkthrough_1794162325606/` (captured 2026-11-08; summary identifies release/run and records 44/44 checks).
+**Cleanup archive:** `A:\Projects\crimescope_archive\2026-11-10\restore_inventory.csv` (hash-verified restore inventory; secrets excluded).
+**Final verification:** Python 20 passed; frontend 31 and backend 21 passed; builds passed; live backend 8 passed; browser closure 138/138 assertions, zero app network/page/console errors. No refit, commit, push, or release-pointer change.
 
 ---
 
@@ -196,7 +192,7 @@ Fresh output directory: `data/verification/scope_2021_2024_reverify_20261107_235
   `years = [2021,2022,2023,2024]`; `observations = 546198`.
 
 **Demo rehearsal (2026-11-09).** `verify_demo_walkthrough.js` follows
-[`docs/demo_run_sheet.md`](../docs/demo_run_sheet.md) steps 1–9 **in order** in an
+[`docs/handoff.md`](../docs/handoff.md) steps 1–9 **in order** in an
 isolated Playwright context → `data/verification/demo_walkthrough_1794162325606/`
 (`summary.json`, 9 step screenshots, per-step text). **44/44 checks passed,
 automated duration 34.2 s** (machine wall-clock; excludes the presenter's speaking
@@ -366,14 +362,14 @@ assignment from the **selected** k model; browser-verified for k = 3/4/5).
    boundary continuity; cluster membership is similarity, not ranking or
    severity; PCA component 1 tracks reporting volume; large anomaly z-scores can
    arise from near-zero variance rather than severity. See
-   [`docs/limitations.md`](../docs/limitations.md).
+  [`docs/final_report.md`](../docs/final_report.md).
 
 **Manual presentation preparation still pending**
 
 4. **Human visual review of captured screenshots** — the browser runs produce
    scripted DOM/text/API assertions plus screenshot capture (evidence
    generation); no screenshot has been opened and inspected here (no
-   image-viewing tool). See [`docs/demo_run_sheet.md`](../docs/demo_run_sheet.md)
+  image-viewing tool). See [`docs/handoff.md`](../docs/handoff.md)
    for the evidence index.
 
 ---

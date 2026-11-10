@@ -60,13 +60,12 @@ arithmetic:
 
 ## 3. Dataset provenance and active scope
 
-- **Source:** NCRB *Crime in India* district-wise IPC and BNS tables. The archived source
-  tables are preserved unchanged under `data/raw/2021` … `data/raw/2024`.
+- **Source:** NCRB *Crime in India* district-wise IPC and BNS tables. The active
+  2021–2024 fragments are available through `python scripts/download_data.py`; source
+  identity and checksums are recorded in its ignored download manifest.
 - **Active scope:** years **2021–2024**, `36 state/UT fragments`; 2020 is **excluded**
   because the only available 2020 input covered a partial Andhra Pradesh fragment. The
-  partial-2020 slice is preserved in earlier releases (see
-  [`docs/SCOPE_2021_2024_VERIFICATION.md`](SCOPE_2021_2024_VERIFICATION.md)) and is not
-  served or analysed.
+  partial-2020 files are in the external cleanup archive and are not served or analysed.
 - **Active release:** `ncrb-districtwise-2021-2024-ecec48b772bc`
   (dataset sha256 `ecec48b772bc…`, SQLite sha256 `a030e5e01f51…`): 567,078 rows,
   546,198 eligible, 20,880 aggregate, 144 source files.
@@ -83,10 +82,10 @@ independently verified administrative list.
 
 ## 4. Preparation pipeline, methods and parameter choices
 
-**Pipeline.** Raw fragments → phase-B normalization → phase-C canonical build
-(`crime_observations`) → SQLite release with manifest → analysis run → serving. Each
-stage records row accounting and hashes; see [`docs/data_preparation_challenges.md`](data_preparation_challenges.md)
-for the challenge→risk→decision→evidence table.
+**Pipeline.** Manifest-selected raw fragments → phase-C canonical build
+(`crime_observations`) → staged SQLite candidate → separately selected serving release →
+analysis run. Each stage records row accounting and hashes; see
+[`methodology.md`](methodology.md) for source, cleaning, and classification decisions.
 
 **Feature construction.** For the 2024 cohort the matrix uses source **leaf and component**
 categories only — official totals and parent totals are excluded to avoid overlapping
@@ -158,7 +157,7 @@ formula-injection prefixes.
 
 ## 7. Validation and reproducibility
 
-Executed during this work (details in [`docs/reproducibility.md`](reproducibility.md) and
+Executed during this work (commands and scope in [`handoff.md`](handoff.md) and
 `progress/WORK_LOG.md`):
 
 - **Python:** `python -m pytest analysis/tests scripts/test_refined_classifier.py` — passes,
@@ -215,8 +214,6 @@ co-occurrence.
   2021–2024 (primary source data).
 - Archived NCRB source tables: https://github.com/reclaimchennai/NCRB (the archive used
   for `data/raw/`).
-- Project-internal evidence: [`docs/findings.md`](findings.md),
-  [`docs/methodology.md`](methodology.md),
-  [`docs/data_dictionary.md`](data_dictionary.md),
-  [`docs/limitations.md`](limitations.md),
-  [`docs/SCOPE_2021_2024_VERIFICATION.md`](SCOPE_2021_2024_VERIFICATION.md).
+- Project-internal evidence: [`findings.md`](findings.md),
+  [`methodology.md`](methodology.md),
+  [`handoff.md`](handoff.md), and the required [`work log`](../progress/WORK_LOG.md).

@@ -1,7 +1,0 @@
-# Publication policies
-approved_runs: []
-publication_policy:
-  reject_nan_infinity: true
-  encode_undefined_as_null: true
-  atomic_promotion: true
-  preserve_previous_release: true

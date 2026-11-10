@@ -43,6 +43,8 @@ data/verification/**/chrome-profile*/
 # Test-run debug logs (regenerable)
 *_output.txt
 vitest_*.txt
+/test-results/
+/playwright-report/
 
 # Ad-hoc debugging dumps and one-off scratch scripts (repository root)
 /browser_verify.js

@@ -21,7 +21,7 @@ Current saved association scope is 739 transactions across 774 national administ
 
 The active SQLite serving release is `ncrb-districtwise-2021-2024-ecec48b772bc` (`data/serving/releases/ncrb-districtwise-2021-2024-ecec48b772bc/crimescope.sqlite`).
 
-The 2020 raw source table is preserved only in `data/raw/2020/` and the historical `2020_cci_district_children` release for reproducibility. It is excluded from all active endpoints.
+The partial 2020 raw source files are kept in the external cleanup archive, along with the historical `2020_cci_district_children` release when present there. They are excluded from all active endpoints.
 
 Explicit requests for year 2020 return HTTP 400 with code `unsupported_year` and message "Year 2020 is not supported. Active scope is 2021–2024."
 

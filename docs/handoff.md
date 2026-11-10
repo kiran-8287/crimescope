@@ -1,121 +1,81 @@
-# CrimeScope — Handoff / Submission Guide
+# Run and handoff guide
 
-This document describes how to assemble a **portable handoff folder** for the local
-demo, what it contains, what it deliberately excludes, and how to run the demo from it.
+This guide is the team run sheet for the current dashboard and its reproducibility commands. The active release and analysis pointers select frozen artifacts; rebuilding analysis writes a new run and does not change what the dashboard serves.
 
-## Why a handoff folder is needed
+## Local dashboard startup
 
-The frozen runtime artifacts the running app depends on are **gitignored/untracked**:
+Requirements: Node.js 18+, npm 9+, and the local ignored runtime artifacts described below. Install workspace dependencies once with `npm install`.
 
-- `data/serving/releases/*` (SQLite releases)
-- `analysis/output/` (analysis runs + findings)
-- `data/interim/`, `data/raw/`, `data/processed/`
-- browser-evidence Chrome profile caches
-
-A clean clone therefore has all the **source code** but **none of the runtime files** the
-dashboard reads. The handoff folder supplies exactly those missing frozen files, in a
-layout that mirrors the repository.
-
-## Building the folder
-
-Run the packaging script (Windows PowerShell 5+). It resolves the active artifacts from
-the two pointers and writes a fresh folder — it never deletes or edits originals and
-refuses to overwrite an existing destination.
+From the repository root, start the API:
 
 ```powershell
-# Preview the exact copy plan (writes nothing):
-powershell -File scripts/package_handoff.ps1 -DryRun
-
-# Build the folder (default destination is a timestamped sibling of the repo root,
-# so nothing large is produced inside the repo):
-powershell -File scripts/package_handoff.ps1
-
-# Or choose the destination explicitly:
-powershell -File scripts/package_handoff.ps1 -Destination D:\crimescope-handoff
+npm --workspace backend run dev
 ```
 
-## What the script selects
-
-Resolved from `data/serving/current.json` and `analysis/output/runs/current.json`:
-
-| Copied | Notes |
-|---|---|
-| `data/serving/current.json` | release pointer |
-| `data/serving/releases/<release_id>/crimescope.sqlite` | active release SQLite |
-| `data/serving/releases/<release_id>/release_manifest.json` | release manifest (hashes) |
-| `analysis/output/runs/current.json` | run pointer |
-| `analysis/output/runs/<run_id>/**` | the whole active run directory (feature input, PCA/k-means/anomalies/association/hierarchical artifacts, `run_manifest.json`) |
-| `config/**` | taxonomy, cohorts, features, snapshot manifest, publication/source config |
-| `data/verification/<evidence set>/**` | selected verified evidence (screenshots + `summary.json`) |
-
-Selected evidence sets:
-
-- `data/verification/final_closure_1794162164706` (primary evidence — §9 closure package)
-- `data/verification/phase4_1794162049903` (focused page assertions)
-- `data/verification/demo_walkthrough_1794162325606` (steps 1–9 walkthrough)
-- `data/verification/scope_2021_2024_reverify_20261107_2354` (2021–2024 route set)
-
-It also writes, into the destination:
-
-- `SHA256SUMS.txt` — sha256 inventory of every copied file (plus release/run ids).
-- `START_HERE.txt` — the local-demo start instructions.
-
-## What the script excludes
-
-Deliberately **never** copied: `chrome-profile*` caches (they live inside the evidence
-sets), `node_modules`, `__pycache__`/`*.pyc`, `.env*` / local secrets, and any temporary
-dumps. Historical releases, non-active runs, and intermediate datasets are also left out
-— only the active selection is packaged.
-
-## Running the demo from the handoff
-
-1. Check out the CrimeScope source.
-2. Merge the handoff folder into the checkout root (it only fills in the gitignored
-   runtime files; it does not overwrite source code).
-3. `npm install`
-4. `npm --workspace backend run dev` (backend on `http://localhost:4000`)
-5. `npm --workspace frontend run dev` (frontend on `http://localhost:5173`)
-6. Open `http://localhost:5173`.
-
-Verify integrity at any time against the inventory:
+In a second terminal, start the frontend:
 
 ```powershell
-Get-Content .\SHA256SUMS.txt
-(Get-FileHash -Algorithm SHA256 .\data\serving\releases\<release_id>\crimescope.sqlite).Hash
+npm run dev
 ```
 
-## Relationship to the three reproduction levels
+Open <http://localhost:5173>. The API is at <http://localhost:4000>; check `http://localhost:4000/health` and `/ready` before the browser smoke. The dashboard's nine routes are `/`, `/compare`, `/trends`, `/quality`, `/pca`, `/clusters`, `/anomalies`, `/rules`, and `/methodology`.
 
-This handoff supports levels 1, 2 and the presentation export in
-[`docs/reproducibility.md`](reproducibility.md): **start the dashboard from frozen
-artifacts**, **reproduce the five findings from frozen artifacts**, and **export the
-presentation asset pack** (`python scripts/export_presentation_assets.py`). Level 3
-(re-fitting models into a new isolated output) needs the archived source dataset
-(`data/interim/rebuilt_national_2021_2024_v3/…`, itself gitignored) and is run from the
-source checkout via `scripts/run_current_analysis.py`, not from this folder.
+## Required local artifacts
 
-**Dependency trace — why levels 1–2 need no intermediate dataset.** Findings regeneration
-and the presentation exporter both load the feature matrix from the **run directory**
-(`analysis/output/runs/<run_id>/feature_input.csv`), which this folder packages in full,
-rather than from `data/interim/`. The complete level-2 input set is the two pointers, the
-release SQLite + `release_manifest.json`, the whole active run directory, and `config/**`
-— every one of which the packaging script copies. So the supported reproduction level from
-this folder is **levels 1–2 plus the presentation export**; re-fitting (level 3) is out of
-scope here. This dependency was confirmed by reading `load_context()` in
-`scripts/research_findings.py`, not by file-copy checks alone.
+The dashboard needs the active release selected by `data/serving/current.json`, including `crimescope.sqlite` and `release_manifest.json`; `quality_report.json` and `staging_release_manifest.json` from `data/interim/rebuilt_national_2021_2024_v3/`; and the run selected by `analysis/output/runs/current.json`. The active run directory contains its manifest, feature input, and validated method artifacts. These runtime artifacts are ignored by Git.
 
-**Not verified even so:** a fresh-machine run was still not performed (see “Scope of
-verification”).
+The `scripts/package_handoff.ps1` package carries the active SQLite release, manifest, staged run directory, config, and one selected demo evidence set. It supports **local dashboard startup from an existing source checkout**. It does not carry source code, npm dependencies, raw CSVs, or the full inputs needed to rebuild the release or refit the analysis. For the source set, run `python scripts/download_data.py`; this downloads and verifies 144 fragments and writes the ignored download manifest. The manifest's original table IDs, URLs, local paths, and SHA-256 values identify the renamed files. `data/raw/rename_map.json` is legacy metadata and is not needed by the active selector.
 
-## Scope of verification
+`config/data_snapshot_manifest.json` currently also serves as the backend's repository-root marker (the backend checks for that path when launched from either the repo root or `backend/`). Its contents describe an older snapshot; do not treat its embedded paths as the active source selector. Active selectors are the serving and run pointers plus the download manifest.
 
-The packaging script's **file-selection and copy logic** was verified by running it
-`-DryRun` (161 files, 338.9 MB, zero `chrome-profile` entries) and then end-to-end into a
-throwaway folder outside the repo: all 161 files copied, `SHA256SUMS.txt` had 161 entries,
-the copied `crimescope.sqlite` hash matched the release manifest
-(`a030e5e01f51be5667381437e745443d72094c7396dbec07cd9df6c9c988f192`), and no
-`chrome-profile` directory was copied. The throwaway folder was then removed.
+## Demo sequence
 
-**Not verified:** a fresh-machine / clean-clone run of the dashboard from the handoff
-folder was **not** performed here. The start commands are the documented ones from
-`docs/deployment.md`.
+1. Start backend and frontend and confirm `/health` and `/ready` return successfully.
+2. Open overview and note the release/run provenance and eligible unit count.
+3. Compare two units on `/compare` and select a category filter.
+4. Open `/trends`; show the annual totals and the separate 749-unit matched 2022–2023 series.
+5. Show row accounting on `/quality`, then PCA and cluster profiles.
+6. Show anomaly examples and a paginated rule on `/anomalies` and `/rules`.
+7. Use the dashboard export control and explain that 2023–2024 is not shown as a comparable trend.
+8. Finish on `/methodology` and link the result interpretation to [findings](findings.md).
+
+The retained evidence set is [`data/verification/demo_walkthrough_1794162325606/`](../data/verification/demo_walkthrough_1794162325606/). Its summary records the release/run IDs and 44 successful walkthrough checks; `README.md` in that folder indexes screenshots and original run context. Captures are historical evidence from 2026-11-08, not a claim that the current cleanup's smoke test has run.
+
+## Reproduction and verification commands
+
+These commands preserve the active pointers unless stated otherwise:
+
+```powershell
+# Verify source selector and hashes, then rebuild canonical outputs
+python scripts/download_data.py
+python scripts/build_phase_c.py
+
+# Inspect the current analysis inputs, hashes, and provenance without fitting
+python scripts/run_current_analysis.py --dry-run
+
+# Generate findings and the presentation asset pack from verified saved artifacts
+python scripts/research_findings.py
+python scripts/export_presentation_assets.py
+
+# Tests and builds
+python -m pytest analysis/tests scripts/test_refined_classifier.py
+npm test
+npm run build
+
+# Live source sample smoke test (start the backend first)
+node scripts/verify_live_dashboard_samples.mjs
+
+# Browser smoke: start both services first; output is a new verification directory
+npm run test:e2e
+
+# Inspect exactly what the local handoff package will include
+powershell -NoProfile -File scripts/package_handoff.ps1 -DryRun
+```
+
+To fit a new active-style run, choose a unique ID and use `python scripts/run_current_analysis.py --execute --run-id <new-unique-id>`. It delegates to `run_v4_analysis.py` and creates a new isolated run; it does not move `analysis/output/runs/current.json`. `build_expanded_sqlite_stage.py` creates a staged candidate only and leaves `data/serving/current.json` untouched. No refit is needed to reproduce findings or figures.
+
+The course path is separate: `python scripts/run_methods_01_04.py` creates the multi-year feature input, then `python scripts/run_methods_05_07.py` and `python scripts/run_methods_08_09.py` consume that input. These runners do not reproduce the dashboard's frozen 2024 run. Method 01 defaults to the active 2021–2024 source set; the partial 2020 file is archived. To reproduce the historical partial-2020 variant, restore `data/raw/2020/1_districtwise-ipc-crimes-2020_t1.csv` from `A:\Projects\crimescope_archive\2026-11-10\data\raw\2020\` and pass `--include-2020`. See [methodology](methodology.md#course-method-to-code-map).
+
+## Artifact handoff dry run
+
+The handoff script resolves both active pointers and prints the exact planned file list. It excludes `.env*`, `node_modules`, Python bytecode/cache directories, and temporary dumps. It includes only the selected evidence directory; it does not copy raw data or package source/build dependencies. A clean team checkout must install dependencies and obtain raw inputs separately if source builds are required.

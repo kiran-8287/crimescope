@@ -1101,13 +1101,16 @@ def main() -> int:
     RESULTS["run_id"] = run_id
     RESULTS["checks"] = ctx["checks"]
     RESULTS["conventions"] = {
-        "feature_transform": "log1p then z-score, population std (ddof=0) for PCA/K-means/hierarchical",
+        "feature_transform": "log1p then population z-score (ddof=0); PCA/K-means use the national cohort, Ward uses each state/UT cohort",
         "anomaly_zscore": "cross-sectional (value - mean)/sample std (ddof=1)",
         "association": "binary item present at district count >= 10",
     }
 
     stamp = args.timestamp or datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     root = Path(args.out_root) if args.out_root else ROOT / "analysis/output/presentation"
+    if not root.is_absolute():
+        root = ROOT / root
+    root = root.resolve()
     out = root / run_id / stamp
     if out.exists():
         raise SystemExit(f"refusing to overwrite existing directory: {out}")
@@ -1303,8 +1306,12 @@ def main() -> int:
     }
     (out / "figure_manifest.json").write_text(json.dumps(manifest, indent=2, default=str), encoding="utf-8")
 
+    try:
+        display_out_dir = str(out.relative_to(ROOT)).replace("\\", "/")
+    except ValueError:
+        display_out_dir = str(out)
     print(json.dumps({
-        "out_dir": str(out.relative_to(ROOT)).replace("\\", "/"),
+        "out_dir": display_out_dir,
         "figures": len(FIGURES),
         "tables": len(list((out / "tables").glob("*.csv"))),
         "all_png_min_size_ok": RESULTS["png_min_size_ok"],

@@ -52,6 +52,7 @@ const consoleErrors = [];
 const consoleWarnings = [];
 const pageErrors = [];
 const networkErrors = [];
+const optionalExternalRequests = [];
 // `net::ERR_ABORTED` is emitted for navigations that are superseded by the next
 // `page.goto` in the multi-route sweep. It is recorded, but it is not an
 // application failure and must not gate completion.
@@ -161,17 +162,30 @@ async function browserPhase(api) {
   const browser = await chromium.launch({ executablePath: CHROME, headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
   const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   const page = await context.newPage();
+  const isOptionalFontRequest = url => /^https:\/\/fonts\.(googleapis|gstatic)\.com\//i.test(url);
   page.on('console', m => {
     const t = m.type();
-    if (t === 'error') consoleErrors.push({ text: m.text(), url: (() => { try { return m.location().url; } catch { return null; } })() });
+    if (t === 'error') {
+      const url = (() => { try { return m.location().url; } catch { return null; } })();
+      const record = { text: m.text(), url };
+      if (url && isOptionalFontRequest(url)) optionalExternalRequests.push(record);
+      else consoleErrors.push(record);
+    }
     else if (t === 'warning') consoleWarnings.push({ text: m.text() });
   });
   page.on('pageerror', e => pageErrors.push(String((e && e.message) || e)));
-  page.on('response', r => { if (r.status() >= 400) networkErrors.push({ status: r.status(), url: r.url() }); });
+  page.on('response', r => {
+    if (r.status() >= 400) {
+      const record = { status: r.status(), url: r.url() };
+      if (isOptionalFontRequest(r.url())) optionalExternalRequests.push(record);
+      else networkErrors.push(record);
+    }
+  });
   page.on('requestfailed', r => {
     const err = (r.failure() && r.failure().errorText) || 'unknown';
     const rec = { url: r.url(), error: err };
     if (err === 'net::ERR_ABORTED') navigationAborts.push(rec);
+    else if (isOptionalFontRequest(r.url())) optionalExternalRequests.push({ failed: true, ...rec });
     else networkErrors.push({ failed: true, ...rec });
   });
 
@@ -222,7 +236,7 @@ async function browserPhase(api) {
 
   // ================= Step 3 — Trends (annual + name-matched) =================
   await page.goto(`${BASE}/trends?year=2024`, { waitUntil: 'domcontentloaded' });
-  await ready('Annual recorded crime volume');
+  await ready('Annual recorded totals');
   const annualText = await page.locator('body').innerText();
   assertHas('ui.trends.annual_2021', 'Trends /trends', annualText, '2,909,532');
   assertHas('ui.trends.annual_2022', 'Trends /trends', annualText, '2,808,408');
@@ -238,6 +252,15 @@ async function browserPhase(api) {
   assertText('ui.trends.matched_change_315', 'Trends /trends', t3, '+3.15%');
   assertText('ui.trends.annual_change_470', 'Trends /trends', t3, '+4.70%');
   assertText('ui.trends.excluded_units_1_21', 'Trends /trends', t3, '1 / 21');
+  const [trendDownload] = await Promise.all([
+    page.waitForEvent('download'),
+    page.getByRole('button', { name: 'Export CSV' }).click()
+  ]);
+  assertEq('ui.trends.export_filename', 'Trends CSV export', 'trends_name_matched_2024.csv', trendDownload.suggestedFilename());
+  const trendCsvPath = await trendDownload.path();
+  const trendCsv = fs.readFileSync(trendCsvPath, 'utf8').replace(/^\uFEFF/, '');
+  assertText('ui.trends.export_matched_columns', 'Trends CSV export', trendCsv, 'matched_cases');
+  assertText('ui.trends.export_matched_2022', 'Trends CSV export', trendCsv, '2804254');
   await capture('03_trends_matched');
 
   // ================= Step 4 — Data quality =================
@@ -452,15 +475,16 @@ async function main() {
   const failed = assertions.filter(a => !a.pass);
   summary.finishedAt = new Date().toISOString();
   summary.assertionTotals = { pass: assertions.length - failed.length, total: assertions.length };
-  summary.errorCounts = { consoleErrors: consoleErrors.length, pageErrors: pageErrors.length, networkErrors: networkErrors.length, navigationAborts: navigationAborts.length };
+  summary.errorCounts = { consoleErrors: consoleErrors.length, pageErrors: pageErrors.length, networkErrors: networkErrors.length, optionalExternalRequests: optionalExternalRequests.length, navigationAborts: navigationAborts.length };
 
   const errorRecords = {
     consoleErrors,
     consoleWarnings,
     pageErrors,
     networkErrors,
+    optionalExternalRequests,
     navigationAborts,
-    note: 'networkErrors excludes net::ERR_ABORTED navigations (benign, caused by rapid sequential page.goto in the route sweep); those are listed separately under navigationAborts.'
+    note: 'networkErrors excludes net::ERR_ABORTED navigations (benign, caused by rapid sequential page.goto in the route sweep) and optional Google Fonts requests (the UI has system-font fallbacks); both are retained separately.'
   };
   const completed = failed.length === 0 && pageErrors.length === 0 && networkErrors.length === 0;
   summary.completionStatus = completed ? 'completed' : 'interrupted';
