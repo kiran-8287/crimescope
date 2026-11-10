@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import { ArrowUpRight, Info, Download, X, Layers, ExternalLink } from 'lucide-react';
 import { useFilters } from '../context/useFilters';
 import { useData } from '../context/DataContext';
@@ -298,6 +298,32 @@ export function RegionDetailDrawer({
   const { data } = useData();
   const { filters } = useFilters();
 
+  const titleId = useId();
+  const panelRef = useRef<HTMLDivElement | null>(null);
+  const restoreRef = useRef<HTMLElement | null>(null);
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
+
+  // An open drawer is a labelled modal dialog: Escape closes it, focus moves into
+  // it on open, and focus returns to the control that opened it on close.
+  useEffect(() => {
+    if (!regionName) return;
+    restoreRef.current = (document.activeElement as HTMLElement | null) ?? null;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.stopPropagation();
+        onCloseRef.current();
+      }
+    };
+    document.addEventListener('keydown', onKey);
+    const frame = requestAnimationFrame(() => panelRef.current?.focus());
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      cancelAnimationFrame(frame);
+      restoreRef.current?.focus?.();
+    };
+  }, [regionName]);
+
   if (!regionName) return null;
 
   // Find region in 2024
@@ -327,6 +353,11 @@ export function RegionDetailDrawer({
 
   return (
     <div
+      ref={panelRef}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby={titleId}
+      tabIndex={-1}
       style={{
         position: 'fixed',
         top: 0,
@@ -349,9 +380,9 @@ export function RegionDetailDrawer({
           <span className="eyebrow" style={{ textTransform: 'uppercase', fontSize: '0.75rem', color: '#6b7280' }}>
             {regionType.replace('_', ' ')} · {state}
           </span>
-          <h2 style={{ margin: '0.2rem 0', fontSize: '1.4rem' }}>{regionName}</h2>
+          <h2 id={titleId} style={{ margin: '0.2rem 0', fontSize: '1.4rem' }}>{regionName}</h2>
         </div>
-        <button className="text-button" onClick={onClose}><X size={20} /></button>
+        <button className="text-button" aria-label={`Close ${regionName} profile`} onClick={onClose}><X size={20} /></button>
       </div>
 
       <div>

@@ -1,5 +1,158 @@
 # Work log
 
+## 2026-11-09 — Simplify the two temporal charts and export the presentation evidence
+
+- **Bounded task** in the existing repository per the supplied spec. No restart, model refit,
+  classification change, population rate, synthetic plot point or invented evaluation; no commit,
+  push or deploy. Pointers re-read from disk and unchanged:
+  `data/serving/current.json` → `ncrb-districtwise-2021-2024-ecec48b772bc` (SQLite SHA-256
+  `a030e5e0…f192`); `analysis/output/runs/current.json` →
+  `ncrb-national-2024-admin-log1p-zscore-20261107-v4` (feature input SHA-256 `236b90de…c8dd`).
+- **Section A — simplified temporal charts (frontend).** Overview reduced to four annual total bars;
+  `TrendsPage.tsx` gained an **annual** tab (four bars) and a **matched** tab (two paired bars +
+  dumbbell) with two change measures and a reconciliation note. SVG axis padding corrected so no
+  label/tick is clipped. No new data, denominators or categories were added.
+- **Section B — reproducible exporter.** Added `scripts/export_presentation_assets.py`. It validates
+  the active pointer, the manifest compatibility and every consumed-artifact hash
+  (`sqlite_matches_manifest`, `feature_input_matches_manifest`, `release_dataset_matches_run`,
+  per-artifact), then loads the **saved** memberships/scores/centroids/rules/linkage — it never
+  refits. It emits 18 figures (**PNG 2560×1440** + SVG), 19 exact CSV tables, `results.json`
+  (full-precision metrics, rounded only for display) and `figure_manifest.json`
+  (question/title/axes/units/scope/method/transform/cohort/inputs/caption/limitation per figure) into
+  a fresh timestamped directory that refuses to overwrite an existing one.
+- **Section C — 18 required figures/tables** produced at
+  `analysis/output/presentation/ncrb-national-2024-admin-log1p-zscore-20261107-v4/20261108T191655Z/`
+  (18 PNG + 18 SVG + 19 CSV + `results.json` + `figure_manifest.json`).
+- **Exporter defects found and fixed** (all in the new script, none in frozen data): an unbound
+  `raw` in the regional-comparison rows (`by_id.get(cid, {}).get("label", short)`); a `str`-vs-`int`
+  comparison on the annual-year keys (`int(y) <= 2023`); a `KeyError: 'region'` from using
+  `region_name` rows (`ap = {r["region_id"]: r["region_name"] …}`); and — most substantively —
+  **figure 14**: the saved Ward linkage is truncated at `max_clusters=3` (23 of 25 merges), so a full
+  scipy dendrogram cannot be reconstructed. Rewrote it to render the recorded merge **forest**
+  (append semantics, DFS leaf order, manual draw) and stated the truncation honestly in the caption,
+  per the spec's "otherwise export the supported membership diagram/table and state why". Also fixed
+  `reconstructed_matches` (lexicographic vs sorted size comparison).
+- **Section D — speaker notes + portable ZIP.** Wrote `PRESENTATION_RESULTS.md` (12-slide main deck
+  with 30–60 s speaker notes, 6 backup slides, an 8-row course-functionality mapping, a
+  figure→table index, a status summary and an 8-row issue→decision→evidence data-challenges table).
+  Built one portable archive
+  `analysis/output/presentation/crimescope-presentation-20261108T191655Z.zip` (**2.48 MB, 60
+  entries**) containing `figures/`, `tables/`, `results.json`, `figure_manifest.json`,
+  `PRESENTATION_RESULTS.md`, the export script and a `README.md` (provenance + limitations). No
+  `node_modules`, browser profiles, secrets or raw archives included.
+- **Section E — verification/handoff.**
+  (1) **Independent re-derivation** (`cs_verify.py`, throwaway) recomputed the identities straight
+  from the frozen SQLite/artifacts and matched `results.json` — **24/24 checks PASSED** (annual
+  totals/units, matched-749 endpoints and deltas, reconciliation identities, excluded 1/21 units,
+  PC1–volume r = −0.8774, cluster sum 2,740,258/sizes/medians, association N 739, row accounting
+  144/567,078/546,198/20,880, 67+64=131, `pc1+pc2==cum`, z=(N−1)/√N), and the **protected SQLite
+  SHA-256 is unchanged**.
+  (2) **SVG inspection** — all 18 SVGs share `viewBox="0 0 921.6 518.4"` with no NaN/Inf; all PNGs
+  exceed the minimum size.
+  (3) **Representative-width captures** — Playwright + system Chrome captured Overview and both
+  Trends modes at desktop 1440 / laptop 1280 / tablet 834 / mobile 390 (**12 PNGs**) with
+  **0 overflowing text nodes** and 0 page errors; every `text`/`tspan` box stayed inside its `<svg>`
+  frame. (Human visual inspection of the images was not possible from this environment and is not
+  claimed.)
+  (4) **Tests/builds green** — frontend `node:test` 31/31, backend Vitest 21/21, backend live
+  `node:test` 8/8, pytest 19/19; frontend and backend TypeScript builds passed.
+  (5) **Dependency trace** — the exporter and `research_findings.py` read the feature matrix from
+  `analysis/output/runs/<run_id>/feature_input.csv`, **not** `data/interim/`, so reproduction levels
+  1–2 (and the presentation export) run from the packaged handoff alone; only the level-3 rebuild
+  needs the intermediate dataset. Documented in `docs/reproducibility.md` and `docs/handoff.md`.
+  (6) **Docs updated** — `docs/demo_run_sheet.md` (new Trends explanation + presentation-pack section
+  + rollback line), `docs/reproducibility.md` (§4.4 export command + dependency trace),
+  `docs/handoff.md` (levels 1–2 + presentation export).
+- **True missing inputs.** None required for the pack. The truncated Ward linkage (figure 14) is the
+  only intentional limitation; nothing was fabricated to work around it.
+
+## 2026-11-09 — Final closure pass (narrow-width UI fixes, fresh evidence, doc reconciliation)
+
+- **Bounded closure pass** over the existing project per `CrimeScope_Final_Completion_IDE_Prompt.md`
+  (§4–§10). No restart, redesign, new algorithm, dataset rebuild, model refit, pointer change,
+  commit, push or deploy. Pointers re-read from disk and unchanged:
+  `data/serving/current.json` → `ncrb-districtwise-2021-2024-ecec48b772bc`;
+  `analysis/output/runs/current.json` → `ncrb-national-2024-admin-log1p-zscore-20261107-v4`.
+- **Real narrow-width defects fixed (issue → root cause → correction).**
+  (1) `/anomalies`: the category `<select>` was sized to its longest option (~1058 px) and two
+  worked-example buttons used `white-space: nowrap`, producing genuine horizontal page overflow at
+  **768 px (532 px)** and **390 px (702 px)**. The label was made flexible
+  (`flex: 1 1 300px; minWidth: 0`), the `<select>` bounded (`width/maxWidth: 100%; minWidth: 0`),
+  and both buttons allowed to wrap (`whiteSpace: normal; textAlign: left; maxWidth: 100%; height: auto`).
+  (2) `/clusters`: the Ward state-selector action in a `.panel-head` produced **21 px** overflow at
+  **390 px**; the action wrapper now wraps (`display: flex; flexWrap: wrap; minWidth: 0`) and the
+  `<select>` is capped at `maxWidth: 100%`. (3) Shared rule
+  `.panel-head{flex-wrap:wrap}.panel-head>div{min-width:0}` added inside the existing
+  `@media(max-width:700px)` block in `frontend/src/styles/index.css` so any flex `.panel-head` wraps
+  at mobile widths. These were confirmed genuine defects (not measurement artefacts) with a
+  throwaway unclipped-element probe, then re-measured to **0 px** at every viewport.
+- **Harness correction (not an app defect).** The final-closure harness previously emulated 200 %
+  zoom with `document.body.style.zoom='200%'`, which does **not** shrink the CSS layout viewport, so
+  media queries kept evaluating at 1366 px and produced false overflow on `/rules` and `/pca`.
+  Replaced with a faithful **683 × 384** CSS viewport (1366 × 768 at 200 %); both now measure **0 px**.
+  Rapid multi-route navigation produced **54** `net::ERR_ABORTED` events (benign aborts of superseded
+  navigations); these are now recorded separately in `navigationAborts` and no longer gate completion —
+  the gate counts only genuine request failures, page errors and console errors.
+- **Fresh evidence package.** `data/verification/final_closure_1794162164706/` —
+  `summary.json` (release/run IDs, tested URLs, environment, start/end, `completionStatus: completed`,
+  `assertionTotals {pass:135,total:135}`, `errorCounts {consoleErrors:0, pageErrors:0, networkErrors:0,
+  navigationAborts:54}`, all 39 `overflowPx` entries `0`), named `assertions.json`, real
+  `api_requests.json` (parameters + selected row IDs), console/page/network `errors.json`,
+  `captures/` (38 screenshots + 11 text captures), `captures_index.json`,
+  `evidence_index.json` (issue → correction → test → screenshot) and `review_status.json`
+  (`captured:true`, `visuallyReviewed:false`).
+- **Browser verification on the final state.** `verify_final_closure.js` **135/135**, 0 console/page
+  errors; `verify_demo_walkthrough.js` **44/44**, 0 console/page errors
+  (`data/verification/demo_walkthrough_1794162325606/`); `verify_dashboard_phase4.js` **34/34**, 0 errors
+  (`data/verification/phase4_1794162049903/`). Stale assertions in the phase-4 harness were aligned to
+  the current UI (PCA labels/values, the `Cluster membership sizes` heading, opening the cluster member
+  register before reading a unit's drawer for k = 3/4/5, and expanding the collapsed representative-units
+  details) — no application code was changed to satisfy a test.
+- **Checks.** backend Vitest **21 passed** / 3 files; backend live API (`node --test` vs :4000)
+  **8 passed**; frontend `node --test` **25 passed**; `pytest analysis/tests` **19 passed**;
+  backend `tsc` build PASS; frontend `tsc --noEmit && vite build` PASS (1606 modules).
+- **Preservation verified independently.** sha256 of the serving SQLite = `a030e5e01f51…` and of the
+  source dataset = `ecec48b772bc…` — both identical to their release/run manifest records; the pointer
+  files are byte-identical to before the pass (hashes recorded in the closure `summary.json`).
+  No source data, release, artifact, manifest or pointer changed; generated evidence lives under
+  `data/verification/`, separate from the immutable artifacts.
+- **Docs reconciled.** `docs/FINAL_SUBMISSION_READINESS.md` (test counts + this pass's corrections +
+  final-closure evidence), `progress/STATUS.md` (single current truth: counts, evidence dirs),
+  `docs/demo_run_sheet.md` (fallback switched to the new captures, complete two-unit comparison,
+  correct last-page artifact). The temporary `probe_overflow.js` diagnostic was removed.
+
+## 2026-11-08 — Documentation reconciliation (docs agree with implementation)
+
+- Reconciled current docs with the code and frozen artifacts while preserving history.
+  No source, data, SQLite, artifact, manifest or pointer was changed; earlier log
+  entries and verification reports are kept as-is with dated resolution notes added.
+- `README.md`: health/readiness are served at the server **root**, not under `/api/v1`;
+  the endpoint table was corrected accordingly (and now lists the paginated
+  association-rules and dashboard endpoints); stale `?year=2020` examples changed to
+  `2024`; the frontend route table corrected to the actual routes (`/compare`,
+  `/quality`, `/rules`, …).
+- `frontend/README.md`: rewritten around the **integrated workspace** — removed the
+  obsolete ZIP-merge instructions and the contradictory "all synthetic / no backend /
+  fallback when API unavailable" claims; documented `VITE_DATA_MODE` (code default
+  `demo`, `.env.example` sets `api`), that API mode never falls back to synthetic values
+  and surfaces an error + retry, and the declared Node ≥ 18 engine.
+- `crimescope-frontend-package/README.md`: added a clear **historical–not-active** banner;
+  the archived standalone package's historical code claims were left unrevised.
+- `docs/FINAL_SUBMISSION_READINESS.md`: replaced `file:///A:/…` links with repo-relative
+  links; corrected the recorded `HEAD` to the current `5618f90`.
+- `progress/STATUS.md`: moved the v4 script/manifest provenance mismatch and the
+  `/favicon.ico` 404 into a dated **Resolved 2026-11-08** block (both addressed in code:
+  pointer-driven `scripts/run_v4_analysis.py`, safe `scripts/run_current_analysis.py`,
+  inline SVG favicon in `frontend/index.html`); open items now keep scientific
+  limitations and manual presentation prep separate from bugs.
+- `docs/handoff.md`: corrected the archived source-dataset path
+  (`data/interim/rebuilt_national_2021_2024_v3/…`).
+- `docs/APPLICATION_AUDIT.md` and `docs/REAL_DATA_INTEGRATION_VERIFICATION.md`: added
+  dated historical/superseded notes linking to current status; original content
+  preserved unchanged.
+- The entry immediately below was written earlier the same day and recorded `HEAD
+  22c9db3`; the current `HEAD` is `5618f90` (corrected above).
+
 ## 2026-11-08 — Final submission-readiness correction pass
 
 - **Bounded corrections only.** No project restart, redesign, new algorithm, source

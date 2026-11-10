@@ -131,6 +131,22 @@ export async function getDashboardView(query: { year: number; state: string; uni
       for (const y of years) {
         addYear(y, categoryForYear(y));
       }
+    } else if (view === "compare") {
+      // The comparison page's multi-category profile joins a bounded set of
+      // non-aggregate categories for the selected units. Include the leading
+      // profile categories for the same scope so the client can show real
+      // source-backed values instead of "Unavailable". Nothing is synthesised:
+      // a category absent from the payload is genuinely absent or null in source.
+      addYear(query.year, categoryForYear(query.year));
+      const profileIds = rows(`
+        SELECT category_id AS id, SUM(reported_value) AS cases
+        FROM crime_observations
+        WHERE year=${query.year} AND ${qualityScope}${selectedState}${selectedType} AND reported_value IS NOT NULL
+        GROUP BY category_id ORDER BY cases DESC LIMIT 8
+      `).map((r: any) => String(r.id));
+      for (const id of profileIds) {
+        if (id !== categoryForYear(query.year)) addYear(query.year, id);
+      }
     } else {
       addYear(query.year, categoryForYear(query.year));
     }
@@ -269,6 +285,10 @@ export async function getDashboardView(query: { year: number; state: string; uni
       unitTypes: [...new Set(regions.map(r => r.regionType))].sort(),
       sourceRows: release.rows,
       validRows: release.valid_observations,
+      sourceFiles: release.source_files,
+      aggregateRows: release.validation.aggregate_rows,
+      distinctRegionNames: release.validation.distinct_region_names_state_qualified,
+      regionCountsByYearType: release.validation.region_counts_by_year_type,
       excludedDuplicates: release.excluded_duplicate_observations,
       warnings: [
         "Coverage: 2021–2024 · 36 states/UTs. Source coverage varies by year; not every year contains an identical set of districts.",

@@ -38,7 +38,9 @@ npm start         # runs backend/dist/server.js
 ```
 
 The backend reads the SQLite release from `data/serving/releases/<release_id>/crimescope.sqlite`.
-Set `SERVING_RELEASE_PATH` in `.env` to the release directory.
+The active release directory is normally selected by `data/serving/current.json`
+(`release_path`); `SERVING_RELEASE_PATH` is only the **fallback** used when that pointer
+is absent. Adjusting the pointer (not the env var) is the normal way to switch releases.
 
 ### Analysis (offline)
 ```bash
@@ -54,9 +56,9 @@ python scripts/run_methods_08_09.py
 | Variable | Default | Description |
 |---|---|---|
 | `API_PORT` | 4000 | Backend port |
-| `VITE_API_BASE_URL` | http://localhost:4000 | Frontend API base |
-| `CORS_ORIGIN` | http://localhost:5173 | Allowed CORS origin |
-| `SERVING_RELEASE_PATH` | data/serving/releases/current | SQLite release path |
+| `VITE_API_BASE_URL` | http://localhost:4000/api/v1 (code fallback) | Frontend API base — a backend origin (`…:4000`) **or** a full `…/api/v1` base are both accepted (`frontend/src/api/client.ts`) |
+| `CORS_ORIGIN` | (unset) | Extra allowed CORS origin; any `localhost`/`127.0.0.1` port is also allowed in development |
+| `SERVING_RELEASE_PATH` | data/serving/releases/current | **Fallback** release path; normally superseded by `data/serving/current.json` |
 | `NODE_ENV` | development | Node environment |
 
 ## Data Release Process

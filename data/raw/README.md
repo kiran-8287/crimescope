@@ -34,19 +34,15 @@ data/raw/
 │   ├── 1_districtwise-crime-against-children-2020_t1.csv
 │   └── 1_districtwise-ipc-crimes-2020_t1.csv
 ├── 2021/                     # Active year scope
-│   ├── 1_16730065601districtwiseipccrimes2021_t1.csv   # standalone (earlier layout)
 │   └── districtwise_ipc_bns_fragments/                  # active fragment inputs
 │       ├── 1_16730065601districtwiseipccrimes2021_t1.csv
 │       ├── ..._t2.csv ... _t36.csv
 │       └── ...
 ├── 2022/
-│   ├── standalone files (earlier layout)
 │   └── districtwise_ipc_bns_fragments/   # active fragment inputs
 ├── 2023/
-│   ├── standalone files (earlier layout)
 │   └── districtwise_ipc_bns_fragments/   # active fragment inputs
 └── 2024/
-    ├── standalone files (earlier layout)
     └── districtwise_ipc_bns_fragments/   # active fragment inputs
 ```
 
@@ -56,11 +52,7 @@ The nested `districtwise_ipc_bns_fragments/` folders hold the complete active
 input set: 36 fragments per year for 2021–2024 (144 fragments total). The active
 input selector is `scripts/source_inputs.py`, which reads
 `download_manifest_2021_2024.json` and selects only fragments from these
-fragment folders. The standalone `_t1.csv` files directly under each year
-folder come from the earlier one-file-per-year layout and are **not** active
-inputs unless explicitly confirmed by `source_inputs.py`. Matching filenames
-alone do not prove identical file contents between a standalone file and a
-fragment.
+fragment folders. All active inputs live under `data/raw/<year>/districtwise_ipc_bns_fragments/`.
 
 ### Reporting Framework
 

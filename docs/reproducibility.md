@@ -59,10 +59,22 @@ npm --workspace backend run dev
 npm --workspace frontend run dev
 ```
 
-## 4. Reproduce the five findings
+## 4. Three reproduction levels
 
-One entry point generates every figure, table and number used in
-[`docs/findings.md`](findings.md):
+The project supports three distinct levels of reproduction. They differ in what they
+reuse and whether they write anything. **Only level 3 fits models**, and even that
+writes to a fresh, isolated directory and never touches a pointer.
+
+### 4.1 Start the dashboard from frozen artifacts
+
+Requires only the frozen release SQLite, the active run directory and the two pointer
+files (see §2). No model is fitted and nothing is regenerated — the app reads the
+frozen artifacts. Start it with the commands in §3.
+
+### 4.2 Reproduce the five findings from frozen artifacts
+
+One entry point regenerates every figure, table and number used in
+[`docs/findings.md`](findings.md) **from the frozen run artifacts**:
 
 ```bash
 python scripts/research_findings.py
@@ -86,6 +98,71 @@ Outputs (default, one directory per run id):
 These are **new findings outputs**, kept separate from immutable source data, from the
 production run artifacts under `analysis/output/runs/<run_id>/`, and from the SQLite
 releases under `data/serving/releases/<release_id>/`.
+
+### 4.3 Re-run model fitting into a new isolated output
+
+This level actually re-fits the methods. It is driven by
+[`scripts/run_current_analysis.py`](../scripts/run_current_analysis.py), which:
+
+- resolves the method input from the **active serving release pointer**
+  (`data/serving/current.json` → `release_manifest.json` → `source_dataset`) — there is
+  no hard-coded staging path;
+- validates the resolved CSV's **sha256 against the active release manifest** and
+  cross-checks the 2024 cohort against the active run manifest (expects 774
+  administrative districts × 131 features);
+- **refuses to overwrite** an existing run directory; and
+- **never writes or updates any pointer** (`data/serving/current.json`,
+  `analysis/output/runs/current.json`). Repointing stays a deliberate, separate act.
+
+Dry run (default) — resolve and validate only; writes nothing, fits no model:
+
+```bash
+python scripts/run_current_analysis.py --dry-run
+```
+
+Execute — after the same validation, delegate fitting to
+[`scripts/run_v4_analysis.py`](../scripts/run_v4_analysis.py) with a **new** run id:
+
+```bash
+python scripts/run_current_analysis.py --execute --run-id ncrb-national-2024-admin-log1p-zscore-<stamp>
+```
+
+The result is a fresh run under `analysis/output/runs/<run-id>/`; because the pointer is
+untouched, the running app keeps serving the previous run until someone deliberately
+repoints it.
+
+The historical runners (`scripts/run_rebuilt_2024_analysis.py`,
+`run_expanded_2024_analysis.py`, `run_verified_2024_analysis.py`) target their own staged
+inputs and are kept for provenance only; they are **not** the current reproduction path.
+
+### 4.4 Export the presentation asset pack (from the same frozen artifacts)
+
+[`scripts/export_presentation_assets.py`](../scripts/export_presentation_assets.py) builds the
+presentation figures and tables used for the results deck:
+
+```bash
+python scripts/export_presentation_assets.py
+```
+
+It shares [`scripts/research_findings.py`](../scripts/research_findings.py)'s loaders and
+verifies the same hashes (pointer/manifest compatibility, SQLite, feature input, release
+dataset, and each consumed run artifact, plus the Ward linkage via
+`verify_artifact_hash`). It loads saved memberships/scores/centroids/rules/linkage and
+**never refits**, and writes to a fresh
+`analysis/output/presentation/<run_id>/<timestamp>/` (refusing to overwrite an existing
+timestamp). Outputs: 18 figures (PNG ≥ 2400×1350 + SVG), 19 CSV tables, `results.json` and
+`figure_manifest.json`. See [`PRESENTATION_RESULTS.md`](../PRESENTATION_RESULTS.md).
+
+**Dependency trace (which inputs level 2 actually reads).** Findings regeneration and the
+presentation exporter both resolve their feature matrix from the **run directory** —
+`feature_path = analysis/output/runs/<run_id>/feature_input.csv` (`load_context()` in
+`research_findings.py`) — not from the archived intermediate dataset. The complete level-2
+input set is therefore: `data/serving/current.json`, the release `crimescope.sqlite` +
+`release_manifest.json`, `analysis/output/runs/current.json`, the whole
+`analysis/output/runs/<run_id>/` directory, and `config/category_hierarchy.json`. All of these
+are packaged by the handoff (§[handoff.md](handoff.md)), so levels 1–2 reproduce **from the
+handoff alone**. Only level 3 (re-fitting) needs the gitignored intermediate source dataset
+`data/interim/rebuilt_national_2021_2024_v3/…`.
 
 ## 5. Tests, builds and browser checks
 

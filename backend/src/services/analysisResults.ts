@@ -118,17 +118,51 @@ export function getAssociationPage(input: { year: number; minSupport: number; mi
     throw new Error(`Filters cannot be lower than the saved mining thresholds (support ${params.min_support}, confidence ${params.min_confidence}, lift ${params.min_lift}); this endpoint does not re-mine rules.`);
   }
   const relative = manifest.methods.association.artifact;
-  const runDir = resolve(root, manifest.artifacts ? "analysis/output/runs/current.json" : "analysis/output/runs/current.json");
-  const pointer = readJson(runDir); const manifestPath = resolve(root, pointer.manifest); const full = resolve(manifestPath, "..", relative);
+  const pointer = readJson(resolve(root, "analysis/output/runs/current.json"));
+  const manifestPath = resolve(root, pointer.manifest);
+  const full = resolve(manifestPath, "..", relative);
   if (fileHash(full) !== manifest.artifacts[relative]) throw new Error("Association result artifact integrity check failed.");
   const artifact = readJson(full);
   const categories = new Map(manifest.feature_input.ordered_features.map((f: any) => [f.label, f.id]));
-  const filtered = artifact.rules.filter((rule: any) => rule.support >= input.minSupport && rule.confidence >= input.minConfidence && rule.lift >= input.minLift);
-  const page = filtered.slice(input.offset, input.offset + input.limit).map((rule: any, index: number) => ({
-    id: `${runId}-${input.offset + index}`, antecedent: rule.antecedent.join(" + "), consequent: rule.consequent.join(" + "),
+  const keyOf = (labels: string[]) => [...labels].sort().join("\u0001");
+  const stablePart = (labels: string[]) => labels.map((label: string) => categories.get(label) ?? label).join("+");
+
+  // Exact per-itemset counts from the saved artifact: singleton itemsets back the
+  // antecedent/consequent marginals, and the joint count is the rule support count.
+  const itemsetCounts = new Map<string, number>();
+  for (const set of artifact.itemsets ?? []) itemsetCounts.set(keyOf(set.itemset), Number(set.count));
+
+  const filtered = artifact.rules
+    .filter((rule: any) => rule.support >= input.minSupport && rule.confidence >= input.minConfidence && rule.lift >= input.minLift)
+    // Deterministic ordering with an explicit tie-break, so a fixed request always
+    // maps to a fixed row order and stable IDs: pagination can never reorder,
+    // duplicate or drop rows.
+    .map((rule: any, index: number) => ({ rule, index }))
+    .sort((a: any, b: any) => {
+      const A = a.rule, B = b.rule;
+      if (B.support !== A.support) return B.support - A.support;
+      if (B.confidence !== A.confidence) return B.confidence - A.confidence;
+      if (B.lift !== A.lift) return B.lift - A.lift;
+      const ka = keyOf(A.antecedent), kb = keyOf(B.antecedent);
+      if (ka !== kb) return ka < kb ? -1 : 1;
+      const ca = keyOf(A.consequent), cb = keyOf(B.consequent);
+      if (ca !== cb) return ca < cb ? -1 : 1;
+      return a.index - b.index;
+    })
+    .map((entry: any) => entry.rule);
+
+  const page = filtered.slice(input.offset, input.offset + input.limit).map((rule: any) => ({
+    // Stable identity derived from the canonical antecedent/consequent items, not the page offset.
+    id: `${runId}#${stablePart(rule.antecedent)}=>${stablePart(rule.consequent)}`,
+    antecedent: rule.antecedent.join(" + "), consequent: rule.consequent.join(" + "),
     antecedentIds: rule.antecedent.map((label: string) => categories.get(label)), consequentIds: rule.consequent.map((label: string) => categories.get(label)),
+    antecedentCount: itemsetCounts.get(keyOf(rule.antecedent)) ?? null,
+    consequentCount: itemsetCounts.get(keyOf(rule.consequent)) ?? null,
+    jointCount: rule.support_count,
     support: rule.support, supportCount: rule.support_count, confidence: rule.confidence, lift: rule.lift,
   }));
   return { status: "available", runId, year: artifact.year, nTransactions: artifact.n_transactions,
-    transactionDefinition: method.scope, parameters: params, total: filtered.length, limit: input.limit, offset: input.offset, rules: page };
+    transactionDefinition: method.scope, parameters: params,
+    sort: "support desc, confidence desc, lift desc, antecedent asc, consequent asc",
+    total: filtered.length, limit: input.limit, offset: input.offset, rules: page };
 }

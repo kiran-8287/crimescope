@@ -1,0 +1,1089 @@
+{
+  "generatedAt": "2026-11-08T18:25:22.681Z",
+  "totals": {
+    "pass": 135,
+    "total": 135
+  },
+  "assertions": [
+    {
+      "id": "api.overview.unit_count",
+      "scope": "API overview 2024",
+      "expected": "774",
+      "actual": "774",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "api.overview.official_total_2024",
+      "scope": "API overview 2024",
+      "expected": "2740258",
+      "actual": "2740258",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "api.quality.source_files",
+      "scope": "API meta",
+      "expected": "144",
+      "actual": "144",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "api.quality.aggregate_rows",
+      "scope": "API meta",
+      "expected": "20880",
+      "actual": "20880",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "api.quality.source_rows",
+      "scope": "API meta",
+      "expected": "567078",
+      "actual": "567078",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "api.quality.valid_rows",
+      "scope": "API meta",
+      "expected": "546198",
+      "actual": "546198",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "api.rules.total",
+      "scope": "API rules",
+      "expected": "697",
+      "actual": "697",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "api.rules.transactions",
+      "scope": "API rules",
+      "expected": "739",
+      "actual": "739",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "api.rules.page1_rows",
+      "scope": "API rules offset 0",
+      "expected": "20",
+      "actual": "20",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "api.rules.page2_rows",
+      "scope": "API rules offset 20",
+      "expected": "20",
+      "actual": "20",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "api.rules.last_page_rows",
+      "scope": "API rules offset 680",
+      "expected": "17",
+      "actual": "17",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "api.rules.pages_disjoint",
+      "scope": "API rules offsets 0 vs 20",
+      "expected": "0",
+      "actual": "0",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "api.rules.sorted_first_id",
+      "scope": "API rules offset 0",
+      "expected": "ncrb-national-2024-admin-log1p-zscore-20261107-v4#0870954a88a56971a64ce092=>1171f893e367fd2af57a5496",
+      "actual": "ncrb-national-2024-admin-log1p-zscore-20261107-v4#0870954a88a56971a64ce092=>1171f893e367fd2af57a5496",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "api.compare.gondia_official",
+      "scope": "API compare 2024",
+      "expected": "3922",
+      "actual": "3922",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "api.compare.gondia_theft",
+      "scope": "API compare 2024",
+      "expected": "393",
+      "actual": "393",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "api.compare.gondia_misc",
+      "scope": "API compare 2024",
+      "expected": "2109",
+      "actual": "2109",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "api.compare.kameng_official",
+      "scope": "API compare 2024",
+      "expected": "92",
+      "actual": "92",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "api.compare.kameng_theft",
+      "scope": "API compare 2024",
+      "expected": "18",
+      "actual": "18",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "api.compare.kameng_misc",
+      "scope": "API compare 2024",
+      "expected": "8",
+      "actual": "8",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.overview.unit_count_774",
+      "scope": "Overview /",
+      "expected": "present: 774",
+      "actual": "present: 774",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.overview.official_total_2740258",
+      "scope": "Overview /",
+      "expected": "present: 2,740,258",
+      "actual": "present: 2,740,258",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.overview.contextual_separator",
+      "scope": "Overview /",
+      "expected": "contains \"›\"",
+      "actual": "contains \"›\"",
+      "pass": true,
+      "note": "Parent › Leaf contextual labels"
+    },
+    {
+      "id": "ui.compare.kameng_selected",
+      "scope": "Compare /compare",
+      "expected": "contains \"Kameng West\"",
+      "actual": "contains \"Kameng West\"",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.compare.gondia_selected",
+      "scope": "Compare /compare",
+      "expected": "contains \"Gondia\"",
+      "actual": "contains \"Gondia\"",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.compare.two_chips",
+      "scope": "Compare /compare",
+      "expected": "contains \"2 of 3 selected\"",
+      "actual": "contains \"2 of 3 selected\"",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.compare.gondia_official_value",
+      "scope": "Compare /compare",
+      "expected": "present: 3,922",
+      "actual": "present: 3,922",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.compare.kameng_official_value",
+      "scope": "Compare /compare",
+      "expected": "present: 92",
+      "actual": "present: 92",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.compare.gondia_theft",
+      "scope": "Compare /compare",
+      "expected": "present: 393",
+      "actual": "present: 393",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.compare.gondia_misc",
+      "scope": "Compare /compare",
+      "expected": "present: 2,109",
+      "actual": "present: 2,109",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.compare.kameng_theft",
+      "scope": "Compare /compare",
+      "expected": "present: 18",
+      "actual": "present: 18",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.compare.kameng_misc",
+      "scope": "Compare /compare",
+      "expected": "present: 8",
+      "actual": "present: 8",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.compare.no_unavailable_for_selection",
+      "scope": "Compare /compare",
+      "expected": "contains \"Reported values and classification summary\"",
+      "actual": "contains \"Reported values and classification summary\"",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.compare.no_update_loop",
+      "scope": "Compare /compare",
+      "expected": "no React update-depth loop",
+      "actual": "no React update-depth loop",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.trends.annual_2021",
+      "scope": "Trends /trends",
+      "expected": "present: 2,909,532",
+      "actual": "present: 2,909,532",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.trends.annual_2022",
+      "scope": "Trends /trends",
+      "expected": "present: 2,808,408",
+      "actual": "present: 2,808,408",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.trends.annual_2023",
+      "scope": "Trends /trends",
+      "expected": "present: 2,940,460",
+      "actual": "present: 2,940,460",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.trends.annual_2024",
+      "scope": "Trends /trends",
+      "expected": "present: 2,740,258",
+      "actual": "present: 2,740,258",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.trends.matched_units_749",
+      "scope": "Trends /trends",
+      "expected": "present: 749",
+      "actual": "present: 749",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.trends.matched_2022_2804254",
+      "scope": "Trends /trends",
+      "expected": "present: 2,804,254",
+      "actual": "present: 2,804,254",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.trends.matched_2023_2892597",
+      "scope": "Trends /trends",
+      "expected": "present: 2,892,597",
+      "actual": "present: 2,892,597",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.trends.matched_change_315",
+      "scope": "Trends /trends",
+      "expected": "contains \"+3.15%\"",
+      "actual": "contains \"+3.15%\"",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.trends.annual_change_470",
+      "scope": "Trends /trends",
+      "expected": "contains \"+4.70%\"",
+      "actual": "contains \"+4.70%\"",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.trends.excluded_units_1_21",
+      "scope": "Trends /trends",
+      "expected": "contains \"1 / 21\"",
+      "actual": "contains \"1 / 21\"",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.quality.eligible_546198",
+      "scope": "Quality /quality",
+      "expected": "present: 5,46,198",
+      "actual": "present: 5,46,198",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.quality.zeros_323296",
+      "scope": "Quality /quality",
+      "expected": "present: 3,23,296",
+      "actual": "present: 3,23,296",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.quality.aggregate_20880",
+      "scope": "Quality /quality",
+      "expected": "present: 20,880",
+      "actual": "present: 20,880",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.quality.canonical_567078",
+      "scope": "Quality /quality",
+      "expected": "present: 5,67,078",
+      "actual": "present: 5,67,078",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.quality.retained_nulls_label",
+      "scope": "Quality /quality",
+      "expected": "contains \"Retained nulls\"",
+      "actual": "contains \"Retained nulls\"",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.quality.supplied_cells_label",
+      "scope": "Quality /quality",
+      "expected": "contains \"Non-null supplied cells\"",
+      "actual": "contains \"Non-null supplied cells\"",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.quality.source_files_144",
+      "scope": "Quality /quality",
+      "expected": "present: 144",
+      "actual": "present: 144",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.pca.pc1_1591",
+      "scope": "PCA /pca",
+      "expected": "contains \"15.91%\"",
+      "actual": "contains \"15.91%\"",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.pca.pc2_457",
+      "scope": "PCA /pca",
+      "expected": "contains \"4.57%\"",
+      "actual": "contains \"4.57%\"",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.pca.retained_2048",
+      "scope": "PCA /pca",
+      "expected": "contains \"20.48%\"",
+      "actual": "contains \"20.48%\"",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.pca.subtitle",
+      "scope": "PCA /pca",
+      "expected": "contains \"Variance retained by the two saved components\"",
+      "actual": "contains \"Variance retained by the two saved components\"",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.pca.score_plot_label",
+      "scope": "PCA /pca",
+      "expected": "contains \"PCA score plot\"",
+      "actual": "contains \"PCA score plot\"",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.pca.remainder_7952",
+      "scope": "PCA /pca",
+      "expected": "contains \"79.52%\"",
+      "actual": "contains \"79.52%\"",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.pca.no_stale_227",
+      "scope": "PCA /pca",
+      "expected": "absent: 22.7",
+      "actual": "absent: 22.7",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.pca.no_double_sign",
+      "scope": "PCA /pca",
+      "expected": "absent: +-",
+      "actual": "absent: +-",
+      "pass": true,
+      "note": "no malformed +- signs"
+    },
+    {
+      "id": "ui.pca.no_raw_latex",
+      "scope": "PCA /pca",
+      "expected": "absent: $v_",
+      "actual": "absent: $v_",
+      "pass": true,
+      "note": "no raw LaTeX markup"
+    },
+    {
+      "id": "ui.clusters.c1_190",
+      "scope": "Clusters /clusters",
+      "expected": "present: 190",
+      "actual": "present: 190",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.clusters.c2_168",
+      "scope": "Clusters /clusters",
+      "expected": "present: 168",
+      "actual": "present: 168",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.clusters.c3_416",
+      "scope": "Clusters /clusters",
+      "expected": "present: 416",
+      "actual": "present: 416",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.clusters.median_c1_5309",
+      "scope": "Clusters /clusters",
+      "expected": "present: 5,309",
+      "actual": "present: 5,309",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.clusters.median_c2_1595",
+      "scope": "Clusters /clusters",
+      "expected": "present: 159.5",
+      "actual": "present: 159.5",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.clusters.no_below_average_neg_zero",
+      "scope": "Clusters /clusters",
+      "expected": "absent: below average -0.00",
+      "actual": "absent: below average -0.00",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.clusters.ward_scope_state_scoped",
+      "scope": "Clusters /clusters",
+      "expected": "contains \"fitted separately within each state\"",
+      "actual": "contains \"fitted separately within each state\"",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.anomalies.selector_all_categories",
+      "scope": "Anomalies /anomalies",
+      "expected": "contains \"All analysed categories (131)\"",
+      "actual": "contains \"All analysed categories (131)\"",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.anomalies.sample_std_note",
+      "scope": "Anomalies /anomalies",
+      "expected": "contains \"Sample standard deviation (ddof = 1)\"",
+      "actual": "contains \"Sample standard deviation (ddof = 1)\"",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.anomalies.rare_example_satara",
+      "scope": "Anomalies /anomalies",
+      "expected": "contains \"Satara\"",
+      "actual": "contains \"Satara\"",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.anomalies.nw_delhi_example",
+      "scope": "Anomalies /anomalies",
+      "expected": "contains \"North-West\"",
+      "actual": "contains \"North-West\"",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.anomalies.higher_count_tab",
+      "scope": "Anomalies /anomalies",
+      "expected": "contains \"Higher-count flags (≥20 cases) (1307)\"",
+      "actual": "contains \"Higher-count flags (≥20 cases) (1307)\"",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.anomalies.higher_count_flag_type",
+      "scope": "Anomalies /anomalies",
+      "expected": "contains \"Higher-count flag\"",
+      "actual": "contains \"Higher-count flag\"",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.anomalies.rare_z_2778",
+      "scope": "Anomalies /anomalies",
+      "expected": "contains \"27.78\"",
+      "actual": "contains \"27.78\"",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.anomalies.groups_sum_1999",
+      "scope": "Anomalies /anomalies",
+      "expected": "contains \"= 1,999\"",
+      "actual": "contains \"= 1,999\"",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.anomalies.no_official_total_selector",
+      "scope": "Anomalies /anomalies",
+      "expected": "absent: Analysed category\nOfficial Reported Total",
+      "actual": "absent: Analysed category\nOfficial Reported Total",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.rules.single_pagination_owner",
+      "scope": "Rules /rules",
+      "expected": "1",
+      "actual": "1",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.rules.page1_row_count",
+      "scope": "Rules /rules page 1",
+      "expected": "20",
+      "actual": "20",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.rules.page1_range",
+      "scope": "Rules /rules page 1",
+      "expected": "contains \"Showing 1–20 of 697 rules · Page 1 of 35\"",
+      "actual": "contains \"Showing 1–20 of 697 rules · Page 1 of 35\"",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.rules.page1_ids_match_api",
+      "scope": "Rules /rules page 1",
+      "expected": "b) Vehicle TheftBNS) | g) Other Thefts/305/307 BNS/IPC) | b) Vehicle TheftBNS) | Rash Driving on Public way BNS/Section 279 or 279 r/w 336-338 IPC) | b) Night Burglary | g) Other Thefts/305/307 BNS/IPC) | b) Night Burglary | Rash Driving on Public way BNS/Section 279 or 279 r/w 336-338 IPC) | b) Night Burglary | b) Vehicle TheftBNS) | a) Murder BNS/Section 302 IPC) | g) Other Thefts/305/307 BNS/IPC) | a) Murder BNS/Section 302 IPC) | Rash Driving on Public way BNS/Section 279 or 279 r/w 336-338 IPC) | a) Murder BNS/Section 302 IPC) | b) Vehicle TheftBNS) | Attempt to commit Murder | g) Other Thefts/305/307 BNS/IPC) | b) Cheating BNS/Section 420 IPC) | b) Vehicle TheftBNS)",
+      "actual": "b) Vehicle TheftBNS) | g) Other Thefts/305/307 BNS/IPC) | b) Vehicle TheftBNS) | Rash Driving on Public way BNS/Section 279 or 279 r/w 336-338 IPC) | b) Night Burglary | g) Other Thefts/305/307 BNS/IPC) | b) Night Burglary | Rash Driving on Public way BNS/Section 279 or 279 r/w 336-338 IPC) | b) Night Burglary | b) Vehicle TheftBNS) | a) Murder BNS/Section 302 IPC) | g) Other Thefts/305/307 BNS/IPC) | a) Murder BNS/Section 302 IPC) | Rash Driving on Public way BNS/Section 279 or 279 r/w 336-338 IPC) | a) Murder BNS/Section 302 IPC) | b) Vehicle TheftBNS) | Attempt to commit Murder | g) Other Thefts/305/307 BNS/IPC) | b) Cheating BNS/Section 420 IPC) | b) Vehicle TheftBNS)",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.rules.metrics_visible",
+      "scope": "Rules /rules",
+      "expected": "contains \"Confidence\"",
+      "actual": "contains \"Confidence\"",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.rules.page2_row_count",
+      "scope": "Rules /rules page 2",
+      "expected": "20",
+      "actual": "20",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.rules.page2_ids_match_api",
+      "scope": "Rules /rules page 2",
+      "expected": "Attempt to commit Murder | Rash Driving on Public way BNS/Section 279 or 279 r/w 336-338 IPC) | b) Cheating BNS/Section 420 IPC) | Other IPC/BNS crimes | Cruelty by Husband or Relatives | g) Other Thefts/305/307 BNS/IPC) | Cruelty by Husband or Relatives | Attempt to commit Murder | b) Vehicle TheftBNS) | Rash Driving on Public way BNS/Section 279 or 279 r/w 336-338 IPC) | Cruelty by Husband or Relatives | a) Murder BNS/Section 302 IPC) | b) Cheating BNS/Section 420 IPC) | b) Night Burglary | b) Vehicle TheftBNS) | Other IPC/BNS crimes | a) Murder BNS/Section 302 IPC) | b) Night Burglary | ii) Other Accidents | Rash Driving on Public way BNS/Section 279 or 279 r/w 336-338 IPC)",
+      "actual": "Attempt to commit Murder | Rash Driving on Public way BNS/Section 279 or 279 r/w 336-338 IPC) | b) Cheating BNS/Section 420 IPC) | Other IPC/BNS crimes | Cruelty by Husband or Relatives | g) Other Thefts/305/307 BNS/IPC) | Cruelty by Husband or Relatives | Attempt to commit Murder | b) Vehicle TheftBNS) | Rash Driving on Public way BNS/Section 279 or 279 r/w 336-338 IPC) | Cruelty by Husband or Relatives | a) Murder BNS/Section 302 IPC) | b) Cheating BNS/Section 420 IPC) | b) Night Burglary | b) Vehicle TheftBNS) | Other IPC/BNS crimes | a) Murder BNS/Section 302 IPC) | b) Night Burglary | ii) Other Accidents | Rash Driving on Public way BNS/Section 279 or 279 r/w 336-338 IPC)",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.rules.page35_row_count",
+      "scope": "Rules /rules page 35",
+      "expected": "17",
+      "actual": "17",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.rules.page35_range",
+      "scope": "Rules /rules page 35",
+      "expected": "contains \"Showing 681–697 of 697 rules · Page 35 of 35\"",
+      "actual": "contains \"Showing 681–697 of 697 rules · Page 35 of 35\"",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.rules.page35_ids_match_api",
+      "scope": "Rules /rules page 35",
+      "expected": "Obscene acts and songs at public Places | f) Other Kidnapping & Abduction, 140, 142 BNS/Section 365, 367-368 IPC) | h) Act endangering life or personal safety of othersBNS) | Offences related to Mischief,326 BNS/Section 428-433 IPC) | Assault or Use of criminal force to women with intent to disrobe ) | Obstruction on Public way | h) Act endangering life or personal safety of othersBNS) | h) Act endangering life or personal safety of othersBNS) | Assault or Use of criminal force to women with intent to disrobe ) | k) Land/Property Dispute | k) Land/Property Dispute | Obscene acts and songs at public Places | Attempt to commit Culpable Homicide | Stalking | k) Land/Property Dispute | Obscene acts and songs at public Places | Assault or Use of criminal force to women with intent to disrobe )",
+      "actual": "Obscene acts and songs at public Places | f) Other Kidnapping & Abduction, 140, 142 BNS/Section 365, 367-368 IPC) | h) Act endangering life or personal safety of othersBNS) | Offences related to Mischief,326 BNS/Section 428-433 IPC) | Assault or Use of criminal force to women with intent to disrobe ) | Obstruction on Public way | h) Act endangering life or personal safety of othersBNS) | h) Act endangering life or personal safety of othersBNS) | Assault or Use of criminal force to women with intent to disrobe ) | k) Land/Property Dispute | k) Land/Property Dispute | Obscene acts and songs at public Places | Attempt to commit Culpable Homicide | Stalking | k) Land/Property Dispute | Obscene acts and songs at public Places | Assault or Use of criminal force to women with intent to disrobe )",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.rules.total_697",
+      "scope": "Rules /rules",
+      "expected": "present: 697",
+      "actual": "present: 697",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.rules.transactions_739",
+      "scope": "Rules /rules",
+      "expected": "present: 739",
+      "actual": "present: 739",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.rules.interpret_drawer",
+      "scope": "Rules /rules drawer",
+      "expected": "contains \"Plain-Language Interpretation\"",
+      "actual": "contains \"Plain-Language Interpretation\"",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.rules.interpret_counts",
+      "scope": "Rules /rules drawer",
+      "expected": "contains \"Both (joint)\"",
+      "actual": "contains \"Both (joint)\"",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.rules.interpret_limit",
+      "scope": "Rules /rules drawer",
+      "expected": "contains \"qualifying units\"",
+      "actual": "contains \"qualifying units\"",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.methodology.live_release",
+      "scope": "Methodology /methodology",
+      "expected": "contains \"ecec48b772bc\"",
+      "actual": "contains \"ecec48b772bc\"",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.methodology.live_run",
+      "scope": "Methodology /methodology",
+      "expected": "contains \"v4\"",
+      "actual": "contains \"v4\"",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.methodology.source_files_144",
+      "scope": "Methodology /methodology",
+      "expected": "present: 144",
+      "actual": "present: 144",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.methodology.aggregate_20880",
+      "scope": "Methodology /methodology",
+      "expected": "present: 20,880",
+      "actual": "present: 20,880",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.methodology.no_stale_145_fragments",
+      "scope": "Methodology /methodology",
+      "expected": "absent: 145 fragments",
+      "actual": "absent: 145 fragments",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "ui.methodology.no_stale_21022",
+      "scope": "Methodology /methodology",
+      "expected": "absent: 21,022",
+      "actual": "absent: 21,022",
+      "pass": true,
+      "note": ""
+    },
+    {
+      "id": "viewport.desktop_1440x900.overview.no_page_overflow",
+      "scope": "desktop_1440x900 /",
+      "expected": "true",
+      "actual": "true",
+      "pass": true,
+      "note": "scrollWidth-innerWidth=0px"
+    },
+    {
+      "id": "viewport.desktop_1440x900.compare.no_page_overflow",
+      "scope": "desktop_1440x900 /compare",
+      "expected": "true",
+      "actual": "true",
+      "pass": true,
+      "note": "scrollWidth-innerWidth=0px"
+    },
+    {
+      "id": "viewport.desktop_1440x900.trends.no_page_overflow",
+      "scope": "desktop_1440x900 /trends",
+      "expected": "true",
+      "actual": "true",
+      "pass": true,
+      "note": "scrollWidth-innerWidth=0px"
+    },
+    {
+      "id": "viewport.desktop_1440x900.quality.no_page_overflow",
+      "scope": "desktop_1440x900 /quality",
+      "expected": "true",
+      "actual": "true",
+      "pass": true,
+      "note": "scrollWidth-innerWidth=0px"
+    },
+    {
+      "id": "viewport.desktop_1440x900.pca.no_page_overflow",
+      "scope": "desktop_1440x900 /pca",
+      "expected": "true",
+      "actual": "true",
+      "pass": true,
+      "note": "scrollWidth-innerWidth=0px"
+    },
+    {
+      "id": "viewport.desktop_1440x900.clusters.no_page_overflow",
+      "scope": "desktop_1440x900 /clusters",
+      "expected": "true",
+      "actual": "true",
+      "pass": true,
+      "note": "scrollWidth-innerWidth=0px"
+    },
+    {
+      "id": "viewport.desktop_1440x900.anomalies.no_page_overflow",
+      "scope": "desktop_1440x900 /anomalies",
+      "expected": "true",
+      "actual": "true",
+      "pass": true,
+      "note": "scrollWidth-innerWidth=0px"
+    },
+    {
+      "id": "viewport.desktop_1440x900.rules.no_page_overflow",
+      "scope": "desktop_1440x900 /rules",
+      "expected": "true",
+      "actual": "true",
+      "pass": true,
+      "note": "scrollWidth-innerWidth=0px"
+    },
+    {
+      "id": "viewport.desktop_1440x900.methodology.no_page_overflow",
+      "scope": "desktop_1440x900 /methodology",
+      "expected": "true",
+      "actual": "true",
+      "pass": true,
+      "note": "scrollWidth-innerWidth=0px"
+    },
+    {
+      "id": "viewport.laptop_1366x768.overview.no_page_overflow",
+      "scope": "laptop_1366x768 /",
+      "expected": "true",
+      "actual": "true",
+      "pass": true,
+      "note": "scrollWidth-innerWidth=0px"
+    },
+    {
+      "id": "viewport.laptop_1366x768.compare.no_page_overflow",
+      "scope": "laptop_1366x768 /compare",
+      "expected": "true",
+      "actual": "true",
+      "pass": true,
+      "note": "scrollWidth-innerWidth=0px"
+    },
+    {
+      "id": "viewport.laptop_1366x768.trends.no_page_overflow",
+      "scope": "laptop_1366x768 /trends",
+      "expected": "true",
+      "actual": "true",
+      "pass": true,
+      "note": "scrollWidth-innerWidth=0px"
+    },
+    {
+      "id": "viewport.laptop_1366x768.quality.no_page_overflow",
+      "scope": "laptop_1366x768 /quality",
+      "expected": "true",
+      "actual": "true",
+      "pass": true,
+      "note": "scrollWidth-innerWidth=0px"
+    },
+    {
+      "id": "viewport.laptop_1366x768.pca.no_page_overflow",
+      "scope": "laptop_1366x768 /pca",
+      "expected": "true",
+      "actual": "true",
+      "pass": true,
+      "note": "scrollWidth-innerWidth=0px"
+    },
+    {
+      "id": "viewport.laptop_1366x768.clusters.no_page_overflow",
+      "scope": "laptop_1366x768 /clusters",
+      "expected": "true",
+      "actual": "true",
+      "pass": true,
+      "note": "scrollWidth-innerWidth=0px"
+    },
+    {
+      "id": "viewport.laptop_1366x768.anomalies.no_page_overflow",
+      "scope": "laptop_1366x768 /anomalies",
+      "expected": "true",
+      "actual": "true",
+      "pass": true,
+      "note": "scrollWidth-innerWidth=0px"
+    },
+    {
+      "id": "viewport.laptop_1366x768.rules.no_page_overflow",
+      "scope": "laptop_1366x768 /rules",
+      "expected": "true",
+      "actual": "true",
+      "pass": true,
+      "note": "scrollWidth-innerWidth=0px"
+    },
+    {
+      "id": "viewport.laptop_1366x768.methodology.no_page_overflow",
+      "scope": "laptop_1366x768 /methodology",
+      "expected": "true",
+      "actual": "true",
+      "pass": true,
+      "note": "scrollWidth-innerWidth=0px"
+    },
+    {
+      "id": "viewport.tablet_768.overview.no_page_overflow",
+      "scope": "tablet_768 /",
+      "expected": "true",
+      "actual": "true",
+      "pass": true,
+      "note": "scrollWidth-innerWidth=0px"
+    },
+    {
+      "id": "viewport.tablet_768.compare.no_page_overflow",
+      "scope": "tablet_768 /compare",
+      "expected": "true",
+      "actual": "true",
+      "pass": true,
+      "note": "scrollWidth-innerWidth=0px"
+    },
+    {
+      "id": "viewport.tablet_768.trends.no_page_overflow",
+      "scope": "tablet_768 /trends",
+      "expected": "true",
+      "actual": "true",
+      "pass": true,
+      "note": "scrollWidth-innerWidth=0px"
+    },
+    {
+      "id": "viewport.tablet_768.quality.no_page_overflow",
+      "scope": "tablet_768 /quality",
+      "expected": "true",
+      "actual": "true",
+      "pass": true,
+      "note": "scrollWidth-innerWidth=0px"
+    },
+    {
+      "id": "viewport.tablet_768.pca.no_page_overflow",
+      "scope": "tablet_768 /pca",
+      "expected": "true",
+      "actual": "true",
+      "pass": true,
+      "note": "scrollWidth-innerWidth=0px"
+    },
+    {
+      "id": "viewport.tablet_768.clusters.no_page_overflow",
+      "scope": "tablet_768 /clusters",
+      "expected": "true",
+      "actual": "true",
+      "pass": true,
+      "note": "scrollWidth-innerWidth=0px"
+    },
+    {
+      "id": "viewport.tablet_768.anomalies.no_page_overflow",
+      "scope": "tablet_768 /anomalies",
+      "expected": "true",
+      "actual": "true",
+      "pass": true,
+      "note": "scrollWidth-innerWidth=0px"
+    },
+    {
+      "id": "viewport.tablet_768.rules.no_page_overflow",
+      "scope": "tablet_768 /rules",
+      "expected": "true",
+      "actual": "true",
+      "pass": true,
+      "note": "scrollWidth-innerWidth=0px"
+    },
+    {
+      "id": "viewport.tablet_768.methodology.no_page_overflow",
+      "scope": "tablet_768 /methodology",
+      "expected": "true",
+      "actual": "true",
+      "pass": true,
+      "note": "scrollWidth-innerWidth=0px"
+    },
+    {
+      "id": "viewport.mobile_390.overview.no_page_overflow",
+      "scope": "mobile_390 /",
+      "expected": "true",
+      "actual": "true",
+      "pass": true,
+      "note": "scrollWidth-innerWidth=0px"
+    },
+    {
+      "id": "viewport.mobile_390.compare.no_page_overflow",
+      "scope": "mobile_390 /compare",
+      "expected": "true",
+      "actual": "true",
+      "pass": true,
+      "note": "scrollWidth-innerWidth=0px"
+    },
+    {
+      "id": "viewport.mobile_390.trends.no_page_overflow",
+      "scope": "mobile_390 /trends",
+      "expected": "true",
+      "actual": "true",
+      "pass": true,
+      "note": "scrollWidth-innerWidth=0px"
+    },
+    {
+      "id": "viewport.mobile_390.quality.no_page_overflow",
+      "scope": "mobile_390 /quality",
+      "expected": "true",
+      "actual": "true",
+      "pass": true,
+      "note": "scrollWidth-innerWidth=0px"
+    },
+    {
+      "id": "viewport.mobile_390.pca.no_page_overflow",
+      "scope": "mobile_390 /pca",
+      "expected": "true",
+      "actual": "true",
+      "pass": true,
+      "note": "scrollWidth-innerWidth=0px"
+    },
+    {
+      "id": "viewport.mobile_390.clusters.no_page_overflow",
+      "scope": "mobile_390 /clusters",
+      "expected": "true",
+      "actual": "true",
+      "pass": true,
+      "note": "scrollWidth-innerWidth=0px"
+    },
+    {
+      "id": "viewport.mobile_390.anomalies.no_page_overflow",
+      "scope": "mobile_390 /anomalies",
+      "expected": "true",
+      "actual": "true",
+      "pass": true,
+      "note": "scrollWidth-innerWidth=0px"
+    },
+    {
+      "id": "viewport.mobile_390.rules.no_page_overflow",
+      "scope": "mobile_390 /rules",
+      "expected": "true",
+      "actual": "true",
+      "pass": true,
+      "note": "scrollWidth-innerWidth=0px"
+    },
+    {
+      "id": "viewport.mobile_390.methodology.no_page_overflow",
+      "scope": "mobile_390 /methodology",
+      "expected": "true",
+      "actual": "true",
+      "pass": true,
+      "note": "scrollWidth-innerWidth=0px"
+    },
+    {
+      "id": "zoom200.rules.usable_reflow",
+      "scope": "200% zoom /rules",
+      "expected": "true",
+      "actual": "true",
+      "pass": true,
+      "note": "200% zoom emulated as a 683x384 CSS viewport (1366x768 @ 200%); scrollWidth-innerWidth=0px"
+    },
+    {
+      "id": "zoom200.pca.usable_reflow",
+      "scope": "200% zoom /pca",
+      "expected": "true",
+      "actual": "true",
+      "pass": true,
+      "note": "200% zoom emulated as a 683x384 CSS viewport (1366x768 @ 200%); scrollWidth-innerWidth=0px"
+    },
+    {
+      "id": "zoom200.clusters.usable_reflow",
+      "scope": "200% zoom /clusters",
+      "expected": "true",
+      "actual": "true",
+      "pass": true,
+      "note": "200% zoom emulated as a 683x384 CSS viewport (1366x768 @ 200%); scrollWidth-innerWidth=0px"
+    }
+  ]
+}

@@ -17,10 +17,15 @@ separately in [`data_preparation_challenges.md`](data_preparation_challenges.md)
   earlier `…-fd2d8578be56` release but not served or analysed here. Evidence:
   `data/serving/current.json` (`years: [2021,2022,2023,2024]`),
   [`SCOPE_2021_2024_VERIFICATION.md`](SCOPE_2021_2024_VERIFICATION.md).
-- **No record was silently dropped.** A stable-identity comparison
-  (`year + source_id + source_row_reference + category_id`) between the previous
-  all-years release and this one matched 567,078 rows with 0 added / 0 removed /
-  0 changed. Evidence: `data/verification/scope_2021_2024_20261107/retained_data_comparison.json`.
+- **No record was silently dropped *within the retained years*.** A stable-identity
+  comparison (`year + source_id + source_row_reference + category_id`) between the
+  previous all-years release and this one matched **567,078 rows for the retained years
+  2021–2024 with 0 added / 0 removed / 0 changed**. That "0 removed" applies **only** to
+  the 2021–2024 rows; it does **not** mean this release is identical to the previous
+  all-years release. The **2,944 rows of 2020** (2,802 eligible + 142 aggregate) were
+  **intentionally excluded** from the active scope (§1) and are the only rows present in
+  the previous release but absent here. Evidence:
+  `data/verification/scope_2021_2024_20261107/retained_data_comparison.json`.
 
 ## 2. Row classification and accounting
 

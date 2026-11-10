@@ -64,20 +64,26 @@ export default function AssociationRulesPage() {
   }));
 
   // Export EVERY rule matching the current thresholds — not just the page that is
-  // visible. The endpoint applies the filters server-side and is bounded, so we
-  // request the full matching set in a single call rather than loading any raw
-  // dataset into the browser. If that call fails we fall back to the current page
-  // so the button never silently exports a partial set.
+  // visible. The endpoint is bounded (max 100 rows per request), so we page through
+  // the full matching set in 100-row windows and concatenate the results. Nothing is
+  // synthesised client-side and no raw dataset is loaded into the browser.
   const [exporting, setExporting] = useState(false);
   async function exportAllMatching() {
     const total = Number(payload?.total ?? 0);
     if (!total) return;
     setExporting(true);
     try {
-      const full = await fetchAssociationRules({
-        year: 2024, minSupport: support, minConfidence: confidence, minLift: lift, limit: total, offset: 0
-      });
-      const source = (full.rules ?? []).length ? full.rules : (payload?.rules ?? []);
+      const pageLimit = 100;
+      const all: any[] = [];
+      for (let pageOffset = 0; pageOffset < total; pageOffset += pageLimit) {
+        const chunk = await fetchAssociationRules({
+          year: 2024, minSupport: support, minConfidence: confidence, minLift: lift, limit: pageLimit, offset: pageOffset
+        });
+        const rows = chunk.rules ?? [];
+        all.push(...rows);
+        if (rows.length < pageLimit) break;
+      }
+      const source = all.length ? all : (payload?.rules ?? []);
       const rows = source.map((r: any) => ({
         rule_id: r.id,
         antecedent_source_labels: r.antecedent,
@@ -301,7 +307,10 @@ export default function AssociationRulesPage() {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid #e5e7eb', paddingBottom: '0.75rem' }}>
             <div>
               <span className="eyebrow" style={{ color: '#0f766e' }}>ASSOCIATION RULE INTERPRETATION</span>
-              <h2 style={{ margin: '0.2rem 0', fontSize: '1.25rem' }}>Rule #{selectedRule.id}</h2>
+              <h2 style={{ margin: '0.2rem 0', fontSize: '1.25rem' }}>Rule interpretation</h2>
+              <div style={{ fontSize: '0.7rem', color: '#9ca3af', overflowWrap: 'anywhere' }} title="Stable rule identifier">
+                {String(selectedRule.id)}
+              </div>
             </div>
             <button className="text-button" onClick={() => setSelectedRule(null)}><X size={20} /></button>
           </div>
@@ -343,6 +352,15 @@ export default function AssociationRulesPage() {
               <span style={{ fontSize: '0.7rem', color: '#6b7280' }}>Lift</span>
               <div style={{ fontWeight: 700, fontSize: '1rem', color: '#2563eb' }}>{selectedRule.liftFormatted}×</div>
               <small style={{ fontSize: '0.7rem', color: '#6b7280' }}>Joint / Expected</small>
+            </div>
+          </div>
+
+          <div style={{ fontSize: '0.8rem', color: '#4b5563', background: '#f9fafb', padding: '0.6rem 0.75rem', borderRadius: '6px', lineHeight: 1.6 }}>
+            <strong>Recorded counts across the {number(payload?.nTransactions ?? 739)} qualifying units</strong>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.4rem', marginTop: '0.4rem', fontVariantNumeric: 'tabular-nums' }}>
+              <span>Antecedent: <strong>{number(selectedRule.antecedentCount)}</strong></span>
+              <span>Consequent: <strong>{number(selectedRule.consequentCount)}</strong></span>
+              <span>Both (joint): <strong>{number(selectedRule.jointCount)}</strong></span>
             </div>
           </div>
 

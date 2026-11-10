@@ -1,5 +1,12 @@
 # CrimeScope — Real Data Integration Verification
 
+> **Superseded (noted 2026-11-08).** This verification predates the removal of the
+> partial 2020 Andhra Pradesh slice. Its release (`…5004bc089eed`) and run
+> (`…-v2`) are no longer active. Current active release/run and figures:
+> [`../progress/STATUS.md`](../progress/STATUS.md),
+> [`FINAL_SUBMISSION_READINESS.md`](FINAL_SUBMISSION_READINESS.md). The historical
+> content below is preserved unchanged.
+
 **Date:** 2026-11-06  
 **Status:** Validated and Verified  
 **Active Release ID:** `ncrb-districtwise-2021-2024-5004bc089eed`  

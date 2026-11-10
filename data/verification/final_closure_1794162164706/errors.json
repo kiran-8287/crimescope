@@ -1,0 +1,225 @@
+{
+  "consoleErrors": [],
+  "consoleWarnings": [],
+  "pageErrors": [],
+  "networkErrors": [],
+  "navigationAborts": [
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=overview&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=compare&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=trends&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=quality&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=pca&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=clusters&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=anomalies&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=rules&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/analysis/association-rules?year=2024&minSupport=0.15&minConfidence=0.6&minLift=1.05&limit=20&offset=0",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=methodology&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=overview&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=compare&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=trends&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=quality&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=pca&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=clusters&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=anomalies&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=rules&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/analysis/association-rules?year=2024&minSupport=0.15&minConfidence=0.6&minLift=1.05&limit=20&offset=0",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=methodology&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=overview&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=compare&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=trends&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=quality&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=pca&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=clusters&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=anomalies&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=rules&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/analysis/association-rules?year=2024&minSupport=0.15&minConfidence=0.6&minLift=1.05&limit=20&offset=0",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=methodology&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=overview&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=compare&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=trends&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=quality&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=pca&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=clusters&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=anomalies&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=rules&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/analysis/association-rules?year=2024&minSupport=0.15&minConfidence=0.6&minLift=1.05&limit=20&offset=0",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=methodology&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=overview&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=compare&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=trends&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=quality&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=pca&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=clusters&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=anomalies&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=rules&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/analysis/association-rules?year=2024&minSupport=0.15&minConfidence=0.6&minLift=1.05&limit=20&offset=0",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=methodology&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=rules&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/analysis/association-rules?year=2024&minSupport=0.15&minConfidence=0.6&minLift=1.05&limit=20&offset=0",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=pca&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://localhost:4000/api/v1/dashboard?view=clusters&year=2024&state=all&unitType=administrative_district&category=all",
+      "error": "net::ERR_ABORTED"
+    }
+  ],
+  "note": "networkErrors excludes net::ERR_ABORTED navigations (benign, caused by rapid sequential page.goto in the route sweep); those are listed separately under navigationAborts."
+}

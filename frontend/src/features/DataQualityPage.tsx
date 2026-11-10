@@ -27,6 +27,13 @@ export default function DataQualityPage() {
   const reconciliation = (summary.reconciliation ?? []).map((r, i) => ({ ...r, id: `rec-${r.state_ut}-${r.year}-${i}` }));
   const trailingGaps = (summary.trailingFieldGaps ?? []).map((r, i) => ({ ...r, id: `gap-${r.source_line}-${i}` }));
 
+  // Release-wide totals. `sourceRows` is the canonical reconciliation total across
+  // all rows; eligible + aggregate partitions it without mixing scopes.
+  const eligibleObservations = summary.observations ?? 0;
+  const aggregateObservations = summary.aggregateRows ?? 0;
+  const canonicalObservations = data.meta.sourceRows ?? (eligibleObservations + aggregateObservations);
+  const sourceFileCount = (data.meta as unknown as { sourceFiles?: number }).sourceFiles ?? null;
+
   // Filter state-by-year rows
   const filteredStateRows = (stateFilter === 'all'
     ? byStateYear
@@ -52,84 +59,125 @@ export default function DataQualityPage() {
 
   const regionCoverageRows = [...byRegion.values()].filter(r => stateFilter === 'all' || r.state === stateFilter);
 
-  // Calculate completeness percentage
+  // Calculate completeness percentage — the fraction of non-null values among
+  // supplied expected table cells. This is a supplied-cell measure only.
   const totalSupplied = byStateYear.reduce((s, r) => s + Number(r.supplied ?? 0), 0) || summary.observations;
   const totalKnown = byStateYear.reduce((s, r) => s + Number(r.known ?? 0), 0) || summary.observations;
   const completenessPct = totalSupplied > 0 ? ((totalKnown / totalSupplied) * 100).toFixed(1) + '%' : 'Unavailable';
 
   const states = [...new Set(byStateYear.map(r => r.state))].sort();
 
+  // Reconciliation: distinguish checks available vs passed vs mismatched vs unavailable.
+  // A record existing is not the same as a confirmed reconciliation.
+  const diffOf = (r: any) => (r.difference === null || r.difference === undefined ? null : Number(r.difference));
+  const reconciliationUnavailable = reconciliation.filter(r => diffOf(r) === null || !r.status || r.status === 'unavailable').length;
+  const reconciliationMismatch = reconciliation.filter(r => diffOf(r) !== null && (Number(r.difference) !== 0 || r.status === 'mismatch')).length;
+  const reconciliationPassed = reconciliation.filter(r => diffOf(r) === 0 && r.status === 'match').length;
+  const reconciliationChecks = reconciliation.length;
+  const reconciliationAvailable = reconciliationPassed + reconciliationMismatch;
+
+  const exportRows = activeTab === 'state_matrix'
+    ? filteredStateRows
+    : activeTab === 'unit_coverage'
+      ? regionCoverageRows
+      : activeTab === 'reconciliation'
+        ? reconciliation
+        : (data.issues as unknown as Record<string, unknown>[]);
+
   return (
     <>
       <PageTitle
         eyebrow="KNOW YOUR DATA"
         title="Data quality, coverage & reconciliation"
-        description="Inspect completeness, explicit zeros, geographic reporting coverage, and source reconciliation."
-        action={<ExportButton rows={byStateYear} name="quality_state_summary" />}
+        description="Inspect eligible observations, explicit zeros, geographic reporting coverage, and per-record source reconciliation."
+        action={<ExportButton rows={exportRows} name={`quality_${activeTab}_${stateFilter}`} />}
       />
+
+      <Notice>
+        <strong>Card scope:</strong> The summary cards below describe the whole active release (2021–2024, all States/UTs). The State/UT filter
+        applies only to the coverage tables, not to these release-wide totals.
+      </Notice>
 
       <div className="stats">
         <Stat
-          label="Retained observations"
-          value={number(summary.observations)}
-          detail="Active serving database records (region × year × category)"
+          label="Eligible observations"
+          value={number(eligibleObservations)}
+          detail="Non-aggregate observations in the active release (excludes aggregate rows)"
         />
         <Stat
-          label="Explicit reported zeros"
+          label="Eligible explicit zeros"
           value={number(summary.explicitZeros ?? 0)}
-          detail="Entered as 0 in source; strictly distinguished from missing"
+          detail="Zeros recorded among eligible non-aggregate observations; kept distinct from missing"
         />
         <Stat
-          label="Missing / null values"
-          value={number(summary.missing)}
-          detail="Retained as null; never filled with synthetic zeros"
+          label="Retained nulls"
+          value={number(summary.missing ?? 0)}
+          detail="Nulls retained after preparation; never filled with synthetic zeros"
         />
         <Stat
-          label="Source completeness"
+          label="Non-null supplied cells"
           value={completenessPct}
-          detail="Non-null values among supplied expected table cells"
+          detail="Non-null values among supplied table cells — see the note below"
         />
       </div>
 
       <div className="stats" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', marginTop: '0.75rem' }}>
         <Stat
-          label="Aggregate rows segregated"
-          value={number(summary.aggregateRows ?? 0)}
-          detail="State totals & 'Total Districts' kept for reconciliation"
+          label="Aggregate observations"
+          value={number(aggregateObservations)}
+          detail="State/UT totals & 'Total Districts' rows kept for reconciliation, excluded from unit views"
+        />
+        <Stat
+          label="Canonical observations (all rows)"
+          value={number(canonicalObservations)}
+          detail={`Reconciliation total = ${number(eligibleObservations)} eligible + ${number(aggregateObservations)} aggregate`}
+        />
+        <Stat
+          label="Source files"
+          value={sourceFileCount === null ? 'Unavailable' : number(sourceFileCount)}
+          detail="36 state/UT fragments × 4 active years"
         />
         <Stat
           label="Documented source gaps"
           value={`${trailingGaps.length} lines`}
-          detail="Trailing source fields absent in originating CSV; not zero-filled"
+          detail="Trailing source fields absent from the active files; not zero-filled (see note below)"
         />
       </div>
 
       {/* Tab Controls */}
-      <div style={{ display: 'flex', gap: '0.5rem', margin: '1.25rem 0 1rem 0' }}>
+      <div className="tabs" role="tablist" aria-label="Data quality view" style={{ margin: '1.25rem 0 1rem 0' }}>
         <button
           type="button"
-          className={`button ${activeTab === 'state_matrix' ? 'primary' : ''}`}
+          role="tab"
+          aria-selected={activeTab === 'state_matrix'}
+          className={activeTab === 'state_matrix' ? 'active' : ''}
           onClick={() => setActiveTab('state_matrix')}
         >
           1. State × Year Coverage Matrix
         </button>
         <button
           type="button"
-          className={`button ${activeTab === 'unit_coverage' ? 'primary' : ''}`}
+          role="tab"
+          aria-selected={activeTab === 'unit_coverage'}
+          className={activeTab === 'unit_coverage' ? 'active' : ''}
           onClick={() => setActiveTab('unit_coverage')}
         >
           2. Reporting Unit History ({regionCoverageRows.length} units)
         </button>
         <button
           type="button"
-          className={`button ${activeTab === 'reconciliation' ? 'primary' : ''}`}
+          role="tab"
+          aria-selected={activeTab === 'reconciliation'}
+          className={activeTab === 'reconciliation' ? 'active' : ''}
           onClick={() => setActiveTab('reconciliation')}
         >
-          3. Source Reconciliation ({reconciliation.length} checks)
+          3. Source Reconciliation ({reconciliationPassed}/{reconciliationChecks} passed · {reconciliationMismatch} mismatched · {reconciliationUnavailable} unavailable)
         </button>
         <button
           type="button"
-          className={`button ${activeTab === 'issues' ? 'primary' : ''}`}
+          role="tab"
+          aria-selected={activeTab === 'issues'}
+          className={activeTab === 'issues' ? 'active' : ''}
           onClick={() => setActiveTab('issues')}
         >
           4. Quality & Limitation Register
@@ -138,12 +186,12 @@ export default function DataQualityPage() {
 
       {/* State filter for coverage tables */}
       {(activeTab === 'state_matrix' || activeTab === 'unit_coverage') && (
-        <div style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+        <div style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
           <label style={{ fontSize: '0.875rem', fontWeight: 600 }}>Filter by State / UT:</label>
           <select
             value={stateFilter}
             onChange={e => setStateFilter(e.target.value)}
-            style={{ padding: '0.4rem 0.6rem', minWidth: '220px' }}
+            style={{ minWidth: '220px' }}
           >
             <option value="all">All States / UTs (National)</option>
             {states.map(s => (
@@ -195,7 +243,7 @@ export default function DataQualityPage() {
       {activeTab === 'unit_coverage' && (
         <Panel
           title="Reporting Unit Historical Coverage Matrix"
-          subtitle="Available / supplied category count per unit across years. Cross-year identities joined by state and jurisdiction name."
+          subtitle="Available / supplied category count per unit across the active years. Cross-year identities are joined by state and jurisdiction name; this is a name-based count, not a gazetteer-verified unit list."
         >
           <DataTable
             rows={regionCoverageRows}
@@ -226,51 +274,81 @@ export default function DataQualityPage() {
       )}
 
       {activeTab === 'reconciliation' && (
-        <Panel
-          title="State Official Total Reconciliation"
-          subtitle="Comparing the published state aggregate row total with the sum of individual reporting units."
-        >
-          <DataTable
-            rows={reconciliation}
-            columns={[
-              { key: 'year', label: 'Year' },
-              { key: 'state_ut', label: 'State / UT' },
-              { key: 'category', label: 'Evaluated Category' },
-              {
-                key: 'aggregate_value',
-                label: 'Published State Total',
-                render: r => number(r.aggregate_value as number | null)
-              },
-              {
-                key: 'all_reporting_unit_official_total_sum',
-                label: 'Sum of Reporting Units',
-                render: r => number(r.all_reporting_unit_official_total_sum as number | null)
-              },
-              {
-                key: 'difference',
-                label: 'Difference',
-                render: r => {
-                  const diff = r.difference as number | null;
-                  if (diff === null) return 'N/A';
-                  return (
-                    <Badge tone={diff === 0 ? 'green' : 'amber'}>
-                      {diff === 0 ? 'Match (0)' : diff > 0 ? `+${diff}` : String(diff)}
-                    </Badge>
-                  );
+        <>
+          <div className="stats" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))' }}>
+            <Stat
+              label="Checks available"
+              value={number(reconciliationAvailable)}
+              detail="Records with a comparable published total and unit sum"
+            />
+            <Stat
+              label="Checks passed"
+              value={number(reconciliationPassed)}
+              detail="Difference is exactly zero"
+            />
+            <Stat
+              label="Mismatches"
+              value={number(reconciliationMismatch)}
+              detail="Non-zero difference or non-match status"
+            />
+            <Stat
+              label="Unavailable checks"
+              value={number(reconciliationUnavailable)}
+              detail="No comparable difference could be computed"
+            />
+          </div>
+
+          <Panel
+            title="State Official Total Reconciliation"
+            subtitle="Comparing each state's published aggregate row total with the sum of its individual reporting units for one year. A record existing is not itself a confirmed reconciliation."
+          >
+            <DataTable
+              rows={reconciliation}
+              columns={[
+                { key: 'year', label: 'Year' },
+                { key: 'state_ut', label: 'State / UT' },
+                { key: 'category', label: 'Evaluated Category' },
+                {
+                  key: 'aggregate_value',
+                  label: 'Published State Total',
+                  render: r => number(r.aggregate_value as number | null)
+                },
+                {
+                  key: 'all_reporting_unit_official_total_sum',
+                  label: 'Sum of Reporting Units',
+                  render: r => number(r.all_reporting_unit_official_total_sum as number | null)
+                },
+                {
+                  key: 'difference',
+                  label: 'Difference',
+                  render: r => {
+                    const diff = r.difference as number | null;
+                    if (diff === null || diff === undefined) return <Badge tone="neutral">Unavailable</Badge>;
+                    return (
+                      <Badge tone={diff === 0 ? 'green' : 'amber'}>
+                        {diff === 0 ? 'Match (0)' : diff > 0 ? `+${diff}` : String(diff)}
+                      </Badge>
+                    );
+                  }
+                },
+                {
+                  key: 'status',
+                  label: 'Reconciliation Status',
+                  render: r => {
+                    const status = String(r.status ?? 'unavailable');
+                    const tone = status === 'match' ? 'green' : status === 'mismatch' ? 'amber' : 'neutral';
+                    return <Badge tone={tone}>{status.toUpperCase()}</Badge>;
+                  }
                 }
-              },
-              {
-                key: 'status',
-                label: 'Reconciliation Status',
-                render: r => (
-                  <Badge tone={r.status === 'match' ? 'green' : 'amber'}>
-                    {String(r.status).toUpperCase()}
-                  </Badge>
-                )
-              }
-            ]}
-          />
-        </Panel>
+              ]}
+            />
+            <p className="panel-note">
+              {number(reconciliationChecks)} records are the checks attempted across 36 States/UTs × 4 active years.
+              Of these, {number(reconciliationPassed)} passed, {number(reconciliationMismatch)} mismatched and {number(reconciliationUnavailable)} were unavailable.
+              A count of {number(reconciliationChecks)} records is therefore not automatically {number(reconciliationChecks)} successful reconciliations.
+            </p>
+          </Panel>
+        </>
       )}
 
       {activeTab === 'issues' && (
@@ -290,13 +368,21 @@ export default function DataQualityPage() {
               ]}
             />
           </Panel>
-
-
         </>
       )}
 
       <Notice>
-        <strong>What completeness means:</strong> Completeness measures the fraction of non-null values among supplied table cells in the acquired source files. It does not establish that all NCRB publications or crime sections were ingested, nor that reporting boundaries remained identical across years.
+        <strong>What completeness means:</strong> “Non-null supplied cells” measures the fraction of non-null values among the table cells that
+        were actually supplied in the acquired source files. It does not prove that every NCRB publication, crime section or reporting unit was
+        published or ingested, nor that reporting boundaries were identical across years. It is a supplied-cell measure, not a measure of complete
+        publication coverage or of actual crime coverage.
+      </Notice>
+
+      <Notice>
+        <strong>What “0 documented source gaps” means:</strong> No trailing fields were absent from the trailing columns of the {sourceFileCount === null ? 'active' : number(sourceFileCount)} active
+        source files, so no cells were left zero-filled for that reason in the active 2021–2024 release. This describes the active release only; it
+        is not evidence of perfect source data, and the historical Andhra Pradesh 2020 missing-field issues belong to the archived-scope
+        documentation, outside this release.
       </Notice>
     </>
   );

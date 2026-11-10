@@ -1,0 +1,145 @@
+{
+  "widths": [
+    {
+      "name": "desktop",
+      "width": 1440,
+      "height": 900,
+      "charts": {
+        "overview": [
+          {
+            "index": 19,
+            "w": 515,
+            "h": 242,
+            "overflowingText": 0,
+            "worstOverflowPx": 0
+          }
+        ],
+        "trends_annual": [
+          {
+            "index": 16,
+            "w": 1094,
+            "h": 515,
+            "overflowingText": 0,
+            "worstOverflowPx": 0
+          }
+        ],
+        "trends_matched": [
+          {
+            "index": 16,
+            "w": 1094,
+            "h": 467,
+            "overflowingText": 0,
+            "worstOverflowPx": 0
+          }
+        ]
+      },
+      "pageErrors": []
+    },
+    {
+      "name": "laptop",
+      "width": 1280,
+      "height": 800,
+      "charts": {
+        "overview": [
+          {
+            "index": 19,
+            "w": 435,
+            "h": 205,
+            "overflowingText": 0,
+            "worstOverflowPx": 0
+          }
+        ],
+        "trends_annual": [
+          {
+            "index": 16,
+            "w": 934,
+            "h": 440,
+            "overflowingText": 0,
+            "worstOverflowPx": 0
+          }
+        ],
+        "trends_matched": [
+          {
+            "index": 16,
+            "w": 934,
+            "h": 398,
+            "overflowingText": 0,
+            "worstOverflowPx": 0
+          }
+        ]
+      },
+      "pageErrors": []
+    },
+    {
+      "name": "tablet",
+      "width": 834,
+      "height": 1112,
+      "charts": {
+        "overview": [
+          {
+            "index": 19,
+            "w": 550,
+            "h": 259,
+            "overflowingText": 0,
+            "worstOverflowPx": 0
+          }
+        ],
+        "trends_annual": [
+          {
+            "index": 16,
+            "w": 550,
+            "h": 259,
+            "overflowingText": 0,
+            "worstOverflowPx": 0
+          }
+        ],
+        "trends_matched": [
+          {
+            "index": 16,
+            "w": 550,
+            "h": 235,
+            "overflowingText": 0,
+            "worstOverflowPx": 0
+          }
+        ]
+      },
+      "pageErrors": []
+    },
+    {
+      "name": "mobile",
+      "width": 390,
+      "height": 844,
+      "charts": {
+        "overview": [
+          {
+            "index": 19,
+            "w": 322,
+            "h": 152,
+            "overflowingText": 0,
+            "worstOverflowPx": 0
+          }
+        ],
+        "trends_annual": [
+          {
+            "index": 16,
+            "w": 322,
+            "h": 152,
+            "overflowingText": 0,
+            "worstOverflowPx": 0
+          }
+        ],
+        "trends_matched": [
+          {
+            "index": 16,
+            "w": 322,
+            "h": 137,
+            "overflowingText": 0,
+            "worstOverflowPx": 0
+          }
+        ]
+      },
+      "pageErrors": []
+    }
+  ],
+  "capturedAt": "2026-11-08T19:19:44.611Z"
+}

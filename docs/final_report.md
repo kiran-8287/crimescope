@@ -55,7 +55,7 @@ arithmetic:
 | 05 PCA | SVD, eigenvalues, explained variance, loadings, scores | [`methods/pca.py`](../analysis/src/crimescope_analysis/methods/pca.py) |
 | 06 K-means | K-means++ (k=3/4/5), seed 42, centroids, inertia | [`methods/kmeans.py`](../analysis/src/crimescope_analysis/methods/kmeans.py) |
 | 07 Hierarchical clustering | Ward linkage, merge history | [`methods/hierarchical.py`](../analysis/src/crimescope_analysis/methods/hierarchical.py) |
-| 08 Anomaly detection | Cross-sectional z-scores + year-on-year change | [`methods/anomaly.py`](../analysis/src/crimescope_analysis/methods/anomaly.py) |
+| 08 Anomaly detection | Cross-sectional z-score screen — **additional**, not one of the five core dashboard methods (the module also contains an unused year-on-year change utility, which the active 2024-only run does not use) | [`methods/anomaly.py`](../analysis/src/crimescope_analysis/methods/anomaly.py) |
 | 09 Association rules | Apriori, support/confidence/lift | [`methods/association.py`](../analysis/src/crimescope_analysis/methods/association.py) |
 
 ## 3. Dataset provenance and active scope
@@ -167,8 +167,15 @@ Executed during this work (details in [`docs/reproducibility.md`](reproducibilit
 - **Backend:** `npm --workspace backend run test` (Vitest) and `run build` (`tsc`) — pass.
 - **Frontend:** `npm --workspace frontend test` (`node:test`) and `run build`
   (`tsc --noEmit && vite build`) — pass.
-- **Findings:** `python scripts/research_findings.py` — verifies three hashes, writes
-  `findings.json`, five tables and five figures.
+- **Findings:** `python scripts/research_findings.py` — reads the run manifest first (the
+  manifest is needed to know the expected hashes), then verifies **nine** hashes before any
+  investigation parses the protected payload. Three are structural references
+  (`sqlite_matches_manifest`, `feature_input_matches_manifest`,
+  `release_dataset_matches_run`); the other six are the consumed analysis artifacts
+  (`pca/pca_2024.json`, `kmeans/kmeans_2024_k3.json` / `_k4` / `_k5`,
+  `anomalies/anomalies_2024.json`, `association/association_rules_2024.json`), each checked
+  against its recorded manifest hash and failing closed (naming the artifact) on mismatch or
+  on an unrecorded hash. On success it writes `findings.json`, five tables and five figures.
 - **Browser:** Playwright + system Chrome, isolated profile — see the verification
   directory recorded in `progress/STATUS.md`.
 

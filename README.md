@@ -110,39 +110,44 @@ Open `http://localhost:5173` in your browser.
 
 ## API endpoints
 
-All endpoints are read-only and served from `http://localhost:4000/api/v1`:
+All endpoints are read-only. Service health lives at the server **root**; analytical
+endpoints are served under `http://localhost:4000/api/v1`:
 
 | Endpoint | Description |
 |---|---|
-| `GET /health` | Service health |
-| `GET /ready` | Readiness check |
-| `GET /overview` | KPI metrics, top regions/categories |
-| `GET /regions?year=2024` | Regional comparison table |
-| `GET /trends?region=&category=` | Year-over-year trend |
-| `GET /categories/top?year=2024` | Top categories by cases |
-| `GET /correlations?year=2024` | Top correlated category pairs |
-| `GET /data-quality` | Row accounting and quarantine report |
-| `GET /analysis/runs/current/pca?year=2020` | PCA results |
-| `GET /analysis/runs/current/clusters?year=2020&k=3` | K-means clusters |
-| `GET /analysis/runs/current/hierarchical?year=2020` | Hierarchical clustering |
-| `GET /anomalies?year=2024` | Cross-sectional and YoY anomalies |
-| `GET /association-rules?year=2024` | Association rules |
-| `GET /export/canonical` | Download canonical dataset CSV (2021–2024 only) |
-| `GET /export/quality-report` | Download quality report JSON (2021–2024 only) |
-| `GET /export/quarantined` | Download quarantined observations CSV (2021–2024 only) |
+| `GET /health` | Service health (root) |
+| `GET /ready` | Readiness check (root) |
+| `GET /api/v1/dashboard?year=2024&view=overview` | Bounded dashboard payload used by the UI |
+| `GET /api/v1/overview` | KPI metrics, top regions/categories |
+| `GET /api/v1/regions?year=2024` | Regional comparison table |
+| `GET /api/v1/trends?region=&category=` | Year-over-year trend |
+| `GET /api/v1/categories/top?year=2024` | Top categories by cases |
+| `GET /api/v1/correlations?year=2024` | Top correlated category pairs |
+| `GET /api/v1/data-quality` | Row accounting and quarantine report |
+| `GET /api/v1/analysis/runs/current/pca?year=2024` | PCA results |
+| `GET /api/v1/analysis/runs/current/clusters?year=2024&k=3` | K-means clusters |
+| `GET /api/v1/analysis/runs/current/hierarchical?year=2024` | Hierarchical clustering |
+| `GET /api/v1/anomalies?year=2024` | Cross-sectional and YoY anomalies |
+| `GET /api/v1/analysis/association-rules?year=2024&offset=0&limit=20` | Paginated association rules |
+| `GET /api/v1/export/canonical` | Download canonical dataset CSV (2021–2024 only) |
+| `GET /api/v1/export/quality-report` | Download quality report JSON (2021–2024 only) |
+| `GET /api/v1/export/quarantined` | Download quarantined observations CSV (2021–2024 only) |
+
+Unsupported years are rejected with HTTP 400 (`unsupported_year`); the active scope is
+2021–2024 only.
 
 ## Frontend pages
 
 | Route | Page |
 |---|---|
 | `/` | Overview — KPIs, top regions/categories, provenance |
-| `/regional-comparison` | Compare regions by year/category |
-| `/trends` | Year-over-year trend by region and category |
-| `/data-quality` | Row accounting, quarantine, per-source stats |
+| `/compare` | Regional comparison — compare reporting units by year/category |
+| `/trends` | Yearly trends — year-over-year trend by region and category |
+| `/quality` | Data quality — row accounting, quarantine, per-source stats |
 | `/pca` | Principal Component Analysis |
 | `/clusters` | K-means and hierarchical clustering |
-| `/anomalies` | Unusual changes (cross-sectional + YoY) |
-| `/association-rules` | Category association rules |
+| `/anomalies` | Unusual observations (cross-sectional + YoY) |
+| `/rules` | Category association rules |
 | `/methodology` | Course-method mapping |
 
 ## Data

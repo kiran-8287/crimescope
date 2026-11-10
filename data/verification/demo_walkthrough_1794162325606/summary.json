@@ -1,0 +1,210 @@
+{
+  "startedAt": "2026-11-08T18:25:25.607Z",
+  "testedUrl": "http://localhost:5173",
+  "activeRelease": "ncrb-districtwise-2021-2024-ecec48b772bc",
+  "activeRun": "ncrb-national-2024-admin-log1p-zscore-20261107-v4",
+  "steps": [
+    {
+      "step": 1,
+      "name": "Overview",
+      "route": "/",
+      "checks": {
+        "has_774_units": true,
+        "has_2024_total_2740258": true,
+        "has_contextual_marker": true
+      },
+      "startedAt": "2026-11-08T18:25:25.990Z",
+      "screenshot": "step1.png",
+      "textFile": "step1_text.txt",
+      "has": {
+        "pca_pc1": false,
+        "pca_pc2": false,
+        "pca_cum": false
+      },
+      "autoDurationMs": 3440
+    },
+    {
+      "step": 2,
+      "name": "Regional Comparison",
+      "route": "/compare",
+      "checks": {
+        "kameng_selected": true,
+        "gondia_selected": true,
+        "two_of_three_selected": true,
+        "gondia_official_3922_cases": true,
+        "kameng_official_92_cases": true,
+        "gondia_misc_2109": true,
+        "no_update_loop": true
+      },
+      "startedAt": "2026-11-08T18:25:29.431Z",
+      "screenshot": "step2.png",
+      "textFile": "step2_text.txt",
+      "has": {
+        "pca_pc1": false,
+        "pca_pc2": false,
+        "pca_cum": false
+      },
+      "autoDurationMs": 6155,
+      "note": "Two stable units are selected at once (Kameng West, Arunachal Pradesh and Gondia, Maharashtra) with real source-backed category values, not Unavailable."
+    },
+    {
+      "step": 3,
+      "name": "Trends",
+      "route": "/trends",
+      "checks": {
+        "annual_2023_2940460": true,
+        "annual_2022_2808408": true,
+        "annual_2021_2909532": true,
+        "annual_2024_2740258": true,
+        "matched_749": true,
+        "matched_2022_2804254": true,
+        "matched_2023_2892597": true,
+        "matched_change_315": true,
+        "annual_change_470": true,
+        "excluded_1_21": true
+      },
+      "startedAt": "2026-11-08T18:25:35.587Z",
+      "screenshot": "step3.png",
+      "textFile": "step3_text.txt",
+      "has": {
+        "pca_pc1": false,
+        "pca_pc2": false,
+        "pca_cum": false
+      },
+      "autoDurationMs": 3717,
+      "note": "Name-matched-cohort change +3.15% (749 matched units) and annual change +4.70% are shown together with distinct denominators; excluded units 1 / 21."
+    },
+    {
+      "step": 4,
+      "name": "Data Quality",
+      "route": "/quality",
+      "checks": {
+        "retained_546198": true,
+        "aggregate_20880": true,
+        "zeros_323296": true,
+        "nulls_label": true
+      },
+      "startedAt": "2026-11-08T18:25:39.305Z",
+      "screenshot": "step4.png",
+      "textFile": "step4_text.txt",
+      "has": {
+        "pca_pc1": false,
+        "pca_pc2": false,
+        "pca_cum": false
+      },
+      "autoDurationMs": 4743,
+      "note": "canonical 567,078 = 546,198 + 20,880 (both displayed); the page does not print it as one figure."
+    },
+    {
+      "step": 5,
+      "name": "PCA",
+      "route": "/pca",
+      "checks": {
+        "pc1_1591": true,
+        "pc2_457": true,
+        "cum_2048": true,
+        "score_plot_label": true,
+        "no_stale_227": true
+      },
+      "startedAt": "2026-11-08T18:25:44.049Z",
+      "screenshot": "step5.png",
+      "textFile": "step5_text.txt",
+      "has": {
+        "pca_pc1": true,
+        "pca_pc2": true,
+        "pca_cum": true
+      },
+      "autoDurationMs": 2856
+    },
+    {
+      "step": 6,
+      "name": "Clusters",
+      "route": "/clusters",
+      "checks": {
+        "size_190": true,
+        "size_168": true,
+        "size_416": true
+      },
+      "startedAt": "2026-11-08T18:25:46.906Z",
+      "screenshot": "step6.png",
+      "textFile": "step6_text.txt",
+      "has": {
+        "pca_pc1": false,
+        "pca_pc2": false,
+        "pca_cum": false
+      },
+      "autoDurationMs": 3412
+    },
+    {
+      "step": 7,
+      "name": "Anomalies",
+      "route": "/anomalies",
+      "checks": {
+        "rare_z_2778": true,
+        "higher_count_tab": true,
+        "higher_count_flag_type": true,
+        "sample_std_note": true
+      },
+      "startedAt": "2026-11-08T18:25:50.319Z",
+      "screenshot": "step7.png",
+      "textFile": "step7_text.txt",
+      "has": {
+        "pca_pc1": false,
+        "pca_pc2": false,
+        "pca_cum": false
+      },
+      "autoDurationMs": 3428,
+      "note": "the higher-count tab lists flagged rows by descending z; \"Higher-count flag\" replaces the earlier \"High Recorded Volume\" wording."
+    },
+    {
+      "step": 8,
+      "name": "Association Rules",
+      "route": "/rules",
+      "checks": {
+        "pagination_owner": true,
+        "page2": true,
+        "last_page": true,
+        "rules_697": true,
+        "rules_739_transactions": true
+      },
+      "startedAt": "2026-11-08T18:25:53.748Z",
+      "screenshot": "step8.png",
+      "textFile": "step8_text.txt",
+      "has": {
+        "pca_pc1": false,
+        "pca_pc2": false,
+        "pca_cum": false
+      },
+      "autoDurationMs": 2890
+    },
+    {
+      "step": 9,
+      "name": "Methodology",
+      "route": "/methodology",
+      "checks": {
+        "live_release": true,
+        "run_label": true,
+        "live_run_v4": true
+      },
+      "startedAt": "2026-11-08T18:25:56.638Z",
+      "screenshot": "step9.png",
+      "textFile": "step9_text.txt",
+      "has": {
+        "pca_pc1": false,
+        "pca_pc2": false,
+        "pca_cum": false
+      },
+      "autoDurationMs": 3550
+    }
+  ],
+  "consoleErrors": [],
+  "pageErrors": [],
+  "status": "completed",
+  "finishedAt": "2026-11-08T18:26:00.393Z",
+  "automatedWalkthroughMs": 34191,
+  "checkTotals": {
+    "pass": 44,
+    "total": 44
+  },
+  "note": "autoDurationMs is machine wall-clock only; it excludes human speaking time in the 8-10 min demo."
+}

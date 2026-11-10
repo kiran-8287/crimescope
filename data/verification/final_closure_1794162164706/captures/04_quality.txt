@@ -1,0 +1,128 @@
+Skip to content
+CrimeScope
+REGIONAL INTELLIGENCE
+EXPLORE
+Overview
+Regional comparison
+Yearly trends
+Data quality
+ANALYSE
+PCA explorer
+Cluster profiles
+Unusual observations
+Association rules
+REFERENCE
+Methodology & sources
+Coverage: 2021–2024 · 36 states/UTs
+2024 · 774 districts
+Workspace / Data quality
+Coverage: 2021–2024 · 36 states/UTs
+Methodology & Provenance
+Coverage: 2021–2024 · 36 states/UTs. Reported records reflect police recording practices and population sizes.
+KNOW YOUR DATA
+Data quality, coverage & reconciliation
+
+Inspect eligible observations, explicit zeros, geographic reporting coverage, and per-record source reconciliation.
+
+Export CSV
+Card scope: The summary cards below describe the whole active release (2021–2024, all States/UTs). The State/UT filter applies only to the coverage tables, not to these release-wide totals.
+Eligible observations
+5,46,198
+Non-aggregate observations in the active release (excludes aggregate rows)
+Eligible explicit zeros
+3,23,296
+Zeros recorded among eligible non-aggregate observations; kept distinct from missing
+Retained nulls
+0
+Nulls retained after preparation; never filled with synthetic zeros
+Non-null supplied cells
+100.0%
+Non-null values among supplied table cells — see the note below
+Aggregate observations
+20,880
+State/UT totals & 'Total Districts' rows kept for reconciliation, excluded from unit views
+Canonical observations (all rows)
+5,67,078
+Reconciliation total = 5,46,198 eligible + 20,880 aggregate
+Source files
+144
+36 state/UT fragments × 4 active years
+Documented source gaps
+0 lines
+Trailing source fields absent from the active files; not zero-filled (see note below)
+1. State × Year Coverage Matrix
+2. Reporting Unit History (1011 units)
+3. Source Reconciliation (144/144 passed · 0 mismatched · 0 unavailable)
+4. Quality & Limitation Register
+Filter by State / UT:
+All States / UTs (National)
+A&N Islands
+Andhra Pradesh
+Arunachal Pradesh
+Assam
+Bihar
+Chandigarh
+Chhattisgarh
+D&N Haveli and Daman & Diu
+Delhi
+Goa
+Gujarat
+Haryana
+Himachal Pradesh
+Jammu & Kashmir
+Jharkhand
+Karnataka
+Kerala
+Ladakh
+Lakshadweep
+Madhya Pradesh
+Maharashtra
+Manipur
+Meghalaya
+Mizoram
+Nagaland
+Odisha
+Puducherry
+Punjab
+Rajasthan
+Sikkim
+Tamil Nadu
+Telangana
+Tripura
+Uttar Pradesh
+Uttarakhand
+West Bengal
+State by Year Reporting Matrix
+
+Showing reporting units, supplied source cells, explicit zeros, and cell completeness.
+
+144 records
+State / UT
+	
+Year
+	
+Districts
+	
+City Police
+	
+Railways
+	
+Other Units
+	
+Known / Supplied Cells
+	
+Explicit Zeros
+	
+Completeness
+
+A&N Islands	2021	3	0	0	0	426 / 426	285	100.0%
+A&N Islands	2022	3	0	0	0	426 / 426	287	100.0%
+A&N Islands	2023	3	0	0	0	426 / 426	299	100.0%
+A&N Islands	2024	3	0	0	0	462 / 462	327	100.0%
+Andhra Pradesh	2021	14	3	2	1	2,840 / 2,840	1,171	100.0%
+Andhra Pradesh	2022	26	0	2	0	3,976 / 3,976	1,667	100.0%
+Page 1 of 24
+What completeness means: “Non-null supplied cells” measures the fraction of non-null values among the table cells that were actually supplied in the acquired source files. It does not prove that every NCRB publication, crime section or reporting unit was published or ingested, nor that reporting boundaries were identical across years. It is a supplied-cell measure, not a measure of complete publication coverage or of actual crime coverage.
+What “0 documented source gaps” means: No trailing fields were absent from the trailing columns of the 144 active source files, so no cells were left zero-filled for that reason in the active 2021–2024 release. This describes the active release only; it is not evidence of perfect source data, and the historical Andhra Pradesh 2020 missing-field issues belong to the archived-scope documentation, outside this release.
+CrimeScope · Reported crime analytics
+Release ncrb-districtwise-2021-2024-ecec48b772bc · Reported records do not measure all crime.

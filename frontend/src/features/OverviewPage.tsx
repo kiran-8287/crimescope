@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ArrowUpRight, BarChart2, Eye } from 'lucide-react';
 import { PageTitle } from '../components/Layout';
 import { Panel, Filters, Stat, Notice, Badge, UnitTypeBadge, ExportButton, RegionDetailDrawer } from '../components/UI';
-import { Lines, Bars, colors } from '../components/Charts';
+import { AnnualBars, Bars, colors, type AnnualBarDatum } from '../components/Charts';
 import { DataTable } from '../components/DataTable';
 import { useAnalytics } from '../context/useAnalytics';
 import { number } from '../utils/format';
@@ -18,11 +18,15 @@ export default function OverviewPage() {
 
   const observationIndex = getObservationIndex(data.observations);
   const labels = data.meta.years.map(String);
-  const pairs = data.meta.comparisonPairs?.filter(p => p.status === 'available') ?? [];
   const selectedLabel = filters.category === 'all' ? 'Official reported total' : categoryLabel(data, filters.category);
 
-  // Annual recorded totals series for all available years (2021–2024 active scope).
-  const nationalAnnualSeriesValues: (number | null)[] = labels.map(() => null);
+  // Annual recorded totals for every available year. Each year is an independent
+  // snapshot of the eligible reporting units for that year; each total is the sum
+  // over the selected unit cohort (not the official all-India published total).
+  // The years are never connected, because 2023 is reported under the IPC and 2024
+  // under the BNS.
+  const annualValues: (number | null)[] = labels.map(() => null);
+  const annualUnitCounts: number[] = labels.map(() => 0);
 
   for (const year of data.meta.years) {
     const categoryAtYear = filters.category === 'all'
@@ -35,58 +39,31 @@ export default function OverviewPage() {
     const sum = known.length ? known.reduce<number>((a, b) => a + (b ?? 0), 0) : null;
 
     const yearIdx = data.meta.years.indexOf(year);
-    nationalAnnualSeriesValues[yearIdx] = sum;
+    annualValues[yearIdx] = sum;
+    annualUnitCounts[yearIdx] = yearUnits.length;
   }
 
-  // Connected pairwise comparison series for verified stable cohorts
-  const totalSeries = pairs.map(pair => {
-    const values: (number | null)[] = data.meta.years.map(() => null);
-    const categoryAt = (year: number) => filters.category === 'all'
-      ? data.meta.categories?.find(c => c.years.includes(year) && roleFor(data, c.id, year) === 'official_total')?.id
-      : filters.category;
-    const fromCategory = categoryAt(pair.fromYear), toCategory = categoryAt(pair.toYear);
-    if (!fromCategory || !toCategory) return { name: `${pair.fromYear}–${pair.toYear} cohort (unavailable)`, values };
+  const annualBars: AnnualBarDatum[] = data.meta.years.map((year, i) => ({
+    label: String(year),
+    value: annualValues[i],
+    units: annualUnitCounts[i],
+    framework: year <= 2023 ? 'IPC' : 'BNS'
+  }));
 
-    const fromRegions = data.regions.filter(r => r.year === pair.fromYear && r.cohortId?.startsWith(`${pair.id}:`) && (filters.unitType === 'all' || r.regionType === filters.unitType) && (filters.state === 'all' || r.state === filters.state));
-    const toIds = new Set(data.regions.filter(r => r.year === pair.toYear && r.cohortId?.startsWith(`${pair.id}:`) && (filters.unitType === 'all' || r.regionType === filters.unitType) && (filters.state === 'all' || r.state === filters.state)).map(r => r.cohortId));
-    const candidate = fromRegions.filter(r => toIds.has(r.cohortId));
-    const usable = candidate.filter(r => [pair.fromYear, pair.toYear].every(year => {
-      const region = data.regions.find(x => x.year === year && x.cohortId === r.cohortId);
-      const category = year === pair.fromYear ? fromCategory : toCategory;
-      return !!region && !!category && (observationAt(observationIndex, region.id, year, category)?.cases ?? null) !== null;
-    }));
+  // The 2024 bar follows a reporting-framework change (IPC → BNS), so the chart
+  // divides the last two years rather than implying a comparable decline.
+  const frameworkBreak = data.meta.years.indexOf(2023);
 
-    for (const [year, cat] of [[pair.fromYear, fromCategory], [pair.toYear, toCategory]] as const) {
-      const index = data.meta.years.indexOf(year);
-      const ids = new Set(usable.map(r => r.cohortId));
-      const yearRegions = data.regions.filter(r => r.year === year && ids.has(r.cohortId));
-      const valuesFor = yearRegions.map(r => observationAt(observationIndex, r.id, year, cat)?.cases ?? null);
-      values[index] = valuesFor.length && valuesFor.every(v => v !== null) ? valuesFor.reduce<number>((a, v) => a + (v ?? 0), 0) : null;
-    }
-    return { name: `Verified ${pair.fromYear}–${pair.toYear} cohort (${usable.length} units)`, values };
-  });
-
-  const chartSeries = filters.state === 'all'
-    ? [
-        { name: `National annual totals (2021–2024) · ${selectedLabel}`, values: nationalAnnualSeriesValues },
-        ...totalSeries
-      ]
-    : [
-        { name: `Annual recorded totals · ${selectedLabel}`, values: nationalAnnualSeriesValues },
-        ...totalSeries
-      ];
-
-  const detailRows = chartSeries.flatMap((series): { id: string; period: string; year: number; category: string; cases: number | null }[] =>
-    series.values.flatMap((value, i): { id: string; period: string; year: number; category: string; cases: number | null }[] =>
-      value === null ? [] : [{
-        id: `${series.name}-${labels[i]}`,
-        period: series.name,
-        year: Number(labels[i]),
-        category: selectedLabel,
-        cases: value
-      }]
-    )
-  );
+  // Exact annual values shown beside the chart. The visible scope and unit count
+  // travel with the numbers so the table matches what the chart displays.
+  const annualTableRows = data.meta.years.map((year, i) => ({
+    id: `annual-${year}`,
+    year,
+    framework: year <= 2023 ? 'IPC' : 'BNS',
+    units: annualUnitCounts[i],
+    scope: filters.state === 'all' ? 'National · 36 States/UTs' : filters.state,
+    cases: annualValues[i]
+  }));
 
   // Top category counts for the category breakdown
   const topCategories = data.topCategories?.filter(c => c.role !== 'official_total').slice(0, 8) ?? [];
@@ -168,23 +145,37 @@ export default function OverviewPage() {
         />
       </div>
 
-      <div className="grid two-one">
+      <div className="grid two-col">
         <Panel
-          title="Recorded crimes over time"
-          subtitle={`${selectedLabel} across reporting periods. 2022–2023 connected where units are matched.`}
-          action={<Link className="text-link" to="/trends">Full trends view <ArrowUpRight size={14} /></Link>}
+          title="Reported cases by year"
+          subtitle="Separate annual snapshots of eligible reporting units."
+          action={
+            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
+              <ExportButton rows={annualTableRows} name="overview_annual_totals" />
+              <Link className="text-link" to="/trends">Compare the same named units <ArrowUpRight size={14} /></Link>
+            </div>
+          }
         >
-          <Lines labels={labels} series={chartSeries} unit="cases" />
+          <AnnualBars
+            bars={annualBars}
+            unit="cases"
+            height={320}
+            breakAfterIndex={frameworkBreak}
+            breakLabel="2024 framework change"
+            callout={`Each bar is that year's own source total for the eligible units — the four bars are separate snapshots, not a continuous series. 2024 is reported under the BNS, a different legal framework from the IPC used through 2023, so the 2023→2024 change is not a like-for-like comparison and no comparable decline is claimed. To compare the same jurisdiction names, use the name-matched cohort in the trends view.`}
+            ariaLabel="Reported cases by year from 2021 to 2024 with a zero baseline. Each year is a separate snapshot and 2024 uses a different reporting framework."
+          />
           <details className="details" style={{ marginTop: '0.75rem' }}>
-            <summary>View chart values table</summary>
+            <summary>View exact annual values</summary>
             <DataTable
               searchable={false}
-              rows={detailRows}
+              rows={annualTableRows}
               columns={[
-                { key: 'period', label: 'Series' },
                 { key: 'year', label: 'Year' },
-                { key: 'category', label: 'Category' },
-                { key: 'cases', label: 'Recorded cases', render: r => number(r.cases as number) }
+                { key: 'framework', label: 'Law framework', render: r => <Badge tone={r.framework === 'IPC' ? 'neutral' : 'amber'}>{String(r.framework)}</Badge> },
+                { key: 'scope', label: 'Geographic scope' },
+                { key: 'units', label: 'Reporting units' },
+                { key: 'cases', label: 'Recorded cases', render: r => number(r.cases as number | null) }
               ]}
             />
           </details>

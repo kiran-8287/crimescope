@@ -1,5 +1,14 @@
 # CrimeScope — Application Audit and Root Cause Analysis
 
+> **Historical note (added 2026-11-08).** This is a root-cause audit of the **pre-fix
+> state** (2026-11-06). Its PCA row records the symptom of that time ("only 22.7%
+> variance", "Scree and cumulative variance charts"); the current dashboard uses a
+> **two-component retained-variance** chart with values derived from the active
+> artifact (PC1 15.91 % / PC2 4.57 % / combined 20.48 %). Current status:
+> [`../progress/STATUS.md`](../progress/STATUS.md),
+> [`FINAL_SUBMISSION_READINESS.md`](FINAL_SUBMISSION_READINESS.md). The content below
+> is preserved unchanged.
+
 **Date:** 2026-11-06  
 **Auditor:** Antigravity AI Engineering  
 **Scope:** Full-stack inspection across all nine routes, database, analysis pipeline, and API.

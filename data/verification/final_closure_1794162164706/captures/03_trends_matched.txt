@@ -1,0 +1,138 @@
+Skip to content
+CrimeScope
+REGIONAL INTELLIGENCE
+EXPLORE
+Overview
+Regional comparison
+Yearly trends
+Data quality
+ANALYSE
+PCA explorer
+Cluster profiles
+Unusual observations
+Association rules
+REFERENCE
+Methodology & sources
+Coverage: 2021–2024 · 36 states/UTs
+2024 · 774 districts
+Workspace / Yearly trends
+Coverage: 2021–2024 · 36 states/UTs
+Methodology & Provenance
+Coverage: 2021–2024 · 36 states/UTs. Reported records reflect police recording practices and population sizes.
+ACROSS TIME
+Yearly trends & comparability
+
+Annual recorded totals are shown as isolated points. Only the source-verified 2022–2023 name-matched cohort is connected, and only between its own two years.
+
+Export CSV
+Reporting Year
+2021
+2022
+2023
+2024
+State / UT
+All states / UTs (National)
+A&N Islands
+Andhra Pradesh
+Arunachal Pradesh
+Assam
+Bihar
+Chandigarh
+Chhattisgarh
+D&N Haveli and Daman & Diu
+Delhi
+Goa
+Gujarat
+Haryana
+Himachal Pradesh
+Jammu & Kashmir
+Jharkhand
+Karnataka
+Kerala
+Ladakh
+Lakshadweep
+Madhya Pradesh
+Maharashtra
+Manipur
+Meghalaya
+Mizoram
+Nagaland
+Odisha
+Puducherry
+Punjab
+Rajasthan
+Sikkim
+Tamil Nadu
+Telangana
+Tripura
+Uttar Pradesh
+Uttarakhand
+West Bengal
+Reporting Units
+All reporting units
+Administrative districts (inferred)
+Crime Category
+Official Reported Total
+Select a crime category...
+Reset
+1. Annual recorded totals
+2. Name-matched cohorts
+3. Single-region history
+Name-matched units (2022–2023)
+749
+Units whose jurisdiction names match in both years
+Matched-cohort change
++3.15%
+28,04,254 → 28,92,597 matched cases (2022 = 100%)
+Annual change
++4.70%
+28,08,408 → 29,40,460 annual cases (2022 = 100%)
+Excluded units
+1 / 21
+2022 / 2023 units without a name match, omitted from the cohort
+2022–2023 name-matched cohort
+
+Units whose jurisdiction names appear in both years. The cohort is joined only between 2022 and 2023; the two denominators are shown separately below.
+
+0
+8,09,927
+16,19,854
+24,29,781
+32,39,709
+2021
+2022
+2023
+2024
+Name-matched 2022–2023 cohort · 749 units (+3.15% matched change)
+
+This is an operational jurisdiction-name match: it controls membership in the comparison set but does not establish unchanged administrative boundaries, population, or coding practice. The matched-cohort change (+3.15%) uses the name-matched 2022 total as its denominator, while the annual change (+4.70%) uses the full annual 2022 official total for the same unit scope — the two denominators are different and are not interchangeable.
+
+2022–2023 reconciliation
+Comparison Period
+	
+Year
+	
+Framework
+	
+Annual units
+	
+Matched units
+	
+Excluded units
+	
+Annual cases
+	
+Matched cases
+	
+Excluded cases
+
+2022–2023	2022	IPC	750	749	1	28,08,408	28,04,254	4,154
+2022–2023	2023	IPC	770	749	21	29,40,460	28,92,597	47,863
+Page 1 of 1
+
+Annual units are every reporting unit of the selected type in that year; matched units are the subset present in both years under the same jurisdiction name; excluded units are the remainder (2022: 1 unit; 2023: 21 units). “Matched units” is not the full annual candidate pool — it is the name-matched subset, so candidate and matched counts are intentionally distinct from the annual unit count. Excluded cases are annual cases minus matched cases.
+
+Comparability boundaries: Annual totals are shown as isolated points and never connected across the 2023–2024 legal-framework break. Only the 2022–2023 name-matched cohort is joined, and only between its own two years. 2021–2022 includes district reorganisation in Andhra Pradesh.
+Methodology & context
+CrimeScope · Reported crime analytics
+Release ncrb-districtwise-2021-2024-ecec48b772bc · Reported records do not measure all crime.
