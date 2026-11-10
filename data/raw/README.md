@@ -13,14 +13,41 @@ retrieved from the archive's public GitHub repository.
 
 ## File Naming
 
-Filenames such as `1_16730065601districtwiseipccrimes2021_t1.csv` retain the
-archive's original naming convention. The leading number, timestamp-like string,
-and table descriptor are all part of the archive's identifier. The `_tN` suffix
-(where N is 1–36) identifies a fragment of a state/UT table.
+Active source CSVs use a readable, provenance-preserving naming convention:
+
+```
+<year>_<state_or_ut>_districtwise_<framework>_crimes.csv
+```
+
+- `<year>` — 2021, 2022, 2023, or 2024
+- `<state_or_ut>` — lowercase snake_case state or union territory name (e.g. `andhra_pradesh`, `west_bengal`, `dadra_and_nagar_haveli_and_daman_and_diu`, `andaman_and_nicobar_islands`)
+- `<framework>` — `ipc` for 2021–2023, `ipc_bns` for the 2024 IPC/BNS transition
+
+Examples:
+
+| Year | State/UT | Framework | Original archive filename | New local filename |
+|------|----------|-----------|---------------------------|---------------------|
+| 2021 | Andhra Pradesh | IPC | `1_16730065601districtwiseipccrimes2021_t1.csv` | `2021_andhra_pradesh_districtwise_ipc_crimes.csv` |
+| 2024 | Andhra Pradesh | IPC/BNS | `1_1districtwiseipccrimes2024_t1.csv` | `2024_andhra_pradesh_districtwise_ipc_bns_crimes.csv` |
+| 2021 | A&N Islands | IPC | `1_16730065601districtwiseipccrimes2021_t30.csv` | `2021_andaman_and_nicobar_islands_districtwise_ipc_crimes.csv` |
+| 2024 | West Bengal | IPC/BNS | `1_1districtwiseipccrimes2024_t28.csv` | `2024_west_bengal_districtwise_ipc_bns_crimes.csv` |
+
+The original archive filename, source URL, table ID (fragment identifier), and SHA-256 checksum are
+retained in `download_manifest_2021_2024.json` under the `archive_filename`, `source_url`,
+`index_source_path`, `table_id`, and `sha256` fields for each entry. The complete old→new path map,
+including checksums for reversal, is stored in `data/raw/rename_map.json`.
+
+**rename_map.json path convention:** both `old_path` and `new_path` are relative to `data/raw/`
+using forward slashes. `old_path` preserves the original archive-style filename so the rename can be
+reversed (new_path → old_path). `new_path` is the final current readable filename.
+
+The `_tN` suffix (where N is 1–36) in the original archive filename identifies a fragment of a
+state/UT table. Within a given year, each state/UT has exactly one active fragment file, so the
+year + state/UT combination uniquely identifies each CSV.
 
 Do not infer the state or year from the filename suffix alone. Use
-[source_index.csv](source_index.csv) to look up the actual state/UT, year, and
-file path for any source CSV.
+[source_index.csv](source_index.csv) to look up the actual state/UT, year, reporting framework,
+original filename, and file path for any source CSV.
 
 ## Folder Layout
 
@@ -35,15 +62,19 @@ data/raw/
 │   └── 1_districtwise-ipc-crimes-2020_t1.csv
 ├── 2021/                     # Active year scope
 │   └── districtwise_ipc_bns_fragments/                  # active fragment inputs
-│       ├── 1_16730065601districtwiseipccrimes2021_t1.csv
-│       ├── ..._t2.csv ... _t36.csv
-│       └── ...
+│       ├── 2021_andhra_pradesh_districtwise_ipc_crimes.csv
+│       ├── 2021_arunachal_pradesh_districtwise_ipc_crimes.csv
+│       ├── ... (34 more state/UT files)
+│       └── 2021_west_bengal_districtwise_ipc_crimes.csv
 ├── 2022/
 │   └── districtwise_ipc_bns_fragments/   # active fragment inputs
 ├── 2023/
 │   └── districtwise_ipc_bns_fragments/   # active fragment inputs
 └── 2024/
     └── districtwise_ipc_bns_fragments/   # active fragment inputs
+        ├── 2024_andhra_pradesh_districtwise_ipc_bns_crimes.csv
+        ├── ... (34 more state/UT files)
+        └── 2024_west_bengal_districtwise_ipc_bns_crimes.csv
 ```
 
 ### Active Input Set
@@ -93,8 +124,9 @@ only for historical reproduction, not for the active dataset.
 2. Filter rows where `year = 2022` and `state_ut = "Odisha"`.
 3. Read the matching row:
    - `fragment = t19`
+   - `reporting_framework = IPC`
    - `original_filename = 1_17016833111districtwiseipccrimes2022_t19.csv`
-   - `relative_path = 2022/districtwise_ipc_bns_fragments/1_17016833111districtwiseipccrimes2022_t19.csv`
+   - `relative_path = 2022/districtwise_ipc_bns_fragments/2022_odisha_districtwise_ipc_crimes.csv`
 4. Open that path under `data/raw/`.
 
 ## Pipeline Outputs

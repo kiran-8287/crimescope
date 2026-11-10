@@ -28,9 +28,41 @@ YEARS = (2021, 2022, 2023, 2024)
 MANIFEST_PATH = Path("data/raw/download_manifest_2021_2024.json")
 FRAGMENT_DIR = "districtwise_ipc_bns_fragments"
 
+FRAMEWORK_FOR_YEAR = {2021: "ipc", 2022: "ipc", 2023: "ipc", 2024: "ipc_bns"}
+
 
 def sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
+
+
+# Explicit aliases for union territories whose official full names differ from
+# the slug produced by the generic converter (which collapses "&" to "and").
+UT_SLUG_ALIASES = {
+    "a&n islands": "andaman_and_nicobar_islands",
+    "d&n haveli and daman & diu": "dadra_and_nagar_haveli_and_daman_and_diu",
+}
+
+
+def state_slug(name: str) -> str:
+    """Convert a state/UT name to a lowercase snake_case slug for readable filenames."""
+    key = name.strip().lower()
+    if key in UT_SLUG_ALIASES:
+        return UT_SLUG_ALIASES[key]
+    s = key
+    s = s.replace("&", "and")
+    s = re.sub(r"[^a-z0-9]+", "_", s)
+    s = re.sub(r"_+", "_", s).strip("_")
+    return s
+
+
+def new_local_filename(year: int, state_ut: str) -> str:
+    """Compute the readable local filename for a source fragment.
+
+    Convention: <year>_<state_or_ut>_districtwise_<framework>_crimes.csv
+    Framework is `ipc` for 2021-2023 and `ipc_bns` for the 2024 IPC/BNS transition.
+    """
+    fw = FRAMEWORK_FOR_YEAR[year]
+    return f"{year}_{state_slug(state_ut)}_districtwise_{fw}_crimes.csv"
 
 
 def fetch(url: str, attempts: int = 3) -> tuple[bytes, str | None]:
@@ -180,7 +212,8 @@ def download_fragment(row: dict[str, str], root: Path) -> dict:
     year = int(row["year"])
     source_path = Path(row["csv"]).as_posix()
     url = RAW_BASE_URL + source_path
-    output = root / "data" / "raw" / str(year) / FRAGMENT_DIR / Path(source_path).name
+    state_ut = state_label(row["title"], row["table_id"])
+    output = root / "data" / "raw" / str(year) / FRAGMENT_DIR / new_local_filename(year, state_ut)
     entry = {
         "year": year,
         "table_id": row["table_id"],
