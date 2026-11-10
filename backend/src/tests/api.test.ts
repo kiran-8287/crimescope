@@ -102,4 +102,45 @@ describe("Backend module", () => {
     const anantapur = apCheck.regions.find((r: any) => r.name === "Anantapuramu");
     expect(anantapur).toBeDefined();
   }, 30000);
+
+  it("serves reconciled saved PCA and K-means results for k = 3, 4 and 5", async () => {
+    const { app } = await import("../app.js");
+    const response = await request(app).get("/api/v1/dashboard?view=clusters&year=2024").expect(200);
+    expect(response.body.methods.pca.status).toBe("available");
+    expect(response.body.methods.kmeans.status).toBe("available");
+    // Both artifacts belong to the same analysis run and cohort.
+    expect(response.body.methods.kmeans.runId).toBe(response.body.methods.pca.runId);
+    const kmeans = response.body.methods.kmeans;
+    const pca = response.body.methods.pca.result;
+    expect(pca.explained_variance_ratio[0]).toBeCloseTo(0.1591084, 6); // PC1 15.91%
+    expect(pca.explained_variance_ratio[1]).toBeCloseTo(0.0457401, 6); // PC2 4.57%
+    expect(pca.n_regions).toBe(774);
+    expect(pca.n_categories).toBe(131);
+    // PCA components are keyed by stable region id; no duplicates.
+    const pcaIds = pca.components.map((c: any) => c.region_id);
+    expect(new Set(pcaIds).size).toBe(pcaIds.length);
+    // Each saved k result covers the same 774-unit cohort and reconciles to it.
+    for (const kVal of [3, 4, 5]) {
+      const res = kmeans.results[kVal];
+      expect(res).toBeDefined();
+      expect(res.year).toBe(2024);
+      expect(res.n_regions).toBe(774);
+      expect(res.n_categories).toBe(131);
+      expect(res.assignment_records).toHaveLength(774);
+      const assignIds = res.assignment_records.map((a: any) => a.region_id);
+      expect(new Set(assignIds).size).toBe(assignIds.length);
+      // Cluster sizes reconcile to the cohort.
+      expect(res.cluster_sizes.reduce((sum: number, s: number) => sum + s, 0)).toBe(774);
+      // Each cluster carries centroid values (standardized σ) for distinguishing features.
+      for (const c of res.clusters) {
+        expect(c.centroid).toBeDefined();
+        expect(Object.keys(c.centroid).length).toBeGreaterThan(0);
+      }
+      // Every PCA unit has a K-means assignment and vice versa.
+      const assignSet = new Set(assignIds);
+      for (const c of pca.components) {
+        expect(assignSet.has(c.region_id)).toBe(true);
+      }
+    }
+  }, 30000);
 });

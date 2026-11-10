@@ -1,10 +1,14 @@
 import { useState } from 'react';
 import { X, Info } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
 import { useData } from '../context/DataContext';
 import { PageTitle } from '../components/Layout';
 import { Panel, Notice, Badge, UnitTypeBadge, ExportButton, Filters, RegionDetailDrawer, Stat } from '../components/UI';
 import { Bars, DivergingBars, colors } from '../components/Charts';
+import { ClusterProjection, clusterColor } from '../components/ClusterProjection';
+import { CentroidHeatmap } from '../components/CentroidHeatmap';
 import { DataTable } from '../components/DataTable';
+import { joinPcaAndKmeans } from '../utils/clusterProjection';
 import { categoryContextLabelByRaw } from '../utils/categories';
 import { number } from '../utils/format';
 
@@ -66,7 +70,10 @@ function splitRegion(region: unknown): { name: string; state: string } {
 
 export default function ClustersPage() {
   const { data } = useData();
-  const [k, setK] = useState<number>(3);
+  const [searchParams] = useSearchParams();
+  const urlK = Number(searchParams.get('k'));
+  const initialK = [3, 4, 5].includes(urlK) ? urlK : 3;
+  const [k, setK] = useState<number>(initialK);
   const [selectedClusterId, setSelectedClusterId] = useState<number | null>(null);
   const [memberSearch, setMemberSearch] = useState('');
   const [drawerRegion, setDrawerRegion] = useState<string | null>(null);
@@ -75,10 +82,10 @@ export default function ClustersPage() {
   const [hierarchicalState, setHierarchicalState] = useState<string>('Andhra Pradesh');
 
   const km = data.methods?.kmeans;
-  const result = km?.results?.[k];
+  const pca = data.methods?.pca;
   const hier = data.methods?.hierarchical;
 
-  if (km?.status !== 'available' || !result) {
+  if (km?.status !== 'available') {
     return (
       <>
         <PageTitle
@@ -95,10 +102,48 @@ export default function ClustersPage() {
     );
   }
 
+  const result = km.results?.[k];
+  if (!result) {
+    return (
+      <>
+        <PageTitle
+          eyebrow="SIMILARITY, NOT RANKING"
+          title="Cluster profiles"
+          description="Saved groupings of 2024 regional crime profiles."
+        />
+        <Filters fixedYear={2024} hideCategory />
+        <div className="empty">
+          <h2>K-means result unavailable</h2>
+          <p>No saved K-means result is available for k = {k}.</p>
+        </div>
+      </>
+    );
+  }
+
   const clusters: any[] = result.clusters ?? [];
   const assignments: any[] = result.assignment_records ?? [];
   const cohortSize: number = result.n_regions ?? assignments.length;
+  const nCategories: number = result.n_categories ?? 0;
   const seed = result.seed ?? 42;
+
+  // Join saved PCA scores with saved K-means assignments by stable unit id.
+  // PCA coordinates and axis bounds are independent of k and stay fixed across
+  // k = 3, 4, 5. A join failure produces a chart-level error, never a fabricated
+  // cluster for an unmatched point.
+  const joinResult = joinPcaAndKmeans(pca, km, k);
+
+  const pcaResult = pca?.result;
+  const variance = pcaResult?.explained_variance_ratio ?? [];
+  const pc1Pct = Number(variance[0] ?? 0) * 100;
+  const pc2Pct = Number(variance[1] ?? 0) * 100;
+  const combinedPct = pc1Pct + pc2Pct;
+
+  // Heatmap is unavailable only when the saved assignments carry no centroid
+  // metadata; the scatter and table remain usable in that case.
+  const hasCentroids = clusters.some((c: any) => c.centroid && Object.keys(c.centroid ?? {}).length > 0);
+  const centroidUnavailable = hasCentroids
+    ? null
+    : 'The saved K-means assignments are available but no centroid values were recorded for this run, so the distinguishing-feature heatmap cannot be drawn.';
 
   // Members grouped by cluster, using real unit names parsed from the artifact.
   const membersByCluster = new Map<number, any[]>();
@@ -149,7 +194,7 @@ export default function ClustersPage() {
         controls do not refit or rescope these clusters — the fitted model is fixed; the controls affect other pages only.
       </Notice>
 
-      {/* Model Diagnostics Banner */}
+      {/* Variance / cohort banner */}
       <div className="stats">
         <Stat
           label="Selected Model"
@@ -163,7 +208,7 @@ export default function ClustersPage() {
         />
         <Stat
           label="Feature Dimensions"
-          value={`${result.n_categories} Categories`}
+          value={`${nCategories} Categories`}
           detail="Log1p count + per-feature population z-score (ddof = 0)"
         />
         <Stat
@@ -173,35 +218,65 @@ export default function ClustersPage() {
         />
       </div>
 
-      {/* K Selector & Cluster Size Distribution */}
+      {/* Run controls: number of clusters (k). Changing k updates the projection,
+          heatmap, size summary and membership table together. */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginTop: '1rem', flexWrap: 'wrap' }}>
+        <label style={{ fontSize: '0.85rem', fontWeight: 600 }}>Number of clusters (k):</label>
+        <select
+          value={k}
+          onChange={e => {
+            setK(Number(e.target.value));
+            setSelectedClusterId(null);
+            setMemberSearch('');
+          }}
+          style={{ padding: '0.3rem 0.5rem' }}
+        >
+          {[3, 4, 5].map(n => (
+            <option key={n} value={n}>k = {n}</option>
+          ))}
+        </select>
+        <span style={{ fontSize: '0.82rem', color: '#6b7280' }}>
+          {number(cohortSize)} units · K-means fitted on {number(nCategories)} transformed features · displayed in PCA space
+        </span>
+      </div>
+
+      {/* 1. Cluster membership in PCA space — first analytical chart */}
+      <Panel
+        title="Cluster membership in PCA space"
+        subtitle={`Saved K-means assignments (k = ${k}) plotted on the first two saved PCA axes. Points are coloured by cluster; the legend shows unit counts per cluster.`}
+      >
+        <ClusterProjection
+          points={joinResult.points}
+          error={joinResult.error}
+          cohortSize={joinResult.cohortSize}
+          k={k}
+          pc1Pct={pc1Pct}
+          pc2Pct={pc2Pct}
+          combinedPct={combinedPct}
+          featureCount={nCategories}
+          onSelectUnit={region => setDrawerRegion(region)}
+        />
+      </Panel>
+
+      {/* 2. Centroid heatmap — offence features that distinguish the clusters */}
+      <Panel
+        title="Offence features that distinguish the clusters"
+        subtitle={`Saved k = {k} centroid values for the most distinguishing offence features (standardized σ, not case counts).`}
+      >
+        <CentroidHeatmap clusters={clusters} k={k} cohortSize={cohortSize} data={data} unavailableReason={centroidUnavailable} />
+      </Panel>
+
+      {/* 3. Existing cluster sizes, diagnostics, profiles, membership table */}
       <div className="grid two-one" style={{ marginTop: '1rem' }}>
         <Panel
           title={`Cluster membership sizes (k = ${k})`}
           subtitle="Distribution of reporting units across the selected clusters, read from the saved k artifact."
-          action={
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              <label style={{ fontSize: '0.85rem', fontWeight: 600 }}>Number of clusters (k):</label>
-              <select
-                value={k}
-                onChange={e => {
-                  setK(Number(e.target.value));
-                  setSelectedClusterId(null);
-                  setMemberSearch('');
-                }}
-                style={{ padding: '0.3rem 0.5rem' }}
-              >
-                {[3, 4, 5].map(n => (
-                  <option key={n} value={n}>k = {n}</option>
-                ))}
-              </select>
-            </div>
-          }
         >
           <Bars
             items={clusters.map((c, i) => ({
               label: `Cluster ${c.cluster_id + 1} (${number(c.size)} units)`,
               value: c.size,
-              color: colors[i % colors.length]
+              color: clusterColor(c.cluster_id),
             }))}
             unit="units"
           />
@@ -262,7 +337,7 @@ export default function ClustersPage() {
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.5rem' }}>
                   <div>
-                    <span className="eyebrow" style={{ color: colors[c.cluster_id % colors.length], fontWeight: 700 }}>
+                    <span className="eyebrow" style={{ color: clusterColor(c.cluster_id), fontWeight: 700 }}>
                       Cluster {c.cluster_id + 1}
                     </span>
                     <h4 style={{ margin: '0.15rem 0 0 0', fontSize: '1.1rem' }}>
@@ -320,7 +395,7 @@ export default function ClustersPage() {
         <div style={{ fontSize: '0.85rem', lineHeight: 1.5, color: '#374151', marginTop: '0.6rem', display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
           <p style={{ margin: 0 }}>
             <strong>Model scope.</strong> K-means is fitted nationally on the {number(result.n_regions)}-unit 2024 cohort on
-            log1p(count) then per-feature population standardization (ddof = 0) across {result.n_categories} features. The
+            log1p(count) then per-feature population standardization (ddof = 0) across {nCategories} features. The
             model is fixed; changing the year, state or reporting-unit controls does not refit or rescope it.
           </p>
           <p style={{ margin: 0 }}>
